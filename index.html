@@ -4,8 +4,157 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <script src="script.js"></script>
+    <link rel="shortcut icon" href="images/favicon32.png" type="image/x-icon" />
+    <title>Bamboo Stock Trading</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="styles.css" />
   </head>
-  <body></body>
+  <body>
+    <header>
+      <img src="images/bamboo_logo.png" alt="" />
+      <form action="">
+        <label for="sear"></label>
+        <input type="text" id="search_input" />
+      </form>
+
+      <nav>
+        <ul>
+          <li>Portfolio</li>
+          <li>About</li>
+          <li>Logout</li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="app-container">
+      <div class="main-section"></div>
+
+      <aside>
+        <div class="stock-container side-container">
+          <h1>My Stocks</h1>
+          <div class="stocks-panel panel">
+            <div class="stocks">
+              <div class="ticker">
+                <p>AMD</p>
+                <p>1 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">88</div>
+            </div>
+
+            <div class="stocks">
+              <div class="ticker">
+                <p>SPY</p>
+                <p>10 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">123.52</div>
+            </div>
+
+            <div class="stocks">
+              <div class="ticker">
+                <p>AMZN</p>
+                <p>50 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">85.25</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stock-container side-container">
+          <h1>My Wishlist</h1>
+          <div class="stocks-panel panel">
+            <div class="stocks">
+              <div class="ticker">
+                <p>AMD</p>
+                <p>1 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">88</div>
+            </div>
+
+            <div class="stocks">
+              <div class="ticker">
+                <p>SPY</p>
+                <p>10 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">123.52</div>
+            </div>
+
+            <div class="stocks">
+              <div class="ticker">
+                <p>AMZN</p>
+                <p>50 Shares</p>
+              </div>
+
+              <div class="ticker-graph">jwadjaj</div>
+
+              <div class="ticker-price">85.25</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="purchase-container side-container">
+          <div class="purchase-panel panel">
+            <h2>Buy AMD</h2>
+            <hr />
+            <form action="" class="purchase-form">
+              <section>
+                <p>Order Type</p>
+                <p>Market Order</p>
+              </section>
+
+              <section>
+                <label for="order-type">Buy in</label>
+                <select name="order-type" id="order-type">
+                  <option value="shares">Shares</option>
+                  <option value="dollars">Dollars</option>
+                </select>
+              </section>
+
+              <section>
+                <label for="order-shares">Shares</label>
+                <input type="number" min="0" />
+              </section>
+
+              <section class="current-market">
+                <p>Market Price</p>
+                <p id="market-price">$85.96</p>
+              </section>
+              <hr />
+
+              <section class="currnet-estimated">
+                <p>Estimated Cost</p>
+                <p id="estimated-price">$0.00</p>
+              </section>
+
+              <input type="submit" id="btn-submit" value="Review" />
+            </form>
+            <hr />
+
+            <p class="user-available">$3123<span> available</span></p>
+          </div>
+        </div>
+      </aside>
+    </main>
+  </body>
 </html>

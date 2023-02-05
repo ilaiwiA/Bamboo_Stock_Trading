@@ -1,0 +1,158 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  /* main */
+  --positive__green: rgb(71, 230, 18);
+
+  --ff_main: "Nunito Sans", sans-serif;
+}
+
+body {
+  font-family: var(--ff_main);
+}
+
+/* header */
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1em 3em;
+  gap: 5em;
+  font-weight: 700;
+}
+
+header img {
+  width: 48px;
+  height: 48px;
+}
+
+form input {
+  width: 30rem;
+  height: 48px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 2em;
+}
+
+/* main container */
+.app-container {
+  display: flex;
+  justify-content: center;
+}
+
+.main-section {
+  background-color: olive;
+  min-width: 1200px;
+  height: 5000px;
+}
+
+/* side containers */
+aside {
+  position: sticky;
+  top: 74.5px;
+  max-height: 500px;
+}
+
+.side-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 0 1em;
+  margin-bottom: 2em;
+  width: 335px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em;
+  font-size: 14px;
+  box-shadow: 0px 0px 32px 6px rgba(0, 0, 0, 0.18);
+  border-radius: 0.25em;
+}
+
+/* stock content panel */
+
+.stocks-panel {
+  gap: 1.5em;
+}
+
+.stocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  font-weight: 700;
+}
+
+.stocks .ticker-graph {
+  justify-self: center;
+}
+.stocks .ticker-price {
+  justify-self: end;
+}
+
+/* Purchase Panel */
+
+.purchase-panel hr {
+  margin: 0 -1em;
+  border: none;
+  background-color: lightgray;
+  height: 1px;
+}
+
+.purchase-panel h2 {
+  font-weight: 700;
+}
+
+.purchase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25em;
+}
+.purchase-form section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.purchase-form section input,
+select {
+  width: 120px;
+  height: 30px;
+  padding-left: 6px;
+}
+
+.purchase-form hr {
+  margin: 0;
+}
+
+.currnet-estimated {
+  font-weight: 900;
+}
+
+#btn-submit {
+  background-color: var(--positive__green);
+  border: none;
+  border-radius: 0.5em;
+  color: white;
+  font-weight: 600;
+  margin-top: 1em;
+  width: inherit;
+}
+
+.user-available {
+  font-weight: 700;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
