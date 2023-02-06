@@ -9,6 +9,9 @@
   --positive__green: #00c800;
   --negative__red: #fd5240;
 
+  /* body */
+  --light__gray__body: #7b7b7b;
+
   --ff_main: "Nunito Sans", sans-serif;
 }
 
@@ -58,6 +61,20 @@ nav ul {
   width: 1200px;
   height: 5000px;
   margin: 1em;
+}
+
+/* main portfolio */
+.portfolio-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.portfolio-bp {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 800;
+  font-size: 1.25em;
 }
 
 /* side containers */
@@ -188,6 +205,10 @@ select {
 
 .news-title {
   font-size: 1.5em;
+}
+
+.news-teaser {
+  color: var(--light__gray__body);
 }
 
 .news-ticker {
