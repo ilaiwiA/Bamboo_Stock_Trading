@@ -1,4 +1,4 @@
-import { TIME_OUT } from "./config";
+import { TIME_OUT } from "./config.js";
 
 const timeOut = function (sec) {
   return new Promise(function (res) {
@@ -7,7 +7,14 @@ const timeOut = function (sec) {
 };
 
 export const getJSON = async function (url) {
-  const res = await Promise.race(fetch(url), timeOut(TIME_OUT));
-  console.log(res);
-  return await res.json();
+  try {
+    console.log(url);
+    // const res = await fetch(url);
+    const res = await Promise.race([fetch(url), timeOut(TIME_OUT)]);
+    if (!res.ok) throw new Error(`${res.ok}`);
+    return await res.json();
+  } catch (error) {
+    console.error(`${"🚨🚨🚨"} + ${error}`);
+    throw error;
+  }
 };

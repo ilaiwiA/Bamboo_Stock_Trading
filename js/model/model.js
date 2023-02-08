@@ -1,7 +1,12 @@
-import { URL } from "../config";
-import { getJSON } from "../helper";
+import { URL } from "../config.js";
+import { getJSON } from "../helper.js";
 
-const generateStockList = async function () {
-  const data = await getJSON(URL);
-  console.log(data);
+export const generateStockList = async function () {
+  try {
+    const data = await getJSON(URL);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(`${"🚨🚨🚨"} + ${error}`);
+  }
 };
