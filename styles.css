@@ -227,11 +227,19 @@ input::-webkit-inner-spin-button {
   gap: 5em;
   margin: 1em 0;
   align-items: center;
+  text-decoration: none;
+  color: black;
+}
+
+.news-panel:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
 }
 
 .news-panel-main {
   display: flex;
   flex-direction: column;
+  gap: 1em;
   justify-content: space-between;
 }
 

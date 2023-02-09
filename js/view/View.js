@@ -4,7 +4,7 @@ export default class View {
 
     const html = this._generateHTML();
 
-    this._clear();
+    // this._clear(); // turn back on
     this._parentElement.insertAdjacentHTML("afterbegin", html);
   }
 

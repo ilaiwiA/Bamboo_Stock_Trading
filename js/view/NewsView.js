@@ -36,7 +36,7 @@ class NewsView extends View {
 
   _generateNewsPanel(data) {
     return `
-        <div class="news-panel">
+        <a class="news-panel" href = "${data.url}" target="_blank">
             <div class="news-panel-main">
             <p class="news-publisher">
                 ${data.publisher}
@@ -57,10 +57,10 @@ class NewsView extends View {
             </div>
 
             <img
-            src="${image_url}"
+            src="${data.image_url}"
             alt=""
             />
-      </div>
+      </a>
 
       <hr />
         `;
