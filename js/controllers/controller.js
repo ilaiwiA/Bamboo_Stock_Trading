@@ -19,12 +19,11 @@ import NewsView from "../view/NewsView.js";
 const controllerStockList = async function (panelType) {
   try {
     await model.loadStockList(panelType);
-    await model.loadNews();
     // await model.loadNews();
+
     StockListView.render(model.state[panelType], panelType);
-    NewsView.render(model.state.news);
-    // PurchaseView.render(model.state[USER_STOCK][1]);
     // NewsView.render(model.state.news);
+    // PurchaseView.render(model.state[USER_STOCK][1]);
   } catch (error) {
     console.error(error);
   }

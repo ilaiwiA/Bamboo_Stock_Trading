@@ -1,7 +1,7 @@
 import View from "./View.js";
 
 class NewsView extends View {
-  _parentElement = document.querySelector(".news-container");
+  _parentElement = document.querySelector(".main-container");
 
   _generateHTML() {
     return `
@@ -46,7 +46,6 @@ class NewsView extends View {
   _calcDate(data) {
     const today = new Date();
     const date = new Date(data);
-    console.log(today.getDate() - date.getDate());
 
     if (
       today.getDay() === date.getDay() &&
