@@ -1,4 +1,5 @@
-package com.example.stock.models;
+package com.example.stock.models.Stocks;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class StockList {
+public class Stock {
     private String assetType;
     private String symbol;
     private String description;
