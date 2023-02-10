@@ -35,7 +35,8 @@ export const generateStock = function (data) {
 
 export const generateNewsObject = function (data) {
   try {
-    console.log(data);
+    state.news = data.data.map((a) => a);
+    console.log(state);
   } catch (error) {
     console.error(error);
   }
@@ -53,6 +54,7 @@ export const loadStockList = async function (panelType) {
 export const loadNews = async function () {
   try {
     const data = await getJSON(URL + "news");
+    generateNewsObject(data);
   } catch (error) {
     console.error(error);
   }

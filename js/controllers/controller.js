@@ -22,8 +22,8 @@ const controllerStockList = async function (panelType) {
     await model.loadNews();
     // await model.loadNews();
     StockListView.render(model.state[panelType], panelType);
-
-    PurchaseView.render(model.state[USER_STOCK][1]);
+    NewsView.render(model.state.news);
+    // PurchaseView.render(model.state[USER_STOCK][1]);
     // NewsView.render(model.state.news);
   } catch (error) {
     console.error(error);

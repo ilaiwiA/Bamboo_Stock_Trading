@@ -226,8 +226,8 @@ input::-webkit-inner-spin-button {
   grid-template-columns: 2fr 1fr;
   gap: 5em;
   margin: 1em 0;
-  align-items: center;
   text-decoration: none;
+  align-items: center;
   color: black;
 }
 
@@ -262,6 +262,15 @@ input::-webkit-inner-spin-button {
 .news-ticker {
   align-self: flex-end;
   font-weight: 800;
+}
+
+.news-image {
+  display: flex;
+  height: 150px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  background-color: #00c800;
 }
 
 .news-panel img {
