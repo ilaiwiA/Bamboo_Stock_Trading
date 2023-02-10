@@ -5,9 +5,8 @@ export const state = {
   stock: {},
 };
 
-export const generateStockList = async function (panelType) {
+export const generateStockList = function (data, panelType) {
   try {
-    const data = [...Object.entries(await getJSON(URL))];
     const list = [];
     data.forEach((val) => {
       const { assetType, symbol, description, lastPrice } = val[1];
@@ -26,7 +25,7 @@ export const generateStockList = async function (panelType) {
   }
 };
 
-export const generateStock = async function (data) {
+export const generateStock = function (data) {
   try {
     return ({ assetType, symbol, description, lastPrice } = stock);
   } catch (error) {
@@ -34,10 +33,27 @@ export const generateStock = async function (data) {
   }
 };
 
+export const generateNewsObject = function (data) {
+  try {
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const loadStockList = async function (panelType) {
   try {
-    state[`${panelType}`] = await generateStockList(panelType);
+    const data = [...Object.entries(await getJSON(URL + "stocks"))];
+    state[`${panelType}`] = generateStockList(data, panelType);
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
+  }
+};
+
+export const loadNews = async function () {
+  try {
+    const data = await getJSON(URL + "news");
+  } catch (error) {
+    console.error(error);
   }
 };
