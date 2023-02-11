@@ -9,14 +9,10 @@ export const generateStockList = function (data, panelType) {
   try {
     const list = [];
     data.forEach((val) => {
-      const { assetType, symbol, description, lastPrice } = val[1];
+      const rest = val[1];
       list.push({
         ticker: val[0],
-        assetType,
-        symbol,
-        description,
-        lastPrice,
-        ...(val[1].quantity && { quantity: val[1].key }),
+        ...rest,
       });
     });
     return list;
@@ -27,7 +23,9 @@ export const generateStockList = function (data, panelType) {
 
 export const generateStock = function (data) {
   try {
-    return ({ assetType, symbol, description, lastPrice } = stock);
+    console.log(data);
+    state.stock = data;
+    // return ({ assetType, symbol, description, lastPrice } = stock);
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
   }
@@ -36,7 +34,6 @@ export const generateStock = function (data) {
 export const generateNewsObject = function (data) {
   try {
     state.news = data.data.map((a) => a);
-    console.log(state);
   } catch (error) {
     console.error(error);
   }

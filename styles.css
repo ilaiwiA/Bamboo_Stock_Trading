@@ -93,7 +93,14 @@ nav ul {
   font-weight: 700;
 }
 
-.main-panel {
+#buying-power {
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 3em;
+}
+
+/* Main sub-panels */
+
+.sub-panel {
   display: flex;
   flex-direction: column;
   gap: 2em;
@@ -102,15 +109,17 @@ nav ul {
   padding: 1.5em 0;
 }
 
-.main-panel ul {
+.sub-panel ul {
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1em;
+  font-size: 0.8em;
 }
 
 section h1 {
   font-size: 2em;
+  font-weight: 600;
   margin-bottom: 0.5em;
 }
 
@@ -133,18 +142,12 @@ aside {
 .panel {
   display: flex;
   flex-direction: column;
-  /* gap: 1em; */
-  /* padding: 1em; */
   font-size: 1em;
   box-shadow: 0px 0px 32px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.25em;
 }
 
 /* stock content panel */
-
-.stocks-panel {
-  /* gap: 1.5em; */
-}
 
 .stocks {
   display: grid;

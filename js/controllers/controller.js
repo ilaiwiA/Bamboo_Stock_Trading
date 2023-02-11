@@ -6,6 +6,7 @@ import { WATCH_LIST, USER_STOCK } from "../config.js";
 import StockListView from "../view/StockListView.js";
 import PurchaseView from "../view/PurchaseView.js";
 import NewsView from "../view/NewsView.js";
+import StockDetailsView from "../view/StockDetailsView.js";
 
 // (async function () {
 //   await model.loadStockList(USER_STOCK);
@@ -19,10 +20,11 @@ import NewsView from "../view/NewsView.js";
 const controllerStockList = async function (panelType) {
   try {
     await model.loadStockList(panelType);
-    // await model.loadNews();
+    await model.loadNews();
 
     StockListView.render(model.state[panelType], panelType);
-    // NewsView.render(model.state.news);
+    StockDetailsView.render(model.state[panelType][0]);
+    NewsView.render(model.state.news);
     // PurchaseView.render(model.state[USER_STOCK][1]);
   } catch (error) {
     console.error(error);
