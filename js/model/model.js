@@ -23,8 +23,7 @@ export const generateStockList = function (data, panelType) {
 
 export const generateStock = function (data) {
   try {
-    console.log(data);
-    state.stock = data;
+    return data;
     // return ({ assetType, symbol, description, lastPrice } = stock);
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -45,6 +44,15 @@ export const loadStockList = async function (panelType) {
     state[`${panelType}`] = generateStockList(data, panelType);
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
+  }
+};
+
+export const loadStock = async function (ticker) {
+  try {
+    const data = Object.values(await getJSON(URL + ticker))[0];
+    state.stock = generateStock(data);
+  } catch (error) {
+    console.error(error);
   }
 };
 

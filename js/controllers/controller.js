@@ -7,6 +7,7 @@ import StockListView from "../view/StockListView.js";
 import PurchaseView from "../view/PurchaseView.js";
 import NewsView from "../view/NewsView.js";
 import StockDetailsView from "../view/StockDetailsView.js";
+import PortfolioChartView from "../view/PortfolioChartView.js";
 
 // (async function () {
 //   await model.loadStockList(USER_STOCK);
@@ -20,6 +21,7 @@ import StockDetailsView from "../view/StockDetailsView.js";
 const controllerStockList = async function (panelType) {
   try {
     console.log(window.location.href);
+
     await model.loadStockList(panelType);
     await model.loadNews();
 
@@ -32,9 +34,6 @@ const controllerStockList = async function (panelType) {
   }
 };
 
-controllerStockList(USER_STOCK);
-controllerStockList(WATCH_LIST);
-
 // const controllerPurchasePanel = async function (panelType) {
 //   try {
 //     await model.loadStockList(USER_STOCK);
@@ -46,6 +45,26 @@ controllerStockList(WATCH_LIST);
 
 // controllerPurchasePanel();
 
-const init = function () {};
+const controllerSidePanels = async function () {
+  await model.loadStockList(USER_STOCK);
+  await model.loadNews();
+
+  StockListView.render(model.state[USER_STOCK], USER_STOCK);
+  NewsView.render(model.state.news);
+};
+
+const controllerChangePage = async function () {
+  const val = window.location.hash.indexOf("/") + 1;
+  const ticker = window.location.hash.slice(val);
+
+  await model.loadStock(ticker);
+  PortfolioChartView.render(model.state.stock);
+};
+
+const init = function () {
+  StockListView.addHandlerChangePage(controllerChangePage);
+  StockListView.addHandlerRender(controllerSidePanels);
+  PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+};
 
 init();

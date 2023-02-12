@@ -9,6 +9,21 @@ class StockListView extends View {
     super();
   }
 
+  addHandlerChangePage(handler) {
+    this._parentElement.addEventListener("click", function (e) {
+      handler(e.target.closest(".stocks")?.id);
+    });
+  }
+
+  addHandlerRender(handler) {
+    ["load"].forEach((a) =>
+      window.addEventListener(a, function () {
+        console.log(a);
+        handler();
+      })
+    );
+  }
+
   render(data, panelType) {
     this._data = data;
 
@@ -30,7 +45,7 @@ class StockListView extends View {
 
   _generateStocks = function (data) {
     return `
-    <div class="stocks" id = "${data.ticker}">
+    <a class="stocks" id = "${data.ticker}" href="#stocks/${data.ticker}">
         <div class="ticker">
             <p>${data.ticker}</p>
             ${
@@ -45,7 +60,7 @@ class StockListView extends View {
         <div class="ticker-graph">jwadjaj</div>
     
         <div class="ticker-price">${data.lastPrice}</div>    
-    </div>
+    </a>
     `;
   };
 }

@@ -163,6 +163,8 @@ aside {
   grid-template-columns: 1fr 1fr 1fr;
   font-weight: 700;
   padding: 1em;
+  text-decoration: none;
+  color: black;
 }
 
 .stocks:hover {
