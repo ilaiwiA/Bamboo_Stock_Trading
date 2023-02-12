@@ -30,7 +30,7 @@ class StockListView extends View {
 
   _generateStocks = function (data) {
     return `
-    <div class="stocks">
+    <div class="stocks" id = "${data.ticker}">
         <div class="ticker">
             <p>${data.ticker}</p>
             ${

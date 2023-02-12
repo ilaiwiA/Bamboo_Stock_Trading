@@ -13,6 +13,8 @@
   --light__gray__body: #7b7b7b;
 
   --ff_main: "Nunito Sans", sans-serif;
+
+  --aside_height: 135px;
 }
 
 body {
@@ -22,11 +24,16 @@ body {
 /* header */
 
 header {
+  position: sticky;
+  top: 0;
+  padding: 1em 5em;
+
+  background-color: white;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 1em 3em;
-  margin-bottom: 2em;
+
   gap: 5em;
   font-weight: 700;
   font-size: 1.25em;
@@ -42,6 +49,9 @@ form input {
   height: 48px;
   padding-left: 1em;
   font-size: 1em;
+}
+
+header nav {
 }
 
 nav ul {
@@ -60,7 +70,6 @@ nav ul {
 .main-container {
   /* min-width: 1200px; */
   width: 1200px;
-  height: 5000px;
   margin: 1em;
   display: flex;
   flex-direction: column;
@@ -126,7 +135,7 @@ section h1 {
 /* side containers */
 aside {
   position: sticky;
-  top: 74.5px;
+  top: var(--aside_height);
   max-height: 500px;
 }
 

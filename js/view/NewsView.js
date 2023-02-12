@@ -23,14 +23,12 @@ class NewsView extends View {
     ${data.title}
     </h1>
     
-    <p class="news-teaser">
-    ${data.description}
-            </p>
+    <p class="news-teaser">${data.description}</p>
             
-            <div class="news-tickers">
-            <span class="news-ticker">${data.ticker}</span>
-            <span>^2.66%</span>
-            </div>
+      <div class="news-tickers">
+        <span class="news-ticker">${data.ticker}</span>
+        <span>^2.66%</span>
+      </div>
             </div>
             <div class = "news-image">
             <img
@@ -41,7 +39,7 @@ class NewsView extends View {
             </a>
             
             <hr />
-            `;
+  `;
   }
   _calcDate(data) {
     const today = new Date();

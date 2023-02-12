@@ -1,7 +1,6 @@
 export default class View {
   render(data) {
     this._data = data;
-    console.log(data);
 
     const html = this._generateHTML();
 

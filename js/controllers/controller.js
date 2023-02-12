@@ -19,6 +19,7 @@ import StockDetailsView from "../view/StockDetailsView.js";
 
 const controllerStockList = async function (panelType) {
   try {
+    console.log(window.location.href);
     await model.loadStockList(panelType);
     await model.loadNews();
 
@@ -32,7 +33,7 @@ const controllerStockList = async function (panelType) {
 };
 
 controllerStockList(USER_STOCK);
-// controllerStockList(WATCH_LIST);
+controllerStockList(WATCH_LIST);
 
 // const controllerPurchasePanel = async function (panelType) {
 //   try {
