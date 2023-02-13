@@ -45,11 +45,35 @@ const controllerStockList = async function (panelType) {
 
 // controllerPurchasePanel();
 
+const controllerLoadPortfollio = async function () {
+  try {
+    const id = window.location.hash;
+    if (id) return;
+
+    await model.loadStockList(USER_STOCK);
+    await model.loadStockList(WATCH_LIST);
+    await model.loadNews();
+
+    PortfolioChartView.render(model.state[USER_STOCK][0]);
+    StockListView.render(model.state[USER_STOCK], USER_STOCK);
+    StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
+    NewsView.render(model.state.news);
+
+    //load user stocks and watch list
+    //load user portfolio
+    //load current news
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const controllerSidePanels = async function () {
   await model.loadStockList(USER_STOCK);
+  await model.loadStockList(WATCH_LIST);
   await model.loadNews();
 
   StockListView.render(model.state[USER_STOCK], USER_STOCK);
+  StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
   NewsView.render(model.state.news);
 };
 
@@ -58,12 +82,19 @@ const controllerChangePage = async function () {
   const ticker = window.location.hash.slice(val);
 
   await model.loadStock(ticker);
+
+  PortfolioChartView.clear();
+  PurchaseView.clear();
+
   PortfolioChartView.render(model.state.stock);
+  PurchaseView.render(model.state.stock);
+  StockDetailsView.render(model.state.stock);
+  NewsView.render(model.state.news);
 };
 
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
-  StockListView.addHandlerRender(controllerSidePanels);
+  StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
 };
 

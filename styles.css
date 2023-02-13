@@ -104,7 +104,6 @@ nav ul {
 
 #buying-power {
   border-bottom: 1px solid lightgray;
-  margin-bottom: 3em;
 }
 
 /* Main sub-panels */
@@ -304,7 +303,6 @@ input::-webkit-inner-spin-button {
   overflow: hidden;
   justify-content: center;
   align-items: center;
-  background-color: #00c800;
 }
 
 .news-panel img {

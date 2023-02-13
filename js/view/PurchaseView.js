@@ -11,7 +11,7 @@ class PurchaseView extends View {
     return `
     <div class="purchase-container side-container">
           <div class="purchase-panel panel">
-            <h2>Buy ${this._data.ticker}</h2>
+            <h2>Buy ${this._data.symbol}</h2>
             <hr />
             <form action="" class="purchase-form">
               <section>
@@ -34,7 +34,9 @@ class PurchaseView extends View {
 
               <section class="current-market">
                 <p>Market Price</p>
-                <p id="market-price">$${this._data.lastPrice}</p>
+                <p id="market-price">$${Number(this._data.lastPrice).toFixed(
+                  2
+                )}</p>
               </section>
               <hr />
 

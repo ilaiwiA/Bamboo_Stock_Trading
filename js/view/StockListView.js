@@ -10,15 +10,16 @@ class StockListView extends View {
   }
 
   addHandlerChangePage(handler) {
-    this._parentElement.addEventListener("click", function (e) {
-      handler(e.target.closest(".stocks")?.id);
-    });
+    this._parentElement
+      .querySelector(".side-container")
+      ?.addEventListener("click", function (e) {
+        handler(e.target.closest(".stocks")?.id);
+      });
   }
 
   addHandlerRender(handler) {
     ["load"].forEach((a) =>
       window.addEventListener(a, function () {
-        console.log(a);
         handler();
       })
     );
@@ -45,9 +46,9 @@ class StockListView extends View {
 
   _generateStocks = function (data) {
     return `
-    <a class="stocks" id = "${data.ticker}" href="#stocks/${data.ticker}">
+    <a class="stocks" id = "${data.symbol}" href="#stocks/${data.symbol}">
         <div class="ticker">
-            <p>${data.ticker}</p>
+            <p>${data.symbol}</p>
             ${
               data.quantity
                 ? `<p>${data.quantity} ${

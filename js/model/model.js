@@ -11,7 +11,7 @@ export const generateStockList = function (data, panelType) {
     data.forEach((val) => {
       const rest = val[1];
       list.push({
-        ticker: val[0],
+        // key: val[0],
         ...rest,
       });
     });

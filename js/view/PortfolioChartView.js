@@ -1,7 +1,11 @@
 import View from "./View.js";
 
 class PortfolioChartView extends View {
-  _parentElement = document.querySelector(".portfolio-container");
+  _parentElement = document.querySelector(".main-container");
+
+  constructor() {
+    super();
+  }
 
   addHandlerPortfolio(handler) {
     ["hashchange"].forEach((a) => window.addEventListener(a, handler));
@@ -9,10 +13,11 @@ class PortfolioChartView extends View {
 
   _generateHTML() {
     return `
+    <div class="portfolio-container">
         <div class="portfolio-chart-container">
           <div class="chart-info">
-            <h1>${this._data.symbol}</h1>
-            <h1>${this._data.lastPrice}</h1>
+          ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
+            <h1>${Number(this._data.lastPrice).toFixed(2)}</h1>
             <span class="negative">${
               this._data.netChange
             } <span>(${this._data.netPercentChangeInDouble.toFixed(2)} ${
@@ -32,6 +37,14 @@ class PortfolioChartView extends View {
           <li>YTD</li>
           <li>ALL</li>
         </ul>
+        </div>
+
+        <div class="sub-panel" id="buying-power">
+          <div class="portfolio-bp">
+            <p>Buying Power</p>
+            <p>$0.00</p>
+          </div>
+        </div>
         `;
   }
 }
