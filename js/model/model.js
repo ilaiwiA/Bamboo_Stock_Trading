@@ -65,10 +65,9 @@ export const loadNews = async function () {
   }
 };
 
-export const updatePurchaseQuantity = function (type, quantity) {
+export const updatePurchaseType = function (type) {
   try {
     state.stock.purchaseType = type;
-    state.stock.estimatedCost = quantity;
   } catch (error) {
     console.error(error);
   }

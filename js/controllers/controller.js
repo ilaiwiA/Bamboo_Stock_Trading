@@ -94,19 +94,18 @@ const controllerChangePage = async function () {
   NewsView.render(model.state.news);
 };
 
-const controllerPurchaseQuantity = function (type, quantity) {
-  console.log(type);
-  // model.updatePurchaseQuantity(type, quantity);
+const controllerPurchaseType = function (type) {
+  model.updatePurchaseType(type);
 
-  // PurchaseView.clear();
-  // PurchaseView.render(model.state.stock);
+  PurchaseView.clear();
+  PurchaseView.render(model.state.stock);
 };
 
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
-  PurchaseView.addHandlerInput(controllerPurchaseQuantity);
+  PurchaseView.addHandlerInput(controllerPurchaseType);
 };
 
 init();

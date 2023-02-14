@@ -7,28 +7,35 @@ class PurchaseView extends View {
     super();
   }
 
+  test(e) {
+    e.preventDefault();
+    if (e.target.id === "order-type") return this(e.target.value);
+
+    const parent = e.target.closest(".aside-container");
+
+    const html = parent.querySelector("#estimated-price");
+    const val = e.target.value;
+
+    if (e.target.id === "order-Shares") {
+      const cost = Number(
+        val * +parent.querySelector("#market-price").innerHTML.slice(1)
+      ).toFixed(2);
+
+      html.innerHTML =
+        "$" +
+        Intl.NumberFormat("en-US", {
+          minimumFractionDigits: 2,
+        }).format(cost);
+    } else if (e.target.id === "order-Dollars") {
+      const cost =
+        val / +parent.querySelector("#market-price").innerHTML.slice(1);
+
+      html.innerHTML = cost - cost.toFixed(6) === 0 ? cost : cost.toFixed(6);
+    }
+  }
+
   addHandlerInput(handler) {
-    this._parentElement.addEventListener("input", function (e) {
-      console.log(this, e.target);
-      e.preventDefault();
-      if (e.target.id === "order-type") return handler(e.target.value);
-
-      const val = e.target.value;
-
-      if (e.target.id === "order-Shares") {
-        const html = this.querySelector("#estimated-price");
-        console.log(val);
-        console.log(+this.querySelector("#market-price").innerHTML.slice(1));
-        html.innerHTML =
-          "$" +
-          Number(
-            val * +this.querySelector("#market-price").innerHTML.slice(1)
-          ).toFixed(2);
-      } else if (e.target.id === "order-Dollars") {
-      }
-
-      handler(e.target.id.split("-")[1], e.target.value);
-    });
+    this._parentElement.addEventListener("input", this.test.bind(handler));
   }
 
   addHandlerPurchaseCost(handler) {
@@ -48,11 +55,9 @@ class PurchaseView extends View {
               </section>
 
               <section>
-                <label for="order-type">Buy in</label>
-                <select name="order-type" id="order-type">
-                  <option value="Shares">Shares</option>
-                  <option value="Dollars">Dollars</option>
-                </select>
+              ${this._generatePurchaseLabel(
+                this._generatePurchaseType(this._data.purchaseType)
+              )}
               </section>
 
               <section>
@@ -75,10 +80,15 @@ class PurchaseView extends View {
               <hr />
 
               <section class="current-estimated">
-                <p>Estimated Cost</p>
-                <p id="estimated-price">$${
-                  this._data.estimatedCost ? this._data.estimatedCost : "0.00"
+                <p>${
+                  this._data.purchaseType === "Dollars"
+                    ? "Est. Quantity"
+                    : "Estimated Cost"
                 }</p>
+                <p id="estimated-price">${
+                  this._data.purchaseType === "Dollars" ? "" : "$"
+                }0.00
+                </p>
               </section>
 
               <input type="submit" id="btn-submit" value="Review" />
@@ -102,6 +112,20 @@ class PurchaseView extends View {
     if (data) return data;
 
     return "Shares";
+  }
+
+  _generatePurchaseLabel(data) {
+    return `
+    <label for="order-type">Buy in</label>
+    <select name="order-type" id="order-type">
+      <option value="Shares" ${
+        data === "Shares" ? "selected" : ""
+      }>Shares</option>
+      <option value="Dollars" ${
+        data === "Dollars" ? "selected" : ""
+      }>Dollars</option>
+    </select>
+    `;
   }
 }
 
