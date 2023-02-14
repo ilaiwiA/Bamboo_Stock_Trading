@@ -64,3 +64,12 @@ export const loadNews = async function () {
     console.error(error);
   }
 };
+
+export const updatePurchaseQuantity = function (type, quantity) {
+  try {
+    state.stock.purchaseType = type;
+    state.stock.estimatedCost = quantity;
+  } catch (error) {
+    console.error(error);
+  }
+};

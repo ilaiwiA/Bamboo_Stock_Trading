@@ -221,7 +221,7 @@ input::-webkit-inner-spin-button {
   margin: 0.25em;
 }
 
-.purchase-form #order-shares {
+.purchase-form .order-value {
   text-align: right;
 }
 
@@ -229,7 +229,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-.currnet-estimated {
+.current-estimated {
   font-weight: 800;
 }
 

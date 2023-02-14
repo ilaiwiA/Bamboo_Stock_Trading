@@ -8,7 +8,7 @@ class PortfolioChartView extends View {
   }
 
   addHandlerPortfolio(handler) {
-    ["hashchange"].forEach((a) => window.addEventListener(a, handler));
+    ["hashchange", "load"].forEach((a) => window.addEventListener(a, handler));
   }
 
   _generateHTML() {
@@ -18,9 +18,11 @@ class PortfolioChartView extends View {
           <div class="chart-info">
           ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
             <h1>${Number(this._data.lastPrice).toFixed(2)}</h1>
-            <span class="negative">${
-              this._data.netChange
-            } <span>(${this._data.netPercentChangeInDouble.toFixed(2)} ${
+            <span class="${this._generateColor(
+              +this._data.netChange
+            )}">${this._generateSymbol(+this._data.netChange)}${Number(
+      this._data.netChange
+    ).toFixed(2)} <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
       this._data.netPercentChangeInDouble === 0 ? "" : "%"
     })</span></span>
             <span>Today</span>
@@ -38,7 +40,7 @@ class PortfolioChartView extends View {
           <li>ALL</li>
         </ul>
         </div>
-
+        
         <div class="sub-panel" id="buying-power">
           <div class="portfolio-bp">
             <p>Buying Power</p>
@@ -46,6 +48,20 @@ class PortfolioChartView extends View {
           </div>
         </div>
         `;
+  }
+
+  _generateColor(data) {
+    if (data > 0) return "positive";
+    else if (data < 0) return "negative";
+
+    return "NEUTRAL";
+  }
+
+  _generateSymbol(data) {
+    if (data > 0) return "+";
+    else if (data < 0) return "-";
+
+    return "";
   }
 }
 

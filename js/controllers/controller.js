@@ -20,8 +20,6 @@ import PortfolioChartView from "../view/PortfolioChartView.js";
 
 const controllerStockList = async function (panelType) {
   try {
-    console.log(window.location.href);
-
     await model.loadStockList(panelType);
     await model.loadNews();
 
@@ -45,6 +43,7 @@ const controllerStockList = async function (panelType) {
 
 // controllerPurchasePanel();
 
+// Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
   try {
     const id = window.location.hash;
@@ -81,7 +80,10 @@ const controllerChangePage = async function () {
   const val = window.location.hash.indexOf("/") + 1;
   const ticker = window.location.hash.slice(val);
 
+  if (!ticker) return;
+
   await model.loadStock(ticker);
+  await model.loadNews();
 
   PortfolioChartView.clear();
   PurchaseView.clear();
@@ -92,10 +94,19 @@ const controllerChangePage = async function () {
   NewsView.render(model.state.news);
 };
 
+const controllerPurchaseQuantity = function (type, quantity) {
+  console.log(type);
+  // model.updatePurchaseQuantity(type, quantity);
+
+  // PurchaseView.clear();
+  // PurchaseView.render(model.state.stock);
+};
+
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+  PurchaseView.addHandlerInput(controllerPurchaseQuantity);
 };
 
 init();
