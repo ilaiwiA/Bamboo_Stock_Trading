@@ -7,7 +7,7 @@ class PurchaseView extends View {
     super();
   }
 
-  test(e) {
+  updatePurchasePanel(e) {
     e.preventDefault();
     if (e.target.id === "order-type") return this(e.target.value);
 
@@ -35,7 +35,10 @@ class PurchaseView extends View {
   }
 
   addHandlerInput(handler) {
-    this._parentElement.addEventListener("input", this.test.bind(handler));
+    this._parentElement.addEventListener(
+      "input",
+      this.updatePurchasePanel.bind(handler)
+    );
   }
 
   addHandlerPurchaseCost(handler) {
@@ -95,7 +98,9 @@ class PurchaseView extends View {
             </form>
             <hr />
 
-            <p class="user-available">$3123<span> available</span></p>
+            <p class="user-available">$${
+              this._data.availableBal || "0.00"
+            }<span> available</span></p>
           </div>
         </div>
     `;

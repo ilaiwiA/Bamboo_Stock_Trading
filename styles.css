@@ -163,6 +163,7 @@ aside {
   font-weight: 700;
   padding: 1em;
   text-decoration: none;
+  align-items: center;
   color: black;
 }
 
@@ -175,7 +176,14 @@ aside {
   justify-self: center;
 }
 .stocks .ticker-price {
+  text-align: right;
   justify-self: end;
+}
+
+.stocks .ticker-sub {
+  margin-top: 5px;
+  font-size: 0.85em;
+  font-weight: 600;
 }
 
 /* Purchase Panel */

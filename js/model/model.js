@@ -15,6 +15,11 @@ export const generateStockList = function (data, panelType) {
         ...rest,
       });
     });
+
+    list.forEach((a) => {
+      a.lastPrice = Number(a.lastPrice).toFixed(2);
+    });
+    list[2].quantity = 1;
     return list;
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -40,7 +45,11 @@ export const generateNewsObject = function (data) {
 
 export const loadStockList = async function (panelType) {
   try {
-    const data = [...Object.entries(await getJSON(URL + "stocks"))];
+    const stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME";
+
+    const data = [
+      ...Object.entries(await getJSON(URL + "stocks/" + stockList)),
+    ];
     state[`${panelType}`] = generateStockList(data, panelType);
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -49,8 +58,9 @@ export const loadStockList = async function (panelType) {
 
 export const loadStock = async function (ticker) {
   try {
-    const data = Object.values(await getJSON(URL + ticker))[0];
+    const data = Object.values(await getJSON(URL + "stock/" + ticker))[0];
     state.stock = generateStock(data);
+    state.stock.availableBal = 1023.52;
   } catch (error) {
     console.error(error);
   }

@@ -50,12 +50,12 @@ const controllerLoadPortfollio = async function () {
     if (id) return;
 
     await model.loadStockList(USER_STOCK);
-    await model.loadStockList(WATCH_LIST);
+    // await model.loadStockList(WATCH_LIST);
     await model.loadNews();
 
     PortfolioChartView.render(model.state[USER_STOCK][0]);
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
-    StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
+    // StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
     NewsView.render(model.state.news);
 
     //load user stocks and watch list

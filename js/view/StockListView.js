@@ -51,7 +51,7 @@ class StockListView extends View {
             <p>${data.symbol}</p>
             ${
               data.quantity
-                ? `<p>${data.quantity} ${
+                ? `<p class= "ticker-sub">${data.quantity} ${
                     data.quantity > 1 ? "Shares" : "Share"
                   }`
                 : ""
@@ -60,7 +60,12 @@ class StockListView extends View {
     
         <div class="ticker-graph">jwadjaj</div>
     
-        <div class="ticker-price">${data.lastPrice}</div>    
+        <div class="ticker-price ticker">
+        <p>${data.lastPrice}<p>
+        <p class= "ticker-sub ${
+          data.netPercentChangeInDouble >= 0 ? "positive" : "negative"
+        }">${Number(data.netPercentChangeInDouble).toFixed(2)}%<p>
+        </div>    
     </a>
     `;
   };

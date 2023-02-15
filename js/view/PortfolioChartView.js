@@ -44,7 +44,7 @@ class PortfolioChartView extends View {
         <div class="sub-panel" id="buying-power">
           <div class="portfolio-bp">
             <p>Buying Power</p>
-            <p>$0.00</p>
+            <p>$${this._data.availableBal || "0.00"}</p>
           </div>
         </div>
         `;
