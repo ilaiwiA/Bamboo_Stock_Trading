@@ -1,51 +1,64 @@
 package com.example.stock.models.Stocks;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-
+@JsonInclude(Include.NON_EMPTY)
 public class StockSummary {
+
+    @JsonProperty("Symbol")
     private String Symbol;
+        
+    @JsonProperty("AssetType")
     private String AssetType;
+    
+    @JsonProperty("Name")
     private String Name;
+
+    @JsonProperty("Description")
     private String Description;
-    private String CIK;
+    
+    @JsonProperty("Exchange")
     private String Exchange;
+    
+    @JsonProperty("Currency")
     private String Currency;
+    
+    @JsonProperty("Country")
     private String Country;
+    
+    @JsonProperty("Sector")
     private String Sector;
+    
+    @JsonProperty("Industry")
     private String Industry;
+    
+    @JsonProperty("Address")
     private String Address;
-    private String FiscalYearEnd;
-    private String LatestQuarter;
+    
+    @JsonProperty("MarketCapitalization")
     private String MarketCapitalization;
-    private String EBITDA;
+    
+    @JsonProperty("PERatio")
     private String PERatio;
-    private String PEGRatio;
-    private String BookValue;
-    private String DividendPerShare;
+    
+    @JsonProperty("DividendYield")
     private String DividendYield;
+    
+    @JsonProperty("EPS")
     private String EPS;
-    private String RevenuePerShareTTM;
-    private String ProfitMargin;
-    private String OperatingMarginTTM;
-    private String ReturnOnAssetsTTM;
-    private String ReturnOnEquityTTM;
-    private String RevenueTTM;
-    private String GrossProfitTTM;
-    private String DilutedEPSTTM;
-    private String QuarterlyEarningsGrowthYOY;
-    private String QuarterlyRevenueGrowthYOY;
+    
+    @JsonProperty("TrailingPE")
     private String TrailingPE;
+
+    @JsonProperty("ForwardPE")
     private String ForwardPE;
-    private String PriceToSalesRatioTTM;
-    private String PriceToBookRatio;
 
     @JsonProperty("52WeekHigh")
     private String _52WeekHigh;
@@ -60,11 +73,14 @@ public class StockSummary {
     private String _200DayMovingAverage;
 
     @JsonProperty("SharesOutstanding")
-    private String SharesOutstanding;    
-    
+    private String SharesOutstanding;
+
     @JsonProperty("DividendDate")
     private String DividendDate;    
-    
+
     @JsonProperty("ExDividendDate")
     private String ExDividendDate;
+
+
+
 }

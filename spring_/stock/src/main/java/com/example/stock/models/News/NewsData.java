@@ -4,11 +4,7 @@ import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.Data;
-
-@Data
 public class NewsData {
-    
-    @JsonProperty("data")
-    public ArrayList<News> data;
+    @JsonProperty("feed")
+    public ArrayList<News> feed;
 }

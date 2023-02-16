@@ -30,7 +30,6 @@ public class StockListController {
     @CrossOrigin
     @GetMapping(("/api/stocks/{stockList}"))
     public Map<String, Stock> getStocks (@PathVariable("stockList") String list){
-        System.out.println(list);
         RestTemplate restTemplate = new RestTemplate();
 
         ParameterizedTypeReference<Map<String, Stock>> stock = new ParameterizedTypeReference<Map<String,Stock>>() {}; 
