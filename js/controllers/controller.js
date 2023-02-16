@@ -9,28 +9,19 @@ import NewsView from "../view/NewsView.js";
 import StockDetailsView from "../view/StockDetailsView.js";
 import PortfolioChartView from "../view/PortfolioChartView.js";
 
-// (async function () {
-//   await model.loadStockList(USER_STOCK);
-//   await model.loadStockList(WATCH_LIST);
+// const controllerStockList = async function (panelType) {
+//   try {
+//     await model.loadStockList(panelType);
+//     await model.loadNews();
 
-//   StockListView.render(model.state[USER_STOCK], USER_STOCK);
-//   StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
-//   console.log("done");
-// })();
-
-const controllerStockList = async function (panelType) {
-  try {
-    await model.loadStockList(panelType);
-    await model.loadNews();
-
-    StockListView.render(model.state[panelType], panelType);
-    StockDetailsView.render(model.state[panelType][0]);
-    NewsView.render(model.state.news);
-    // PurchaseView.render(model.state[USER_STOCK][1]);
-  } catch (error) {
-    console.error(error);
-  }
-};
+//     StockListView.render(model.state[panelType], panelType);
+//     StockDetailsView.render(model.state[panelType][0]);
+//     NewsView.render(model.state.news);
+//     // PurchaseView.render(model.state[USER_STOCK][1]);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 // const controllerPurchasePanel = async function (panelType) {
 //   try {
@@ -56,7 +47,7 @@ const controllerLoadPortfollio = async function () {
     PortfolioChartView.render(model.state[USER_STOCK][0]);
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
     // StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
-    NewsView.render(model.state.news);
+    if (model.state.stock.news) NewsView.render(model.state.stock);
 
     //load user stocks and watch list
     //load user portfolio
@@ -66,15 +57,15 @@ const controllerLoadPortfollio = async function () {
   }
 };
 
-const controllerSidePanels = async function () {
-  await model.loadStockList(USER_STOCK);
-  await model.loadStockList(WATCH_LIST);
-  await model.loadNews();
+// const controllerSidePanels = async function () {
+//   await model.loadStockList(USER_STOCK);
+//   await model.loadStockList(WATCH_LIST);
+//   await model.loadNews();
 
-  StockListView.render(model.state[USER_STOCK], USER_STOCK);
-  StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
-  NewsView.render(model.state.news);
-};
+//   StockListView.render(model.state[USER_STOCK], USER_STOCK);
+//   StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
+//   NewsView.render(model.state.news);
+// };
 
 const controllerChangePage = async function () {
   const val = window.location.hash.indexOf("/") + 1;
@@ -83,7 +74,8 @@ const controllerChangePage = async function () {
   if (!ticker) return;
 
   await model.loadStock(ticker);
-  await model.loadNews();
+  await model.loadStockSummary(ticker);
+  await model.loadNews(ticker);
 
   PortfolioChartView.clear();
   PurchaseView.clear();
@@ -91,7 +83,7 @@ const controllerChangePage = async function () {
   PortfolioChartView.render(model.state.stock);
   PurchaseView.render(model.state.stock);
   StockDetailsView.render(model.state.stock);
-  NewsView.render(model.state.news);
+  if (model.state.stock.news) NewsView.render(model.state.stock);
 };
 
 const controllerPurchaseType = function (type) {

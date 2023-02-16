@@ -15,5 +15,17 @@ export default class View {
     this._parentElement.innerHTML = "";
   }
 
-  update() {}
+  _generateColor(data) {
+    if (data > 0) return "positive";
+    else if (data < 0) return "negative";
+
+    return "NEUTRAL";
+  }
+
+  _generateSymbol(data) {
+    if (data > 0) return "+";
+    else if (data < 0) return "";
+
+    return "";
+  }
 }

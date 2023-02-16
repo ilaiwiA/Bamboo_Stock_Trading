@@ -13,13 +13,13 @@ class StockDetailsView extends View {
           <h1>About</h1>
           <div class="sub-panel">
             <p class="stock-description">
-            ${this._data.description}
+            ${this._data.summary.description}
             </p>
 
             <ul>
               <li>
-                <p><b>CEO</b></p>
-                <p>Lisa T.Su</p>
+                <p><b>Industry</b></p>
+                <p>${this._data.summary.industry}</p>
               </li>
               <li>
                 <p><b>Employees</b></p>
@@ -27,7 +27,7 @@ class StockDetailsView extends View {
               </li>
               <li>
                 <p><b>Headquarters</b></p>
-                <p>Santa Clara, California</p>
+                <p>${this._data.summary.address}</p>
               </li>
               <li>
                 <p><b>Founded</b></p>
@@ -48,7 +48,10 @@ class StockDetailsView extends View {
             <ul>
               <li>
                 <p><b>Market cap</b></p>
-                <p>FILLER</p>
+                <p>${Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  maximumFractionDigits: 2,
+                }).format(this._data.summary.marketCapitalization)}</p>
               </li>
               <li>
                 <p><b>Price-Earnings ratio</b></p>
@@ -76,7 +79,10 @@ class StockDetailsView extends View {
               </li>
               <li>
                 <p><b>Volume</b></p>
-                <p>${this._data.totalVolume}</p>
+                <p>${Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  maximumFractionDigits: 2,
+                }).format(this._data.totalVolume)}</p>
               </li>
               <li>
                 <p><b>52 Week high</b></p>

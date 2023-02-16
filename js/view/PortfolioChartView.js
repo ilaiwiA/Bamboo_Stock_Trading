@@ -49,20 +49,6 @@ class PortfolioChartView extends View {
         </div>
         `;
   }
-
-  _generateColor(data) {
-    if (data > 0) return "positive";
-    else if (data < 0) return "negative";
-
-    return "NEUTRAL";
-  }
-
-  _generateSymbol(data) {
-    if (data > 0) return "+";
-    else if (data < 0) return "-";
-
-    return "";
-  }
 }
 
 export default new PortfolioChartView();
