@@ -15,6 +15,15 @@ export default class View {
     this._parentElement.innerHTML = "";
   }
 
+  renderLoad() {
+    const html = `
+    <div class="loading">
+    </div>
+    `;
+
+    this._parentElement.insertAdjacentHTML("afterbegin", html);
+  }
+
   _generateColor(data) {
     if (data > 0) return "positive";
     else if (data < 0) return "negative";

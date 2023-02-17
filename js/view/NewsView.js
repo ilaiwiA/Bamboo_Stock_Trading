@@ -10,6 +10,7 @@ class NewsView extends View {
   }
 
   _generateNewsPanel(data) {
+    console.log(data.banner_image);
     return `
     <a class="news-panel" href = "${data.url}" target="_blank">
     <div class="news-panel-main">
@@ -33,7 +34,9 @@ class NewsView extends View {
             </div>
             <div class = "news-image">
             <img
-            src="${data.banner_image}"
+            src="${
+              data.banner_image ? data.banner_image : "images/stock_img.jpg"
+            }"
             alt=""
             />
             </div>

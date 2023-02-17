@@ -70,7 +70,7 @@ nav ul {
 .main-container {
   /* min-width: 1200px; */
   width: 1200px;
-  margin: 1em;
+  margin: 0 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -324,4 +324,20 @@ input::-webkit-inner-spin-button {
 
 .negative {
   color: var(--negative__red);
+}
+
+.loading {
+  min-width: 335px;
+  height: 500px;
+  animation: loadingGradient 2s infinite;
+}
+
+@keyframes loadingGradient {
+  50% {
+    background-color: #e6e6e6;
+  }
+
+  100% {
+    background-color: white;
+  }
 }
