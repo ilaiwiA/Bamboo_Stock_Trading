@@ -64,6 +64,7 @@ const controllerLoadPortfollio = async function () {
 };
 
 controllerLoadPortfollio();
+
 // const controllerSidePanels = async function () {
 //   await model.loadStockList(USER_STOCK);
 //   await model.loadStockList(WATCH_LIST);
@@ -92,6 +93,7 @@ const controllerChangePage = async function () {
   StockDetailsView.render(model.state.stock);
   if (model.state.stock.news) NewsView.render(model.state.stock);
 };
+controllerChangePage();
 
 const controllerPurchaseType = function (type) {
   model.updatePurchaseType(type);

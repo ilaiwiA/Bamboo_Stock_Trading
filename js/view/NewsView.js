@@ -5,14 +5,16 @@ class NewsView extends View {
 
   _generateHTML() {
     return `
+    <section>
+    <h1>News</h1>
     ${this._data.news.map((val) => this._generateNewsPanel(val)).join("")}
+    </section>
     `;
   }
 
   _generateNewsPanel(data) {
-    console.log(data.banner_image);
     return `
-    <a class="news-panel" href = "${data.url}" target="_blank">
+    <a class="news-panel sub-panel" href = "${data.url}" target="_blank">
     <div class="news-panel-main">
     <p class="news-publisher">
     ${data.source}
@@ -25,24 +27,29 @@ class NewsView extends View {
     </h1>
     
     <p class="news-teaser">${data.summary}</p>
-            
-      <div class="news-tickers">
-        <span class="news-ticker">${this._data.symbol}</span>
-        <span class="${this._generateColor(+this._data.netChange)}">${+this
-      ._data.netChange}%</span>
+
+    ${
+      !this._data.symbol
+        ? `
+    <div class="news-tickers">
+      <span class="news-ticker">${data.symbol}</span>
+      <span class="${this._generateColor(+this._data.netChange)}">${+this._data
+            .netChange}%</span>
+    </div>
+    `
+        : ""
+    }
+
       </div>
-            </div>
-            <div class = "news-image">
+        <div class = "news-image">
             <img
             src="${
               data.banner_image ? data.banner_image : "images/stock_img.jpg"
             }"
             alt=""
             />
-            </div>
-            </a>
-            
-            <hr />
+      </div>
+  </a>  
   `;
   }
 
@@ -56,21 +63,18 @@ class NewsView extends View {
     ) {
       if (today.getHours() === date.getHours()) {
         const minutes = today.getMinutes() - date.getMinutes();
-        return `${minutes} min ago`;
+        return `${minutes}min`;
       }
 
       const hours = today.getHours() - date.getHours();
-      return hours > 1 ? `${hours} hours ago` : `${hours} hour ago`;
+      return `${hours}h`;
     }
 
     const dayDiff = Math.abs(
       this._convertToDays(today) - this._convertToDays(date)
     );
-    // today.getDate() - date.getDate();
 
-    if (dayDiff === 1) return `${dayDiff} day ago`;
-
-    if (dayDiff < 31) return `${dayDiff} days ago`;
+    if (dayDiff < 31) return `${dayDiff}d`;
 
     return `${
       Math.trunc(dayDiff / 31) === 1

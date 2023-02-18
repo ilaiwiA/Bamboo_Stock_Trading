@@ -1,10 +1,11 @@
-import { URL } from "../config.js";
+import { NEWS_LIMIT, URL } from "../config.js";
 import { getJSON } from "../helper.js";
 
 export const state = {
   stock: {},
 };
 
+//Generate Data
 const generateStockList = function (data, panelType) {
   try {
     const list = [];
@@ -46,23 +47,42 @@ const generateStockSummary = function (data) {
   }
 };
 
-const generateNewsObject = function (data) {
+const generateNewsObject = function (data, ticker) {
   try {
     if (!data.feed) return;
 
-    const news = [];
+    // const news = [];
 
-    data.feed.forEach((a, i) => {
-      if (i >= 5) return;
-      news.push(a);
-    });
+    // console.log(data, ticker);
 
-    return news;
+    const filtered = data.feed.filter((a) => a.symbol === ticker);
+
+    // if (filtered.length > 1) {
+    //   generateNewsLimit(filtered);
+    // } else {
+    //   generateNewsLimit(data.feed);
+    // }
+
+    return filtered.length > 1
+      ? generateNewsLimit(filtered)
+      : generateNewsLimit(data.feed);
   } catch (error) {
     console.error(error);
   }
 };
 
+const generateNewsLimit = function (data) {
+  const news = [];
+
+  data.forEach((a, i) => {
+    if (i >= NEWS_LIMIT) return;
+    news.push(a);
+  });
+
+  return news;
+};
+
+// Load Data
 export const loadStockList = async function (panelType) {
   try {
     const stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME";
@@ -99,9 +119,12 @@ export const loadNews = async function (ticker) {
   try {
     let data;
     if (ticker) data = await getJSON(`${URL}${ticker}/news`);
-    else data = await getJSON(`${URL}news`);
 
-    state.stock.news = generateNewsObject(data);
+    if (!ticker || data.feed === null) {
+      data = await getJSON(`${URL}news`);
+    }
+
+    state.stock.news = generateNewsObject(data, ticker);
   } catch (error) {
     console.error(error);
   }
