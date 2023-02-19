@@ -50,6 +50,7 @@ const controllerLoadPortfollio = async function () {
 
     PortfolioChartView.clear();
     StockListView.clear();
+
     PortfolioChartView.render(model.state[USER_STOCK][0]);
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
     // StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
@@ -63,7 +64,7 @@ const controllerLoadPortfollio = async function () {
   }
 };
 
-controllerLoadPortfollio();
+// controllerLoadPortfollio();
 
 // const controllerSidePanels = async function () {
 //   await model.loadStockList(USER_STOCK);
@@ -81,19 +82,25 @@ const controllerChangePage = async function () {
 
   if (!ticker) return;
 
+  PortfolioChartView.renderLoad();
+  PurchaseView.renderLoad();
+  NewsView.renderLoad();
+
+  window.scrollTo(0, 0);
+
   await model.loadStock(ticker);
   await model.loadStockSummary(ticker);
   await model.loadNews(ticker);
 
   PortfolioChartView.clear();
-  PurchaseView.clear();
+  StockListView.clear();
 
   PortfolioChartView.render(model.state.stock);
   PurchaseView.render(model.state.stock);
   StockDetailsView.render(model.state.stock);
   if (model.state.stock.news) NewsView.render(model.state.stock);
 };
-controllerChangePage();
+// controllerChangePage();
 
 const controllerPurchaseType = function (type) {
   model.updatePurchaseType(type);
@@ -102,10 +109,11 @@ const controllerPurchaseType = function (type) {
 };
 
 const init = function () {
-  // StockListView.addHandlerChangePage(controllerChangePage);
-  // StockListView.addHandlerRender(controllerLoadPortfollio);
-  // PortfolioChartView.addHandlerPortfolio(controllerChangePage);
-  // PurchaseView.addHandlerInput(controllerPurchaseType);
+  StockListView.addHandlerChangePage(controllerChangePage);
+  StockListView.addHandlerRender(controllerLoadPortfollio);
+  PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+  PurchaseView.addHandlerInput(controllerPurchaseType);
+  NewsView.addHandlerTicker(controllerChangePage);
 };
 
 init();

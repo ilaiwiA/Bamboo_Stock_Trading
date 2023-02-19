@@ -303,9 +303,18 @@ input::-webkit-inner-spin-button {
   color: var(--light__gray__body);
 }
 
+.news-tickers {
+  width: fit-content;
+}
+
 .news-ticker {
   align-self: flex-end;
   font-weight: 800;
+  transition: color 0.1s ease-in;
+}
+
+.news-tickers:hover {
+  color: orangered;
 }
 
 .news-image {

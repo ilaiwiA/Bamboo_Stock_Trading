@@ -51,17 +51,7 @@ const generateNewsObject = function (data, ticker) {
   try {
     if (!data.feed) return;
 
-    // const news = [];
-
-    // console.log(data, ticker);
-
     const filtered = data.feed.filter((a) => a.symbol === ticker);
-
-    // if (filtered.length > 1) {
-    //   generateNewsLimit(filtered);
-    // } else {
-    //   generateNewsLimit(data.feed);
-    // }
 
     return filtered.length > 1
       ? generateNewsLimit(filtered)
@@ -124,7 +114,23 @@ export const loadNews = async function (ticker) {
       data = await getJSON(`${URL}news`);
     }
 
-    state.stock.news = generateNewsObject(data, ticker);
+    if (!data) return;
+
+    const news = generateNewsObject(data, ticker);
+
+    const stocks = news.map((a) => a.symbol).toString();
+
+    const stockData = Object.values(
+      await getJSON(URL + "stocks/" + stocks)
+    ).map((a) => {
+      return a.symbol ? a.netChange : "";
+    });
+
+    news.forEach((a, i) => {
+      if (stockData[i] || stockData[i] === 0) a.netChange = stockData[i];
+    });
+
+    state.stock.news = news;
   } catch (error) {
     console.error(error);
   }

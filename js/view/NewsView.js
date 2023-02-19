@@ -3,6 +3,17 @@ import View from "./View.js";
 class NewsView extends View {
   _parentElement = document.querySelector(".main-container");
 
+  addHandlerTicker(handler) {
+    this._parentElement.addEventListener("click", function (e) {
+      e.preventDefault();
+      const id = e.target
+        .closest(".news-tickers")
+        .querySelector(".news-ticker").innerHTML;
+
+      window.location.hash = `stocks/${id}`;
+    });
+  }
+
   _generateHTML() {
     return `
     <section>
@@ -29,12 +40,13 @@ class NewsView extends View {
     <p class="news-teaser">${data.summary}</p>
 
     ${
-      !this._data.symbol
+      !this._data.symbol && data.symbol.length > 0
         ? `
     <div class="news-tickers">
       <span class="news-ticker">${data.symbol}</span>
-      <span class="${this._generateColor(+this._data.netChange)}">${+this._data
-            .netChange}%</span>
+      <span class="${this._generateColor(+data.netChange)}">${
+            +data.netChange ? +data.netChange + "%" : ""
+          }</span>
     </div>
     `
         : ""
@@ -43,9 +55,7 @@ class NewsView extends View {
       </div>
         <div class = "news-image">
             <img
-            src="${
-              data.banner_image ? data.banner_image : "images/stock_img.jpg"
-            }"
+            src="${data.banner_image || "images/stock_img.jpg"}"
             alt=""
             />
       </div>
