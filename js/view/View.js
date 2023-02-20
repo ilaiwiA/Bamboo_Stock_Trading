@@ -16,6 +16,9 @@ export default class View {
   }
 
   renderLoad() {
+    console.log(this._parentElement);
+    if (!this._parentElement.querySelector(".loading")) this.clear();
+
     const html = `
     <div class="loading">
     </div>

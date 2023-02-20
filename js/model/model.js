@@ -118,16 +118,28 @@ export const loadNews = async function (ticker) {
 
     const news = generateNewsObject(data, ticker);
 
-    const stocks = news.map((a) => a.symbol).toString();
+    const stocks = news
+      .map((a) => {
+        if (a.symbol.startsWith("FOREX") || !a.symbol) return "";
+
+        return a.symbol;
+      })
+      .toString();
 
     const stockData = Object.values(
       await getJSON(URL + "stocks/" + stocks)
-    ).map((a) => {
-      return a.symbol ? a.netChange : "";
+    ).map((a, i, arr) => {
+      return a.symbol
+        ? {
+            symbol: a.symbol,
+            netChange: a.netChange,
+          }
+        : "";
     });
 
-    news.forEach((a, i) => {
-      if (stockData[i] || stockData[i] === 0) a.netChange = stockData[i];
+    news.forEach((a, i, arr) => {
+      const index = stockData.findIndex((price) => price.symbol === a.symbol);
+      if (index !== -1) a.netChange = stockData[index].netChange;
     });
 
     state.stock.news = news;
