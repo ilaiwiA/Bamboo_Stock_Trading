@@ -29,14 +29,14 @@ public class News {
     @JsonIgnore
     public ArrayList<Ticker> tickerList;
 
-    public String ticker;
+    public String symbol;
 
     @JsonSetter("ticker_sentiment")
     public void setTickers(ArrayList<Ticker> tickerList){
         this.tickerList = tickerList;
     }
 
-    @JsonGetter("ticker")
+    @JsonGetter("symbol")
     public String getTicker(){
         if(tickerList.size() > 0) return tickerList.get(0).ticker;
         return "";
