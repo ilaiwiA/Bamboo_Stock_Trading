@@ -8,6 +8,7 @@ import PurchaseView from "../view/PurchaseView.js";
 import NewsView from "../view/NewsView.js";
 import StockDetailsView from "../view/StockDetailsView.js";
 import PortfolioChartView from "../view/PortfolioChartView.js";
+import MissingView from "../view/MissingView.js";
 
 // const controllerStockList = async function (panelType) {
 //   try {
@@ -38,6 +39,7 @@ import PortfolioChartView from "../view/PortfolioChartView.js";
 const controllerLoadPortfollio = async function () {
   try {
     const id = window.location.hash;
+
     if (id) return;
 
     PortfolioChartView.renderLoad();
@@ -77,28 +79,36 @@ const controllerLoadPortfollio = async function () {
 // };
 
 const controllerChangePage = async function () {
-  const val = window.location.hash.indexOf("/") + 1;
-  const ticker = window.location.hash.slice(val);
+  try {
+    const val = window.location.hash.indexOf("/") + 1;
+    const ticker = window.location.hash.slice(val);
 
-  if (!ticker) return;
+    if (!ticker) return;
 
-  PortfolioChartView.renderLoad();
-  PurchaseView.renderLoad();
-  NewsView.renderLoad();
+    PortfolioChartView.renderLoad();
+    PurchaseView.renderLoad();
+    NewsView.renderLoad();
 
-  window.scrollTo(0, 0);
+    window.scrollTo(0, 0);
 
-  await model.loadStock(ticker);
-  await model.loadStockSummary(ticker);
-  await model.loadNews(ticker);
+    await model.loadStock(ticker);
+    await model.loadStockSummary(ticker);
+    await model.loadNews(ticker);
 
-  PortfolioChartView.clear();
-  StockListView.clear();
+    PortfolioChartView.clear();
+    StockListView.clear();
 
-  PortfolioChartView.render(model.state.stock);
-  PurchaseView.render(model.state.stock);
-  StockDetailsView.render(model.state.stock);
-  if (model.state.stock.news) NewsView.render(model.state.stock);
+    PortfolioChartView.render(model.state.stock);
+    PurchaseView.render(model.state.stock);
+    StockDetailsView.render(model.state.stock);
+    if (model.state.stock.news) NewsView.render(model.state.stock);
+  } catch (error) {
+    if (error.message === "Ticker not Found") {
+      MissingView.clear();
+      MissingView.render();
+    }
+    console.error(error);
+  }
 };
 // controllerChangePage();
 
@@ -108,12 +118,24 @@ const controllerPurchaseType = function (type) {
   PurchaseView.render(model.state.stock);
 };
 
+const controller404Button = function () {
+  try {
+    console.log("called");
+    MissingView.renderStart();
+    window.location.hash = "stocks/AMD";
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
   PurchaseView.addHandlerInput(controllerPurchaseType);
   NewsView.addHandlerTicker(controllerChangePage);
+
+  MissingView.addHandlerHomeButton(controller404Button);
 };
 
 init();

@@ -51,11 +51,13 @@ const generateNewsObject = function (data, ticker) {
   try {
     if (!data.feed) return;
 
-    const filtered = data.feed.filter((a) => a.symbol === ticker);
+    const filterSource = data.feed.filter((a) => a.source !== "Benzinga");
 
-    return filtered.length > 1
-      ? generateNewsLimit(filtered)
-      : generateNewsLimit(data.feed);
+    const filterSymbol = filterSource.filter((a) => a.symbol === ticker);
+
+    return filterSymbol.length > 1
+      ? generateNewsLimit(filterSymbol)
+      : generateNewsLimit(filterSource);
   } catch (error) {
     console.error(error);
   }
@@ -82,17 +84,19 @@ export const loadStockList = async function (panelType) {
     ];
     state[`${panelType}`] = generateStockList(data, panelType);
   } catch (error) {
-    console.error(`${"🚨🚨🚨"} + ${error}`);
+    throw error;
   }
 };
 
 export const loadStock = async function (ticker) {
   try {
     const data = Object.values(await getJSON(URL + "stock/" + ticker))[0];
+    if (!data) throw Error;
+
     state.stock = generateStock(data);
     state.stock.availableBal = 1023.52;
   } catch (error) {
-    console.error(error);
+    throw new Error("Ticker not Found");
   }
 };
 

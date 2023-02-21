@@ -48,10 +48,14 @@ class StockDetailsView extends View {
             <ul>
               <li>
                 <p><b>Market cap</b></p>
-                <p>${Intl.NumberFormat("en-US", {
-                  notation: "compact",
-                  maximumFractionDigits: 2,
-                }).format(this._data.summary.marketCapitalization)}</p>
+                <p>${
+                  Number.isFinite(this._data.summary.marketCapitalization)
+                    ? Intl.NumberFormat("en-US", {
+                        notation: "compact",
+                        maximumFractionDigits: 2,
+                      }).format(this._data.summary.marketCapitalization)
+                    : "-"
+                }</p>
               </li>
               <li>
                 <p><b>Price-Earnings ratio</b></p>
@@ -67,30 +71,34 @@ class StockDetailsView extends View {
               </li>
               <li>
                 <p><b>High today</b></p>
-                <p>${this._data.highPrice.toFixed(2)}</p>
+                <p>${this._data.highPrice.toFixed(2) || "-"}</p>
               </li>
               <li>
                 <p><b>Low today</b></p>
-                <p>${this._data.lowPrice.toFixed(2)}</p>
+                <p>${this._data.lowPrice.toFixed(2) || "-"}</p>
               </li>
               <li>
                 <p><b>Open price</b></p>
-                <p>${this._data.openPrice.toFixed(2)}</p>
+                <p>${this._data.openPrice.toFixed(2) || "-"}</p>
               </li>
               <li>
                 <p><b>Volume</b></p>
-                <p>${Intl.NumberFormat("en-US", {
-                  notation: "compact",
-                  maximumFractionDigits: 2,
-                }).format(this._data.totalVolume)}</p>
+                <p>${
+                  Number.isFinite(this._data.totalVolume)
+                    ? Intl.NumberFormat("en-US", {
+                        notation: "compact",
+                        maximumFractionDigits: 2,
+                      }).format(this._data.totalVolume)
+                    : "-"
+                }</p>
               </li>
               <li>
                 <p><b>52 Week high</b></p>
-                <p>${this._data[`52WkHigh`].toFixed(2)}</p>
+                <p>${this._data[`52WkHigh`].toFixed(2) || "-"}</p>
               </li>
               <li>
                 <p><b>52 Week low</b></p>
-                <p>${this._data[`52WkLow`].toFixed(2)}</p>
+                <p>${this._data[`52WkLow`].toFixed(2) || "-"}</p>
               </li>
             </ul>
           </div>

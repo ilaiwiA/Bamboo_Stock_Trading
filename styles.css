@@ -353,3 +353,43 @@ input::-webkit-inner-spin-button {
     background-color: white;
   }
 }
+
+/* 404 Page */
+.missing-page {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+
+  display: flex;
+  gap: 2em;
+  padding: 5em;
+  font-size: 32px;
+}
+
+.missing-text {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1em;
+}
+
+.missing-img img {
+  width: 500px;
+}
+
+.missing-page section {
+  display: flex;
+  flex-direction: column;
+  font-weight: 800;
+  gap: 0em;
+}
+
+.missing-page button {
+  width: 175px;
+  font-size: 24px;
+  padding: 1em;
+  border: none;
+  border-radius: 3em;
+  font-weight: 600;
+  background-color: #00c800;
+}
