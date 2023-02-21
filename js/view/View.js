@@ -27,8 +27,8 @@ export default class View {
   }
 
   _generateColor(data) {
-    if (data > 0) return "positive";
-    else if (data < 0) return "negative";
+    if (data > 0) return "positive_green";
+    else if (data < 0) return "negative_red";
 
     return "NEUTRAL";
   }

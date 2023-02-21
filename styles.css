@@ -6,8 +6,8 @@
 
 :root {
   /* main */
-  --positive__green: #00c800;
-  --negative__red: #fd5240;
+  --positive_green: #00c800;
+  --negative_red: #fd5240;
 
   /* body */
   --light__gray__body: #7b7b7b;
@@ -241,8 +241,8 @@ input::-webkit-inner-spin-button {
   font-weight: 800;
 }
 
-#btn-submit {
-  background-color: var(--positive__green);
+.btn-submit {
+  background-color: var(--positive_green);
   border: none;
   border-radius: 0.5em;
   color: white;
@@ -254,6 +254,11 @@ input::-webkit-inner-spin-button {
 .user-available {
   font-weight: 700;
   text-align: center;
+}
+
+.btn-watchlist {
+  padding: 1em;
+  width: inherit;
 }
 
 .hidden {
@@ -330,12 +335,12 @@ input::-webkit-inner-spin-button {
 }
 
 /* POSITIVE GREEN NEGATIVE RED */
-.positive {
-  color: var(--positive__green);
+.positive_green {
+  color: var(--positive_green);
 }
 
-.negative {
-  color: var(--negative__red);
+.negative_red {
+  color: var(--negative_red);
 }
 
 .loading {

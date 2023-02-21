@@ -46,6 +46,7 @@ class PurchaseView extends View {
   }
 
   _generateHTML() {
+    console.log(this._data);
     return `
     <div class="purchase-container side-container">
           <div class="purchase-panel panel">
@@ -94,7 +95,9 @@ class PurchaseView extends View {
                 </p>
               </section>
 
-              <input type="submit" id="btn-submit" value="Review" />
+              <input type="submit" class="btn-submit" value="Review" style="background-color: var(--${this._generateColor(
+                `${this._data.netChange}`
+              )}" />
             </form>
             <hr />
 
@@ -103,6 +106,7 @@ class PurchaseView extends View {
             }<span> available</span></p>
           </div>
         </div>
+
     `;
   }
 

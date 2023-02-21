@@ -128,14 +128,14 @@ const controller404Button = function () {
   }
 };
 
-const init = function () {
-  StockListView.addHandlerChangePage(controllerChangePage);
-  StockListView.addHandlerRender(controllerLoadPortfollio);
-  PortfolioChartView.addHandlerPortfolio(controllerChangePage);
-  PurchaseView.addHandlerInput(controllerPurchaseType);
-  NewsView.addHandlerTicker(controllerChangePage);
+// const init = function () {
+//   StockListView.addHandlerChangePage(controllerChangePage);
+//   StockListView.addHandlerRender(controllerLoadPortfollio);
+//   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+//   PurchaseView.addHandlerInput(controllerPurchaseType);
+//   NewsView.addHandlerTicker(controllerChangePage);
 
-  MissingView.addHandlerHomeButton(controller404Button);
-};
+//   MissingView.addHandlerHomeButton(controller404Button);
+// };
 
 init();
