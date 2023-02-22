@@ -122,6 +122,8 @@ export const loadNews = async function (ticker) {
 
     const news = generateNewsObject(data, ticker);
 
+    console.log(news);
+
     const stocks = news
       .map((a) => {
         if (a.symbol.startsWith("FOREX") || !a.symbol) return "";

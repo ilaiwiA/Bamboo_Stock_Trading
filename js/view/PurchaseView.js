@@ -45,8 +45,14 @@ class PurchaseView extends View {
     this._parentElement.querySelector(".");
   }
 
+  addHandlerWatchlist(handler) {
+    this._parentElement.addEventListener("click", function (e) {
+      if (e.target.id !== "btn_watchlist") console.log(e.target);
+      console.log(e.target.closest("#btn_watchlist"));
+    });
+  }
+
   _generateHTML() {
-    console.log(this._data);
     return `
     <div class="purchase-container side-container">
           <div class="purchase-panel panel">
@@ -95,7 +101,7 @@ class PurchaseView extends View {
                 </p>
               </section>
 
-              <input type="submit" class="btn-submit" value="Review" style="background-color: var(--${this._generateColor(
+              <input type="submit" class="btn-submit btn-alternative" value="Review" style="background-color: var(--${this._generateColor(
                 `${this._data.netChange}`
               )}" />
             </form>
@@ -105,22 +111,9 @@ class PurchaseView extends View {
               this._data.availableBal || "0.00"
             }<span> available</span></p>
           </div>
+          ${this._generateSubLabel()}
         </div>
-
     `;
-  }
-
-  _generateCost(quantityShares) {
-    return Number(this._data.lastPrice) * quantityShares;
-  }
-  _generateQuantity(quantityMoney) {
-    return quantityMoney / Number(this._data.lastPrice);
-  }
-
-  _generatePurchaseType(data) {
-    if (data) return data;
-
-    return "Shares";
   }
 
   _generatePurchaseLabel(data) {
@@ -135,6 +128,33 @@ class PurchaseView extends View {
       }>Dollars</option>
     </select>
     `;
+  }
+
+  _generateSubLabel() {
+    return `
+    <button class="btn-alternative ${this._generateColor(
+      this._data.netChange
+    )}_button btn-subPanel" id= 'btn_watchlist'>
+    <img
+      class="${this._generateColor(this._data.netChange)}_symbol"
+      src="images/plus-sign.svg"
+      alt=""
+    />
+    Add to Watchlist
+    </button>
+    `;
+  }
+
+  _generateCost(quantityShares) {
+    return Number(this._data.lastPrice) * quantityShares;
+  }
+  _generateQuantity(quantityMoney) {
+    return quantityMoney / Number(this._data.lastPrice);
+  }
+
+  _generatePurchaseType(data) {
+    if (data) return data;
+    return "Shares";
   }
 }
 

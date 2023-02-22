@@ -38,7 +38,7 @@ class StockListView extends View {
         <div class="side-container">
           <h1>${panelType === WATCH_LIST ? "Watchlist" : "My Stocks"}</h1>
           <div class="stocks-panel panel">
-          ${this._data.map(this._generateStocks).join("")}
+          ${this._data.map(this._generateStocks.bind(this)).join("")}
           </div>
         </div>
         `;
@@ -62,9 +62,9 @@ class StockListView extends View {
     
         <div class="ticker-price ticker">
         <p>${data.lastPrice}<p>
-        <p class= "ticker-sub ${
-          data.netPercentChangeInDouble >= 0 ? "positive" : "negative"
-        }">${Number(data.netPercentChangeInDouble).toFixed(2)}%<p>
+        <p class= "ticker-sub ${this._generateColor(data.netChange)}">${Number(
+      data.netChange
+    ).toFixed(2)}%<p>
         </div>    
     </a>
     `;

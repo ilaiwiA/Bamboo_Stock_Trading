@@ -191,6 +191,7 @@ aside {
 .purchase-panel {
   padding: 1em;
   gap: 1em;
+  margin-bottom: 1em;
 }
 
 .purchase-panel hr {
@@ -244,7 +245,7 @@ input::-webkit-inner-spin-button {
 .btn-submit {
   background-color: var(--positive_green);
   border: none;
-  border-radius: 0.5em;
+  border-radius: 2em;
   color: white;
   font-weight: 600;
   margin-top: 1em;
@@ -256,9 +257,34 @@ input::-webkit-inner-spin-button {
   text-align: center;
 }
 
-.btn-watchlist {
-  padding: 1em;
+.btn-alternative {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 0.5em;
+
+  border-radius: 2em;
+
+  background-color: white;
+
+  font-weight: 500;
   width: inherit;
+}
+
+.btn-subPanel {
+  padding: 1em;
+  align-self: center;
+  width: 225px;
+}
+
+.btn-subPanel:hover {
+  background-color: #fd53401d;
+  background-color: #00c8001d;
+}
+
+.btn-subPanel img {
+  width: 16px;
 }
 
 .hidden {
@@ -334,15 +360,6 @@ input::-webkit-inner-spin-button {
   width: 100%;
 }
 
-/* POSITIVE GREEN NEGATIVE RED */
-.positive_green {
-  color: var(--positive_green);
-}
-
-.negative_red {
-  color: var(--negative_red);
-}
-
 .loading {
   min-width: 335px;
   height: 500px;
@@ -397,4 +414,33 @@ input::-webkit-inner-spin-button {
   border-radius: 3em;
   font-weight: 600;
   background-color: #00c800;
+}
+
+/* POSITIVE GREEN NEGATIVE RED */
+.positive_green {
+  color: var(--positive_green);
+}
+
+.negative_red {
+  color: var(--negative_red);
+}
+
+.positive_green_symbol {
+  filter: invert(43%) sepia(48%) saturate(2137%) hue-rotate(88deg)
+    brightness(106%) contrast(112%);
+}
+
+.negative_red_symbol {
+  filter: invert(42%) sepia(14%) saturate(3604%) hue-rotate(323deg)
+    brightness(105%) contrast(109%);
+}
+
+.positive_green_button {
+  border: 1px solid var(--positive_green);
+  color: var(--positive_green);
+}
+
+.negative_red_button {
+  border: 1px solid var(--negative_red);
+  color: var(--negative_red);
 }
