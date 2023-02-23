@@ -1,4 +1,4 @@
-import { NEWS_LIMIT, URL } from "../config.js";
+import { NEWS_LIMIT, URL, WATCH_LIST } from "../config.js";
 import { getJSON } from "../helper.js";
 
 export const state = {
@@ -6,7 +6,7 @@ export const state = {
 };
 
 //Generate Data
-const generateStockList = function (data, panelType) {
+const generateStockList = function (data) {
   try {
     const list = [];
     data.forEach((val) => {
@@ -82,7 +82,7 @@ export const loadStockList = async function (panelType) {
     const data = [
       ...Object.entries(await getJSON(URL + "stocks/" + stockList)),
     ];
-    state[`${panelType}`] = generateStockList(data, panelType);
+    state[`${panelType}`] = generateStockList(data);
   } catch (error) {
     throw error;
   }
@@ -122,8 +122,6 @@ export const loadNews = async function (ticker) {
 
     const news = generateNewsObject(data, ticker);
 
-    console.log(news);
-
     const stocks = news
       .map((a) => {
         if (a.symbol.startsWith("FOREX") || !a.symbol) return "";
@@ -157,6 +155,13 @@ export const loadNews = async function (ticker) {
 export const updatePurchaseType = function (type) {
   try {
     state.stock.purchaseType = type;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateWatchlist = function (ticker) {
+  try {
   } catch (error) {
     console.error(error);
   }

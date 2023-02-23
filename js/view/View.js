@@ -39,4 +39,8 @@ export default class View {
 
     return "";
   }
+
+  _insideWatchlist() {
+    console.log(this._data);
+  }
 }

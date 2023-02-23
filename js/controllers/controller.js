@@ -128,13 +128,21 @@ const controller404Button = function () {
   }
 };
 
+const controllerWatchlist = function (ticker) {
+  try {
+    console.log(ticker);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
 
   PurchaseView.addHandlerInput(controllerPurchaseType);
-  PurchaseView.addHandlerWatchlist();
+  PurchaseView.addHandlerWatchlist(controllerWatchlist);
 
   NewsView.addHandlerTicker(controllerChangePage);
 

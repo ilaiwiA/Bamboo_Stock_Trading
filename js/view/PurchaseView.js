@@ -7,6 +7,32 @@ class PurchaseView extends View {
     super();
   }
 
+  addHandlerInput(handler) {
+    this._parentElement.addEventListener(
+      "input",
+      this.updatePurchasePanel.bind(handler)
+    );
+  }
+
+  addHandlerPurchaseCost(handler) {
+    this._parentElement.querySelector(".");
+  }
+
+  addHandlerWatchlist(handler) {
+    this._insideWatchlist();
+    this._parentElement.addEventListener("click", function (e) {
+      const btn_watchlist = e.target.closest("#btn_watchlist");
+
+      if (btn_watchlist) {
+        const id = this.querySelector(".purchase-container").id;
+        // console.log(
+        //   btn_watchlist.querySelector("img").src.includes("plus-sign")
+        // );
+
+        handler(id);
+      }
+    });
+  }
   updatePurchasePanel(e) {
     e.preventDefault();
     if (e.target.id === "order-type") return this(e.target.value);
@@ -34,27 +60,10 @@ class PurchaseView extends View {
     }
   }
 
-  addHandlerInput(handler) {
-    this._parentElement.addEventListener(
-      "input",
-      this.updatePurchasePanel.bind(handler)
-    );
-  }
-
-  addHandlerPurchaseCost(handler) {
-    this._parentElement.querySelector(".");
-  }
-
-  addHandlerWatchlist(handler) {
-    this._parentElement.addEventListener("click", function (e) {
-      if (e.target.id !== "btn_watchlist") console.log(e.target);
-      console.log(e.target.closest("#btn_watchlist"));
-    });
-  }
-
   _generateHTML() {
+    this._insideWatchlist();
     return `
-    <div class="purchase-container side-container">
+    <div class="purchase-container side-container" id = '${this._data.symbol}'>
           <div class="purchase-panel panel">
             <h2>Buy ${this._data.symbol}</h2>
             <hr />
@@ -137,7 +146,7 @@ class PurchaseView extends View {
     )}_button btn-subPanel" id= 'btn_watchlist'>
     <img
       class="${this._generateColor(this._data.netChange)}_symbol"
-      src="images/plus-sign.svg"
+      src="images/${this._data.bookmarked ? "checkmark" : "plus-sign"}.svg"
       alt=""
     />
     Add to Watchlist
