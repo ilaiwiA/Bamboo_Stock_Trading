@@ -162,6 +162,9 @@ export const updatePurchaseType = function (type) {
 
 export const updateWatchlist = function (ticker) {
   try {
+    if (state[`${WATCH_LIST}`]) state[`${panelType}`].push(ticker);
+
+    state[`${panelType}`] = generateStockList(ticker);
   } catch (error) {
     console.error(error);
   }
