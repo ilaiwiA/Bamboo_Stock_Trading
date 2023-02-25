@@ -11,6 +11,7 @@ import com.example.stock.models.Stocks.StockSummary;
 
 @RestController
 public class StockSummaryController {
+    
     //https://www.alphavantage.co/ api
     String API_KEY = "RNCVO8QHAI6LHJYT";
     String URL = "https://www.alphavantage.co/query?function=OVERVIEW";

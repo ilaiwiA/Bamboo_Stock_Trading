@@ -21,12 +21,6 @@ public class StockListController {
     String API_KEY = "GEARZVA8KB2B3YEO65VPE2FBLHJYDBAI";
     String URL = "https://api.tdameritrade.com/v1/marketdata/quotes?apikey=" + API_KEY + "&symbol=";
 
-    // @CrossOrigin
-    // @PostMapping("/api/stocks")
-    // public void setStocks (@RequestBody Map<String, Stock> stock){
-    //     test = stock;
-    // }
-
     @CrossOrigin
     @GetMapping(("/api/stocks/{stockList}"))
     public Map<String, Stock> getStocks (@PathVariable("stockList") String list){

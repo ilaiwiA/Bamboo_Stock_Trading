@@ -42,22 +42,7 @@ public class News {
         return "";
     }
 
-//     @JsonIgnore
-//     public ArrayList<entities> entity;
-    
-    //GET ENTITIES LIST (SYMBOL)
-    // @JsonGetter("ticker_sentiment")
-    // public String getEntities() {
-    //     System.out.println(tickerList.get(0).ticker);
-    //     return tickerList.get(0).ticker;
-    // }
 }
-//     // SET ENTITIES LIST (SYMBOL)
-//     @JsonSetter("ticker_sentiment")
-//     public void setEntities(ArrayList<entities> entities) {
-//         this.entity = entities;
-//     }
-// }
 
 class Ticker {
     @JsonProperty("ticker")
