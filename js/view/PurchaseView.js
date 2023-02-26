@@ -25,9 +25,6 @@ class PurchaseView extends View {
 
       if (btn_watchlist) {
         const id = this.querySelector(".purchase-container").id;
-        // console.log(
-        //   btn_watchlist.querySelector("img").src.includes("plus-sign")
-        // );
 
         handler(id);
       }

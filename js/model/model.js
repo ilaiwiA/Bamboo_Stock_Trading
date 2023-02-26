@@ -12,7 +12,6 @@ const generateStockList = function (data) {
     data.forEach((val) => {
       const rest = val[1];
       list.push({
-        // key: val[0],
         ...rest,
       });
     });

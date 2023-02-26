@@ -10,31 +10,6 @@ import StockDetailsView from "../view/StockDetailsView.js";
 import PortfolioChartView from "../view/PortfolioChartView.js";
 import MissingView from "../view/MissingView.js";
 
-// const controllerStockList = async function (panelType) {
-//   try {
-//     await model.loadStockList(panelType);
-//     await model.loadNews();
-
-//     StockListView.render(model.state[panelType], panelType);
-//     StockDetailsView.render(model.state[panelType][0]);
-//     NewsView.render(model.state.news);
-//     // PurchaseView.render(model.state[USER_STOCK][1]);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// const controllerPurchasePanel = async function (panelType) {
-//   try {
-//     await model.loadStockList(USER_STOCK);
-//     PurchaseView.render(model.state[USER_STOCK][4]);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
-
-// controllerPurchasePanel();
-
 // Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
   try {
@@ -66,18 +41,7 @@ const controllerLoadPortfollio = async function () {
   }
 };
 
-// controllerLoadPortfollio();
-
-// const controllerSidePanels = async function () {
-//   await model.loadStockList(USER_STOCK);
-//   await model.loadStockList(WATCH_LIST);
-//   await model.loadNews();
-
-//   StockListView.render(model.state[USER_STOCK], USER_STOCK);
-//   StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
-//   NewsView.render(model.state.news);
-// };
-
+// If hash changes or if page loads with hash not empty, load stock and render view
 const controllerChangePage = async function () {
   try {
     const val = window.location.hash.indexOf("/") + 1;
@@ -110,14 +74,15 @@ const controllerChangePage = async function () {
     console.error(error);
   }
 };
-// controllerChangePage();
 
+// Change purchase type based on form purchase change
 const controllerPurchaseType = function (type) {
   model.updatePurchaseType(type);
   PurchaseView.clear();
   PurchaseView.render(model.state.stock);
 };
 
+// Controller for 404 button so user can return to the home page
 const controller404Button = function () {
   try {
     console.log("called");
@@ -136,6 +101,7 @@ const controllerWatchlist = function (ticker) {
   }
 };
 
+//initialize event handlers
 const init = function () {
   StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
