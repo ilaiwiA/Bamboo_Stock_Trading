@@ -26,8 +26,11 @@ const generateStockList = function (data) {
   }
 };
 
-const generateStock = function (data) {
+const generateStock = async function (ticker) {
   try {
+    const data = Object.values(await getJSON(URL + "stock/" + ticker))[0];
+    if (!data) throw Error;
+
     return data;
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -89,10 +92,7 @@ export const loadStockList = async function (panelType) {
 
 export const loadStock = async function (ticker) {
   try {
-    const data = Object.values(await getJSON(URL + "stock/" + ticker))[0];
-    if (!data) throw Error;
-
-    state.stock = generateStock(data);
+    state.stock = await generateStock(ticker);
     state.stock.availableBal = 1023.52;
   } catch (error) {
     throw new Error("Ticker not Found");
@@ -151,6 +151,7 @@ export const loadNews = async function (ticker) {
   }
 };
 
+// Specific Functions
 export const updatePurchaseType = function (type) {
   try {
     state.stock.purchaseType = type;
@@ -161,9 +162,11 @@ export const updatePurchaseType = function (type) {
 
 export const updateWatchlist = function (ticker) {
   try {
-    if (state[`${WATCH_LIST}`]) state[`${panelType}`].push(ticker);
+    console.log("1", state[`${WATCH_LIST}`]);
+    if (state[`${WATCH_LIST}`]) state[`${WATCH_LIST}`].push(ticker);
 
-    state[`${panelType}`] = generateStockList(ticker);
+    state[`${WATCH_LIST}`] = ticker;
+    console.log("2", state[`${WATCH_LIST}`]);
   } catch (error) {
     console.error(error);
   }

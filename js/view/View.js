@@ -41,6 +41,6 @@ export default class View {
   }
 
   _insideWatchlist() {
-    console.log(this._data);
+    console.log("watchlist", this._data);
   }
 }

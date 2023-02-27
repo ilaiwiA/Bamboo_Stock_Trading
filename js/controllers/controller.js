@@ -96,6 +96,7 @@ const controller404Button = function () {
 const controllerWatchlist = function (ticker) {
   try {
     console.log(ticker);
+    model.updateWatchlist(ticker);
   } catch (error) {
     console.error(error);
   }
