@@ -19,7 +19,7 @@ const generateStockList = function (data) {
     list.forEach((a) => {
       a.lastPrice = Number(a.lastPrice).toFixed(2);
     });
-    list[2].quantity = 1;
+
     return list;
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -77,10 +77,11 @@ const generateNewsLimit = function (data) {
 };
 
 // Load Data
-export const loadStockList = async function (panelType) {
+export const loadStockList = async function (
+  panelType,
+  stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME"
+) {
   try {
-    const stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME";
-
     const data = [
       ...Object.entries(await getJSON(URL + "stocks/" + stockList)),
     ];
@@ -160,13 +161,11 @@ export const updatePurchaseType = function (type) {
   }
 };
 
-export const updateWatchlist = function (ticker) {
+export const updateWatchlist = async function (ticker) {
   try {
-    console.log("1", state[`${WATCH_LIST}`]);
-    if (state[`${WATCH_LIST}`]) state[`${WATCH_LIST}`].push(ticker);
+    if (state[`${WATCH_LIST}1`]) return state[`${WATCH_LIST}1`].push(ticker);
 
-    state[`${WATCH_LIST}`] = ticker;
-    console.log("2", state[`${WATCH_LIST}`]);
+    state[`${WATCH_LIST}1`] = [ticker];
   } catch (error) {
     console.error(error);
   }

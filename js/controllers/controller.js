@@ -21,8 +21,13 @@ const controllerLoadPortfollio = async function () {
     StockListView.renderLoad();
     NewsView.renderLoad();
 
+    if (model.state[`${WATCH_LIST}1`]) {
+      await model.loadStockList(WATCH_LIST, model.state[`${WATCH_LIST}1`]);
+    }
+
+    if (model.state.userStocks) await model.loadStockList(USER_STOCK);
+
     await model.loadStockList(USER_STOCK);
-    // await model.loadStockList(WATCH_LIST);
     await model.loadNews();
 
     PortfolioChartView.clear();
@@ -30,7 +35,7 @@ const controllerLoadPortfollio = async function () {
 
     PortfolioChartView.render(model.state[USER_STOCK][0]);
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
-    // StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
+    StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
     if (model.state.stock.news) NewsView.render(model.state.stock);
 
     //load user stocks and watch list
@@ -85,9 +90,7 @@ const controllerPurchaseType = function (type) {
 // Controller for 404 button so user can return to the home page
 const controller404Button = function () {
   try {
-    console.log("called");
     MissingView.renderStart();
-    window.location.hash = "stocks/AMD";
   } catch (error) {
     console.error(error);
   }
@@ -95,7 +98,6 @@ const controller404Button = function () {
 
 const controllerWatchlist = function (ticker) {
   try {
-    console.log(ticker);
     model.updateWatchlist(ticker);
   } catch (error) {
     console.error(error);
@@ -104,9 +106,10 @@ const controllerWatchlist = function (ticker) {
 
 //initialize event handlers
 const init = function () {
-  StockListView.addHandlerChangePage(controllerChangePage);
+  // StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+  PortfolioChartView.addHandlerPortfolio(controllerLoadPortfollio);
 
   PurchaseView.addHandlerInput(controllerPurchaseType);
   PurchaseView.addHandlerWatchlist(controllerWatchlist);

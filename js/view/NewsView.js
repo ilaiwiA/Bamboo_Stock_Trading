@@ -6,9 +6,12 @@ class NewsView extends View {
   addHandlerTicker(handler) {
     this._parentElement.addEventListener("click", function (e) {
       e.preventDefault();
+
+      if (!e.target.closest(".news-tickers")) return;
+
       const id = e.target
         .closest(".news-tickers")
-        .querySelector(".news-ticker").innerHTML;
+        ?.querySelector(".news-ticker").innerHTML;
 
       window.location.hash = `stocks/${id}`;
     });
@@ -45,7 +48,7 @@ class NewsView extends View {
     <div class="news-tickers">
       <span class="news-ticker">${data.symbol}</span>
       <span class="${this._generateColor(+data.netChange)}">${
-            +data.netChange ? +data.netChange + "%" : ""
+            +data.netChange ? Number(+data.netChange).toFixed(2) + "%" : ""
           }</span>
     </div>
     `

@@ -9,13 +9,14 @@ class StockListView extends View {
     super();
   }
 
-  addHandlerChangePage(handler) {
-    this._parentElement
-      .querySelector(".side-container")
-      ?.addEventListener("click", function (e) {
-        handler(e.target.closest(".stocks")?.id);
-      });
-  }
+  // addHandlerChangePage(handler) {
+  //   this._parentElement
+  //     .querySelector(".side-container")
+  //     ?.addEventListener("click", function (e) {
+  //       console.log("test");
+  //       handler(e.target.closest(".stocks")?.id);
+  //     });
+  // }
 
   addHandlerRender(handler) {
     ["load"].forEach((a) =>
@@ -26,11 +27,13 @@ class StockListView extends View {
   }
 
   render(data, panelType) {
+    if (!data) return;
+
     this._data = data;
 
     const html = this._generateHTML(panelType);
 
-    this._parentElement.insertAdjacentHTML("afterbegin", html);
+    this._parentElement.insertAdjacentHTML("beforeend", html);
   }
 
   _generateHTML = function (panelType) {

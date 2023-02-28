@@ -32,7 +32,7 @@ class MissingView extends View {
   renderStart() {
     const html = `
     <header>
-      <a href="/">
+      <a href="#">
         <img src="images/bamboo_logo.png" alt="main-logo-home" />
       </a>
       <form action="">
@@ -58,6 +58,7 @@ class MissingView extends View {
     </main>
     `;
     this.clear();
+    window.location.hash = "#";
     this._parentElement.insertAdjacentHTML("afterBegin", html);
   }
 }

@@ -40,7 +40,5 @@ export default class View {
     return "";
   }
 
-  _insideWatchlist() {
-    console.log("watchlist", this._data);
-  }
+  _insideWatchlist() {}
 }
