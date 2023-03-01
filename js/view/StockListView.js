@@ -9,15 +9,6 @@ class StockListView extends View {
     super();
   }
 
-  // addHandlerChangePage(handler) {
-  //   this._parentElement
-  //     .querySelector(".side-container")
-  //     ?.addEventListener("click", function (e) {
-  //       console.log("test");
-  //       handler(e.target.closest(".stocks")?.id);
-  //     });
-  // }
-
   addHandlerRender(handler) {
     ["load"].forEach((a) =>
       window.addEventListener(a, function () {
