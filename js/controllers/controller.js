@@ -28,7 +28,7 @@ const controllerLoadPortfollio = async function () {
     if (model.state.userStocks) await model.loadStockList(USER_STOCK);
 
     await model.loadStockList(USER_STOCK);
-    await model.loadNews();
+    // await model.loadNews();
 
     PortfolioChartView.clear();
     StockListView.clear();
@@ -62,7 +62,7 @@ const controllerChangePage = async function () {
 
     await model.loadStock(ticker);
     await model.loadStockSummary(ticker);
-    await model.loadNews(ticker);
+    // await model.loadNews(ticker);
 
     PortfolioChartView.clear();
     StockListView.clear();

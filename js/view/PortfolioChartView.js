@@ -12,6 +12,7 @@ class PortfolioChartView extends View {
   }
 
   _generateHTML() {
+    console.log(this._data);
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">

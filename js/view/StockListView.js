@@ -9,6 +9,15 @@ class StockListView extends View {
     super();
   }
 
+  // addHandlerChangePage(handler) {
+  //   this._parentElement
+  //     .querySelector(".side-container")
+  //     ?.addEventListener("click", function (e) {
+  //       console.log("test");
+  //       handler(e.target.closest(".stocks")?.id);
+  //     });
+  // }
+
   addHandlerRender(handler) {
     ["load"].forEach((a) =>
       window.addEventListener(a, function () {
@@ -56,9 +65,9 @@ class StockListView extends View {
     
         <div class="ticker-price ticker">
         <p>${data.lastPrice}<p>
-        <p class= "ticker-sub ${this._generateColor(data.netChange)}">${Number(
-      data.netChange
-    ).toFixed(2)}%<p>
+        <p class= "ticker-sub ${this._generateColor(
+          data.netPercentChangeInDouble
+        )}">${Number(data.netPercentChangeInDouble).toFixed(2)}%<p>
         </div>    
     </a>
     `;
