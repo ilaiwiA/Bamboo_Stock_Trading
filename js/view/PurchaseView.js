@@ -19,7 +19,6 @@ class PurchaseView extends View {
   }
 
   addHandlerWatchlist(handler) {
-    this._insideWatchlist();
     this._parentElement.addEventListener("click", function (e) {
       const btn_watchlist = e.target.closest("#btn_watchlist");
 
@@ -30,6 +29,7 @@ class PurchaseView extends View {
       }
     });
   }
+
   updatePurchasePanel(e) {
     e.preventDefault();
     if (e.target.id === "order-type") return this(e.target.value);
@@ -57,8 +57,15 @@ class PurchaseView extends View {
     }
   }
 
+  updateWatchlistIMG() {
+    const button = this._parentElement.querySelector("#btn_watchlist");
+    const img = button.querySelector("img");
+
+    if (img.src.includes("plus")) img.src = "images/checkmark.svg";
+    else img.src = "images/plus-sign.svg";
+  }
+
   _generateHTML() {
-    this._insideWatchlist();
     return `
     <div class="purchase-container side-container" id = '${this._data.symbol}'>
           <div class="purchase-panel panel">

@@ -39,6 +39,4 @@ export default class View {
 
     return "";
   }
-
-  _insideWatchlist() {}
 }

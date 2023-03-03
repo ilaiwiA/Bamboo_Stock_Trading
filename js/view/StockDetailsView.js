@@ -59,7 +59,7 @@ class StockDetailsView extends View {
               </li>
               <li>
                 <p><b>Price-Earnings ratio</b></p>
-                <p>${this._data.peRatio.toFixed(2)}</p>
+                <p>${this._data.peRatio || "-"}</p>
               </li>
               <li>
                 <p><b>Dividend yield</b></p>

@@ -82,6 +82,7 @@ export const loadStockList = async function (
   stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME"
 ) {
   try {
+    if (stockList.length === 0) return delete state[`${panelType}`];
     const data = [
       ...Object.entries(await getJSON(URL + "stocks/" + stockList)),
     ];
@@ -163,9 +164,18 @@ export const updatePurchaseType = function (type) {
 
 export const updateWatchlist = async function (ticker) {
   try {
-    if (state[`${WATCH_LIST}1`]) return state[`${WATCH_LIST}1`].push(ticker);
+    if (state[`${WATCH_LIST}1`]) {
+      if (state[`${WATCH_LIST}1`].includes(ticker)) {
+        return state[`${WATCH_LIST}1`].splice(
+          state[`${WATCH_LIST}1`].indexOf(ticker),
+          1
+        );
+      }
 
-    state[`${WATCH_LIST}1`] = [ticker];
+      return state[`${WATCH_LIST}1`].push(ticker);
+    }
+
+    return (state[`${WATCH_LIST}1`] = [ticker]);
   } catch (error) {
     console.error(error);
   }

@@ -21,9 +21,8 @@ const controllerLoadPortfollio = async function () {
     StockListView.renderLoad();
     NewsView.renderLoad();
 
-    if (model.state[`${WATCH_LIST}1`]) {
+    if (model.state[`${WATCH_LIST}1`])
       await model.loadStockList(WATCH_LIST, model.state[`${WATCH_LIST}1`]);
-    }
 
     if (model.state.userStocks) await model.loadStockList(USER_STOCK);
 
@@ -99,6 +98,7 @@ const controller404Button = function () {
 const controllerWatchlist = function (ticker) {
   try {
     model.updateWatchlist(ticker);
+    PurchaseView.updateWatchlistIMG();
   } catch (error) {
     console.error(error);
   }
