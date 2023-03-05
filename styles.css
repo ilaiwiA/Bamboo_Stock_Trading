@@ -51,13 +51,35 @@ form input {
   font-size: 1em;
 }
 
-header nav {
+form ul {
+  list-style: none;
+  position: absolute;
+  padding-top: 1em;
+  padding-left: 1em;
+  width: 30rem;
+  border: 1px solid black;
+  border-top: none;
+  background-color: beige;
+}
+
+form li {
 }
 
 nav ul {
   list-style: none;
   display: flex;
   gap: 2em;
+}
+
+form input:focus {
+  background-color: beige;
+  outline: none;
+  border-bottom: none;
+}
+
+form li:hover {
+  background-color: #e6e6e6;
+  cursor: pointer;
 }
 
 /* main container */

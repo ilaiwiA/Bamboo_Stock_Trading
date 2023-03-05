@@ -9,6 +9,7 @@ import NewsView from "../view/NewsView.js";
 import StockDetailsView from "../view/StockDetailsView.js";
 import PortfolioChartView from "../view/PortfolioChartView.js";
 import MissingView from "../view/MissingView.js";
+import AutoCompleteView from "../view/AutoCompleteView.js";
 
 // Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
