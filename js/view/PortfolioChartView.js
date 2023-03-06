@@ -2,6 +2,7 @@ import View from "./View.js";
 
 class PortfolioChartView extends View {
   _parentElement = document.querySelector(".main-container");
+  portfolioChart = document.querySelector(".portfolio-chart");
 
   constructor() {
     super();
@@ -10,6 +11,8 @@ class PortfolioChartView extends View {
   addHandlerPortfolio(handler) {
     ["hashchange", "load"].forEach((a) => window.addEventListener(a, handler));
   }
+
+  addHandlerPortfolioDate() {}
 
   _generateHTML() {
     return `
@@ -53,6 +56,17 @@ class PortfolioChartView extends View {
             : ""
         }
         `;
+  }
+
+  _generateChart() {
+    // new Chart(this._portfolioChart, {
+    //   type: "line",
+    //   data: [
+    //     {
+    //       data: [84.64, 85.64, 86.64, 87.64, 88.64, 89.64],
+    //     },
+    //   ],
+    // });
   }
 }
 
