@@ -31,13 +31,12 @@ class PortfolioChartView extends View {
         </div>
 
         <ul>
-          <li>1D</li>
-          <li>1W</li>
-          <li>1M</li>
-          <li>3M</li>
-          <li>3D</li>
-          <li>YTD</li>
-          <li>ALL</li>
+          <li id="day">1D</li>
+          <li id="week">1W</li>
+          <li id="month">1M</li>
+          <li id="3month">3M</li>
+          <li id="ytd">YTD</li>
+          <li id="all">ALL</li>
         </ul>
         </div>
         
