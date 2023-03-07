@@ -37,6 +37,21 @@ const generateStock = async function (ticker) {
   }
 };
 
+const generateStockQuotes = async function (ticker, periodType = day) {
+  try {
+    const data = Object.values(
+      await getJSON(URL + "stock/" + ticker + "/" + periodType)
+    )[0];
+
+    return {
+      dates: data.map((a) => a.datetime),
+      prices: data,
+    };
+  } catch (error) {
+    console.error(`${"🚨🚨🚨"} + ${error}`);
+  }
+};
+
 const generateStockSummary = function (data) {
   try {
     Object.keys(data).forEach((a, i) => {
@@ -95,6 +110,7 @@ export const loadStockList = async function (
 export const loadStock = async function (ticker) {
   try {
     state.stock = await generateStock(ticker);
+    state.stock.quotes = await generateStockQuotes(ticker, "month");
     state.stock.availableBal = 1023.52;
   } catch (error) {
     throw new Error("Ticker not Found");

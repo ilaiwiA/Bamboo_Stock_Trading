@@ -134,7 +134,7 @@ form li:hover {
   border-bottom: 2px solid white;
   padding: 1em 1em 0em 0em;
 }
-.portfolio-chart {
+#portfolio-chart {
   width: 100%;
   height: 400px;
 }

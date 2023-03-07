@@ -7,7 +7,9 @@ export const WATCH_LIST = "watchList";
 
 export const NEWS_LIMIT = 10;
 
-const tickerList = "/images/tickers.csv";
+// const tickerList = "/images/tickers.csv";
+
+import tickerList from "url:/images/tickers.csv"; //prevents chrome due to CORS
 
 export const tickers = fetch(tickerList)
   .then((a) => a.text())

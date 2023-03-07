@@ -4,11 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "chart.js": "^4.2.1"
+    "chart.js": "^4.2.1",
+    "chartjs-plugin-annotation": "^2.1.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3"
   }
 }

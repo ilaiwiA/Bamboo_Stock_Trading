@@ -1,8 +1,11 @@
+import { Chart } from "chart.js/auto";
+import annotationPlugin from "chartjs-plugin-annotation";
 import View from "./View.js";
+
+Chart.register(annotationPlugin);
 
 class PortfolioChartView extends View {
   _parentElement = document.querySelector(".main-container");
-  portfolioChart = document.querySelector(".portfolio-chart");
 
   constructor() {
     super();
@@ -15,6 +18,7 @@ class PortfolioChartView extends View {
   addHandlerPortfolioDate() {}
 
   _generateHTML() {
+    console.log(this._data);
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">
@@ -30,7 +34,7 @@ class PortfolioChartView extends View {
     })</span></span>
             <span>Today</span>
           </div>
-          <section class="portfolio-chart"></section>
+          <canvas id="portfolio-chart"></canvas>
         </div>
 
         <ul>
@@ -59,14 +63,69 @@ class PortfolioChartView extends View {
   }
 
   _generateChart() {
-    // new Chart(this._portfolioChart, {
-    //   type: "line",
-    //   data: [
-    //     {
-    //       data: [84.64, 85.64, 86.64, 87.64, 88.64, 89.64],
-    //     },
-    //   ],
-    // });
+    console.log(this._data.quotes.prices);
+    const mainChart = document.querySelector("#portfolio-chart");
+
+    const rgb =
+      this._generateColor(+this._data.netChange) === "positive_green"
+        ? "rgb(0,200,0)"
+        : "rgb(253,82,64)";
+
+    new Chart(mainChart, {
+      type: "line",
+      data: {
+        labels: this._data.quotes.dates.map((a) => {
+          return new Intl.DateTimeFormat("en-US").format(a);
+        }),
+        datasets: [
+          {
+            data: this._data.quotes.prices.map((a) => a.close),
+          },
+        ],
+      },
+      options: {
+        borderColor: rgb,
+
+        elements: {
+          point: {
+            borderWidth: 1,
+          },
+        },
+
+        plugins: {
+          annotation: {
+            annotations: {
+              line1: {
+                type: "line",
+                yMax: this._data.closePrice,
+                yMin: this._data.closePrice,
+                borderColor: "rgb(123, 123, 123)",
+                borderDash: [1, 5],
+              },
+            },
+          },
+          legend: {
+            display: false,
+          },
+        },
+
+        scales: {
+          y: {
+            display: false,
+            // beginAtZero: true,
+            grid: {
+              display: false,
+            },
+          },
+          x: {
+            display: false,
+            grid: {
+              display: false,
+            },
+          },
+        },
+      },
+    });
   }
 }
 
