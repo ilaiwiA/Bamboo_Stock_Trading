@@ -18,7 +18,6 @@ class PortfolioChartView extends View {
   addHandlerPortfolioDate() {}
 
   _generateHTML() {
-    console.log(this._data);
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">
@@ -62,9 +61,19 @@ class PortfolioChartView extends View {
         `;
   }
 
-  _generateChart() {
-    console.log(this._data.quotes.prices);
+  _generateChart(timeChart) {
     const mainChart = document.querySelector("#portfolio-chart");
+
+    const dailyLine =
+      timeChart === "day"
+        ? {
+            type: "line",
+            yMax: this._data.closePrice,
+            yMin: this._data.closePrice,
+            borderColor: "rgb(123, 123, 123)",
+            borderDash: [1, 5],
+          }
+        : "";
 
     const rgb =
       this._generateColor(+this._data.netChange) === "positive_green"
@@ -75,7 +84,12 @@ class PortfolioChartView extends View {
       type: "line",
       data: {
         labels: this._data.quotes.dates.map((a) => {
-          return new Intl.DateTimeFormat("en-US").format(a);
+          return new Intl.DateTimeFormat("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+          }).format(a);
         }),
         datasets: [
           {
@@ -95,13 +109,7 @@ class PortfolioChartView extends View {
         plugins: {
           annotation: {
             annotations: {
-              line1: {
-                type: "line",
-                yMax: this._data.closePrice,
-                yMin: this._data.closePrice,
-                borderColor: "rgb(123, 123, 123)",
-                borderDash: [1, 5],
-              },
+              line1: dailyLine,
             },
           },
           legend: {

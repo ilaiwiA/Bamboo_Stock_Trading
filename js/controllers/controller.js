@@ -34,7 +34,6 @@ const controllerLoadPortfollio = async function () {
     StockListView.clear();
 
     PortfolioChartView.render(model.state[USER_STOCK][0]);
-    PortfolioChartView._generateChart();
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
     StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
     if (model.state.stock.news) NewsView.render(model.state.stock);
@@ -69,7 +68,7 @@ const controllerChangePage = async function () {
     StockListView.clear();
 
     PortfolioChartView.render(model.state.stock);
-    PortfolioChartView._generateChart();
+    PortfolioChartView._generateChart("day");
     PurchaseView.render(model.state.stock);
     StockDetailsView.render(model.state.stock);
     if (model.state.stock.news) NewsView.render(model.state.stock);
