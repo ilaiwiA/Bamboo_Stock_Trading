@@ -6,6 +6,18 @@ Chart.register(annotationPlugin);
 
 class PortfolioChartView extends View {
   _parentElement = document.querySelector(".main-container");
+  _dailyPrice = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
+
+  _pastPrice = {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  };
 
   constructor() {
     super();
@@ -15,7 +27,12 @@ class PortfolioChartView extends View {
     ["hashchange", "load"].forEach((a) => window.addEventListener(a, handler));
   }
 
-  addHandlerPortfolioDate() {}
+  addHandlerPortfolioDate(handler) {
+    this._parentElement.addEventListener("click", function (e) {
+      if (e.target.closest(".portfolio-dates") && e.target.id !== "")
+        handler(e.target.id);
+    });
+  }
 
   _generateHTML() {
     return `
@@ -36,7 +53,7 @@ class PortfolioChartView extends View {
           <canvas id="portfolio-chart"></canvas>
         </div>
 
-        <ul>
+        <ul class="portfolio-dates">
           <li id="day">1D</li>
           <li id="week">1W</li>
           <li id="month">1M</li>
@@ -64,6 +81,10 @@ class PortfolioChartView extends View {
   _generateChart(timeChart) {
     const mainChart = document.querySelector("#portfolio-chart");
 
+    if (this.Chart) {
+      this.Chart.destroy();
+    }
+
     const dailyLine =
       timeChart === "day"
         ? {
@@ -80,16 +101,14 @@ class PortfolioChartView extends View {
         ? "rgb(0,200,0)"
         : "rgb(253,82,64)";
 
-    new Chart(mainChart, {
+    this.Chart = new Chart(mainChart, {
       type: "line",
       data: {
         labels: this._data.quotes.dates.map((a) => {
-          return new Intl.DateTimeFormat("en-US", {
-            month: "short",
-            day: "numeric",
-            hour: "numeric",
-            minute: "numeric",
-          }).format(a);
+          return new Intl.DateTimeFormat(
+            "en-US",
+            timeChart === "day" ? this._dailyPrice : this._pastPrice
+          ).format(a);
         }),
         datasets: [
           {

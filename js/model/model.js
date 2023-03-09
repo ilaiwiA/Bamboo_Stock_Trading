@@ -37,7 +37,7 @@ const generateStock = async function (ticker) {
   }
 };
 
-const generateStockQuotes = async function (ticker, periodType = day) {
+const generateStockQuotes = async function (ticker, periodType = "week") {
   try {
     const data = Object.values(
       await getJSON(URL + "stock/" + ticker + "/" + periodType)
@@ -110,8 +110,18 @@ export const loadStockList = async function (
 export const loadStock = async function (ticker) {
   try {
     state.stock = await generateStock(ticker);
-    state.stock.quotes = await generateStockQuotes(ticker, "month");
+    state.stock.quotes = await generateStockQuotes(ticker);
     state.stock.availableBal = 1023.52;
+  } catch (error) {
+    throw new Error("Ticker not Found");
+  }
+};
+
+export const updateStockQuotes = async function (date) {
+  try {
+    if (!state.stock) return;
+
+    state.stock.quotes = await generateStockQuotes(state.stock.symbol, date);
   } catch (error) {
     throw new Error("Ticker not Found");
   }

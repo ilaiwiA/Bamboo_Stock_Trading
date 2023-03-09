@@ -68,7 +68,7 @@ const controllerChangePage = async function () {
     StockListView.clear();
 
     PortfolioChartView.render(model.state.stock);
-    PortfolioChartView._generateChart("day");
+    PortfolioChartView._generateChart("week");
     PurchaseView.render(model.state.stock);
     StockDetailsView.render(model.state.stock);
     if (model.state.stock.news) NewsView.render(model.state.stock);
@@ -106,12 +106,19 @@ const controllerWatchlist = function (ticker) {
   }
 };
 
+const controllerPortfolioDate = function (date) {
+  model.updateStockQuotes(date);
+  PortfolioChartView.render(model.state.stock);
+  PortfolioChartView._generateChart(date);
+};
+
 //initialize event handlers
 const init = function () {
   // StockListView.addHandlerChangePage(controllerChangePage);
   StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
   PortfolioChartView.addHandlerPortfolio(controllerLoadPortfollio);
+  PortfolioChartView.addHandlerPortfolioDate(controllerPortfolioDate);
 
   PurchaseView.addHandlerInput(controllerPurchaseType);
   PurchaseView.addHandlerWatchlist(controllerWatchlist);
