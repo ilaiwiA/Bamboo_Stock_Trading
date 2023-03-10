@@ -1,10 +1,10 @@
-package com.example.stock.models.Stocks;
+package com.example.stock.models.Stocks.StockQuotes;
 
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class StockQuotes {
+public class HistoricStockQuotes {
     @JsonProperty("candles")
     ArrayList<Candles> candles;
 }
