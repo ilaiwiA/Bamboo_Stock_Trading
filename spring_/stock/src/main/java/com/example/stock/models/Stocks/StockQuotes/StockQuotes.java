@@ -1,13 +1,9 @@
 package com.example.stock.models.Stocks.StockQuotes;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,50 +13,94 @@ public class StockQuotes {
     @JsonProperty("candles")
     ArrayList<Candles> candles;
 
-    @JsonProperty("Time Series (1min)")
-    HashMap<String, Quotes> quotes;
+    //Alpha Vantage Api
+    // @JsonProperty("Time Series (1min)")
+    // HashMap<String, Quotes> quotes;
+
+    //StockData.org
+    // @JsonProperty("data")
+    // ArrayList<QuotesData> quotes;
+
 }
 
-class Quotes {
-    @JsonSetter("1. open")
-    String open;
+// class QuotesData {
+//     @JsonSetter("date")
+//     String date;
 
-    @JsonSetter("2. high")
-    String high;
+//     @JsonGetter("datetime")
+//     Long getDate() {
+//         return Instant.parse(date).toEpochMilli();
+//     }
 
-    @JsonSetter("3. low")
-    String low;
+//     @JsonSetter("data")
+//     Candles candles;
 
-    @JsonSetter("4. close")
-    String close;
+//     @JsonGetter("open")
+//     Double getOpen() {
+//         return candles.open;
+//     }
 
-    @JsonSetter("5. volume")
-    String volume;
+//     @JsonGetter("high")
+//     Double getHigh() {
+//         return candles.high;
+//     }
 
-    @JsonGetter("open")
-    public String getOpen() {
-        return open;
-    }
-    @JsonGetter("high")
-    public String getHigh() {
-        return high;
-    }
+//     @JsonGetter("low")
+//     Double getLow() {
+//         return candles.low;
+//     }
 
-    @JsonGetter("low")
-    public String getLow() {
-        return low;
-    }
+//     @JsonGetter("close")
+//     Double getClose() {
+//         return candles.close;
+//     }
 
-    @JsonGetter("close")
-    public String getClose() {
-        return close;
-    }
+//     @JsonGetter("volume")
+//     Double getVolume() {
+//         return candles.volume;
+//     }
+// }
 
-    @JsonGetter("volume")
-    public String getVolume() {
-        return volume;
-    }
-}
+// class Quotes {
+//     @JsonSetter("1. open")
+//     String open;
+
+//     @JsonSetter("2. high")
+//     String high;
+
+//     @JsonSetter("3. low")
+//     String low;
+
+//     @JsonSetter("4. close")
+//     String close;
+
+//     @JsonSetter("5. volume")
+//     String volume;
+
+//     @JsonGetter("open")
+//     public String getOpen() {
+//         return open;
+//     }
+//     @JsonGetter("high")
+//     public String getHigh() {
+//         return high;
+//     }
+
+//     @JsonGetter("low")
+//     public String getLow() {
+//         return low;
+//     }
+
+//     @JsonGetter("close")
+//     public String getClose() {
+//         return close;
+//     }
+
+//     @JsonGetter("volume")
+//     public String getVolume() {
+//         return volume;
+//     }
+// }
 
 class Candles {
     @JsonProperty("open")
