@@ -7,8 +7,6 @@ Chart.register(annotationPlugin);
 class PortfolioChartView extends View {
   _parentElement = document.querySelector(".main-container");
   _dailyPrice = {
-    month: "short",
-    day: "numeric",
     hour: "numeric",
     minute: "numeric",
   };
@@ -78,15 +76,28 @@ class PortfolioChartView extends View {
         `;
   }
 
-  _generateChart(timeChart) {
+  updateChart() {
+    this.myChart.data.labels = this._data.quotes.dates.map((a) => {
+      return new Intl.DateTimeFormat(
+        "en-US",
+        this._data.quotes.timePeriod === "day"
+          ? this._dailyPrice
+          : this._pastPrice
+      ).format(a);
+    });
+
+    this.myChart.data.datasets[0].data = this._data.quotes.prices.map(
+      (a) => a.close
+    );
+
+    this.myChart.update();
+  }
+
+  _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
 
-    if (this.Chart) {
-      this.Chart.destroy();
-    }
-
     const dailyLine =
-      timeChart === "day"
+      this._data.quotes.timePeriod === "day"
         ? {
             type: "line",
             yMax: this._data.closePrice,
@@ -101,13 +112,15 @@ class PortfolioChartView extends View {
         ? "rgb(0,200,0)"
         : "rgb(253,82,64)";
 
-    this.Chart = new Chart(mainChart, {
+    this.myChart = new Chart(mainChart, {
       type: "line",
       data: {
         labels: this._data.quotes.dates.map((a) => {
           return new Intl.DateTimeFormat(
             "en-US",
-            timeChart === "day" ? this._dailyPrice : this._pastPrice
+            this._data.quotes.timePeriod === "day"
+              ? this._dailyPrice
+              : this._pastPrice
           ).format(a);
         }),
         datasets: [

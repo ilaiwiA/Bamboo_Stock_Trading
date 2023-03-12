@@ -106,10 +106,11 @@ const controllerWatchlist = function (ticker) {
   }
 };
 
-const controllerPortfolioDate = function (date) {
-  model.updateStockQuotes(date);
-  PortfolioChartView.render(model.state.stock);
-  PortfolioChartView._generateChart(date);
+const controllerPortfolioDate = async function (date) {
+  await model.updateStockQuotes(date);
+  PortfolioChartView.updateChart();
+  // PortfolioChartView.render(model.state.stock);
+  // PortfolioChartView._generateChart(date);
 };
 
 //initialize event handlers

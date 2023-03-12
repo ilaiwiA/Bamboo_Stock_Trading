@@ -39,13 +39,24 @@ const generateStock = async function (ticker) {
 
 const generateStockQuotes = async function (ticker, periodType = "week") {
   try {
+    console.log(periodType);
     const data = Object.values(
-      await getJSON(URL + "stock/" + ticker + "/" + periodType)
+      await getJSON(
+        URL +
+          "stock/" +
+          ticker +
+          "/quotes/" +
+          `${periodType === "day" ? "" : periodType}`
+      )
     )[0];
+    console.log(data);
 
     return {
-      dates: data.map((a) => a.datetime),
+      dates: data
+        .sort((a, b) => a.datetime - b.datetime)
+        .map((a) => a.datetime),
       prices: data,
+      timePeriod: periodType,
     };
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
@@ -122,6 +133,7 @@ export const updateStockQuotes = async function (date) {
     if (!state.stock) return;
 
     state.stock.quotes = await generateStockQuotes(state.stock.symbol, date);
+    state.stock.quotes.timePeriod = date;
   } catch (error) {
     throw new Error("Ticker not Found");
   }
