@@ -13,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class IntradayStockQuotes {
     @JsonProperty("open")
-    public
     Double open;
 
     @JsonProperty("high")

@@ -1,5 +1,7 @@
 package com.example.stock.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,21 +23,21 @@ public class StockQuotesController {
     @GetMapping("/{ticker}/quotes/{periodType}")
     public StockQuotes getStockQuotes(@PathVariable("ticker") String ticker, @PathVariable("periodType") String periodType) {
         RestTemplate restTemplate = new RestTemplate();
-        System.out.println("StockQuotesController");
         
         ResponseEntity<StockQuotes> response = restTemplate.getForEntity(getURL(ticker, periodType), StockQuotes.class);
         return response.getBody();
     }
 
+    @CrossOrigin
     @GetMapping(value ={"/{ticker}/quotes", "/{ticker}/quotes/"})
-    public IntradayStockQuotes[] getIntradayStockQuotes(@PathVariable("ticker") String ticker) {
+    public ArrayList<IntradayStockQuotes[]> getIntradayStockQuotes(@PathVariable("ticker") String ticker) {
         RestTemplate restTemplate = new RestTemplate();
-        System.out.println("IntradayController");
-
                 
         ResponseEntity<IntradayStockQuotes []> response = restTemplate.getForEntity(getURL(ticker, "day"), IntradayStockQuotes[].class);
         IntradayStockQuotes [] arr = response.getBody();
-        return arr;
+        ArrayList<IntradayStockQuotes[]> stockList = new ArrayList<IntradayStockQuotes[]>();
+        stockList.add(arr);
+        return stockList;
     }
 
 
@@ -44,8 +46,7 @@ public class StockQuotesController {
         String frequencyType = "daily";
         String frequency = "1";
         if(periodType.equals("day")) {
-
-            return "https://api.tiingo.com/iex/"+ ticker + "/prices?resampleFreq=1min&token=10a4700444c2337bec9894d387dae95a222774ee";
+            return "https://api.tiingo.com/iex/"+ ticker + "/prices?resampleFreq=1min&afterHours=true&token=10a4700444c2337bec9894d387dae95a222774ee";
     
             // LocalDate today = LocalDate.now(); // dependency for stockdata.org
             // return "https://api.stockdata.org/v1/data/intraday?symbols=" + ticker + "&api_token=PbNEPMgVRe2T01tEEhG68hy9RNtnd3Uu8PbaPaqA&date_from="+ today + "&date_to="+ today;
@@ -67,9 +68,11 @@ public class StockQuotesController {
         if(periodType.equals("all")) {
             periodType = "year";
             period = "5";
-            frequencyType = "monthly";
+            frequencyType = "weekly";
             frequency = "1";
         }
+
+        System.out.println(URL + ticker + "/pricehistory?apikey=" + API_KEY + "&periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false");
 
         return URL + ticker + "/pricehistory?apikey=" + API_KEY + "&periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false";
     }
