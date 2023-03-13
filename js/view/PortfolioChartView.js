@@ -134,6 +134,7 @@ class PortfolioChartView extends View {
 
         elements: {
           point: {
+            radius: 0,
             borderWidth: 1,
           },
         },
