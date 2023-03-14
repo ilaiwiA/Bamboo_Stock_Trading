@@ -118,7 +118,6 @@ export const loadStockList = async function (
 
 export const loadStock = async function (ticker) {
   try {
-    console.log(ticker);
     state.stock = await generateStock(ticker);
     state.stock.quotes = await generateStockQuotes(ticker);
     state.stock.availableBal = 1023.52;
@@ -152,7 +151,7 @@ export const loadNews = async function (ticker) {
   try {
     let data;
     if (ticker) data = await getJSON(`${URL}${ticker}/news`);
-
+    // !data.feed
     if (!ticker || data.feed === null) {
       data = await getJSON(`${URL}news`);
     }

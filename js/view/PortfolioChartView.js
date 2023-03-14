@@ -77,6 +77,17 @@ class PortfolioChartView extends View {
   }
 
   updateChart() {
+    const dailyLine =
+      this._data.quotes.timePeriod === "day"
+        ? {
+            type: "line",
+            yMax: this._data.closePrice,
+            yMin: this._data.closePrice,
+            borderColor: "rgb(123, 123, 123)",
+            borderDash: [1, 5],
+          }
+        : "";
+
     this.myChart.data.labels = this._data.quotes.dates.map((a) => {
       return new Intl.DateTimeFormat(
         "en-US",
@@ -89,6 +100,10 @@ class PortfolioChartView extends View {
     this.myChart.data.datasets[0].data = this._data.quotes.prices.map(
       (a) => a.close
     );
+
+    this.myChart.options.plugins.annotation.annotations.line1 = dailyLine;
+
+    this.myChart.options.borderColor = this._generateRGB(this._data.netChange);
 
     this.myChart.update();
   }
@@ -106,11 +121,6 @@ class PortfolioChartView extends View {
             borderDash: [1, 5],
           }
         : "";
-
-    const rgb =
-      this._generateColor(+this._data.netChange) === "positive_green"
-        ? "rgb(0,200,0)"
-        : "rgb(253,82,64)";
 
     this.myChart = new Chart(mainChart, {
       type: "line",
@@ -130,7 +140,11 @@ class PortfolioChartView extends View {
         ],
       },
       options: {
-        borderColor: rgb,
+        borderColor: this._generateRGB(this._data.netChange),
+
+        animation: {
+          animation: false,
+        },
 
         elements: {
           point: {
@@ -167,6 +181,12 @@ class PortfolioChartView extends View {
         },
       },
     });
+  }
+
+  _generateRGB(netChange) {
+    return this._generateColor(+netChange) === "positive_green"
+      ? "rgb(0,200,0)"
+      : "rgb(253,82,64)";
   }
 }
 
