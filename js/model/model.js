@@ -1,4 +1,10 @@
-import { NEWS_LIMIT, URL, WATCH_LIST } from "../config.js";
+import {
+  AFTERHOURS_MINUTES,
+  DAILY_MINUTES,
+  NEWS_LIMIT,
+  URL,
+  WATCH_LIST,
+} from "../config.js";
 import { getJSON } from "../helper.js";
 
 export const state = {
@@ -53,6 +59,9 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
       dates: data
         .sort((a, b) => a.datetime - b.datetime)
         .map((a) => a.datetime),
+      // .concat(
+      //   Array(+`${periodType === "day" ? `${AFTERHOURS_MINUTES}` : 0}`).fill()
+      // ),
       prices: data,
       timePeriod: periodType,
     };

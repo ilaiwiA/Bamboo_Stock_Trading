@@ -111,6 +111,8 @@ class PortfolioChartView extends View {
   _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
 
+    const rgb = this._generateRGB(this._data.netChange);
+
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -140,8 +142,14 @@ class PortfolioChartView extends View {
         ],
       },
       options: {
-        borderColor: this._generateRGB(this._data.netChange),
+        borderColor: rgb,
 
+        onHover: this._generateVerticalLine.bind(this),
+
+        hover: {
+          intersect: false,
+          axis: "x",
+        },
         animation: {
           animation: false,
         },
@@ -149,7 +157,8 @@ class PortfolioChartView extends View {
         elements: {
           point: {
             radius: 0,
-            borderWidth: 1,
+            hoverRadius: 6,
+            backgroundColor: rgb,
           },
         },
 
@@ -187,6 +196,36 @@ class PortfolioChartView extends View {
     return this._generateColor(+netChange) === "positive_green"
       ? "rgb(0,200,0)"
       : "rgb(253,82,64)";
+  }
+
+  _generateVerticalLine(e, active, chart) {
+    this.myChart.options.plugins.annotation.annotations.verticalLine = {
+      type: "line",
+      xMin: this.myChart.data.labels[active[0].index],
+      xMax: this.myChart.data.labels[active[0].index],
+      borderColor: this._generateRGB(this._data.netChange),
+      borderWidth: 2,
+    };
+    this.myChart.update();
+
+    // if (active.length === 0) return;
+
+    // if (this?.lastElement === active[0].index) return;
+    // console.log(this?.lastElement);
+
+    // this.lastElement = active[0].index;
+
+    // const ctx = chart.ctx;
+    // const point = active[0].element;
+
+    // ctx.save();
+    // ctx.beginPath();
+    // ctx.moveTo(point.x, chart.chartArea.top);
+    // ctx.lineTo(point.x, chart.chartArea.bottom);
+    // ctx.lineWidth = 1;
+    // ctx.strokeStyle = this._generateRGB(this._data.netChange.);
+    // ctx.stroke();
+    // ctx.restore();
   }
 }
 

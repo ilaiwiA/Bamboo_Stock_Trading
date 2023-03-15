@@ -7,6 +7,8 @@ export const WATCH_LIST = "watchList";
 
 export const NEWS_LIMIT = 10;
 
+export const AFTERHOURS_MINUTES = 240; // 3pm to 7pm
+
 // const tickerList = "/images/tickers.csv";
 
 import tickerList from "url:/images/tickers.csv"; //prevents chrome due to CORS
