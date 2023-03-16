@@ -207,25 +207,6 @@ class PortfolioChartView extends View {
       borderWidth: 2,
     };
     this.myChart.update();
-
-    // if (active.length === 0) return;
-
-    // if (this?.lastElement === active[0].index) return;
-    // console.log(this?.lastElement);
-
-    // this.lastElement = active[0].index;
-
-    // const ctx = chart.ctx;
-    // const point = active[0].element;
-
-    // ctx.save();
-    // ctx.beginPath();
-    // ctx.moveTo(point.x, chart.chartArea.top);
-    // ctx.lineTo(point.x, chart.chartArea.bottom);
-    // ctx.lineWidth = 1;
-    // ctx.strokeStyle = this._generateRGB(this._data.netChange.);
-    // ctx.stroke();
-    // ctx.restore();
   }
 }
 
