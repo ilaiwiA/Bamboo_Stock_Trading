@@ -15,6 +15,8 @@ class PortfolioChartView extends View {
     month: "short",
     day: "numeric",
     year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
   };
 
   constructor() {
@@ -108,6 +110,8 @@ class PortfolioChartView extends View {
     this.myChart.update();
   }
 
+  _updatePrice() {}
+
   _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
 
@@ -144,7 +148,23 @@ class PortfolioChartView extends View {
       options: {
         borderColor: rgb,
 
-        onHover: this._generateVerticalLine.bind(this),
+        onHover(_, active) {
+          console.log(_);
+          this.options.plugins.annotation.annotations.verticalLine = {
+            type: "line",
+            xMin: this.data.labels[active[0].index],
+            xMax: this.data.labels[active[0].index],
+            borderColor: "#b8b8b8",
+            borderWidth: 2,
+          };
+          this.update();
+        },
+
+        interaction: {
+          mode: "index",
+          intersect: false,
+          axis: "x",
+        },
 
         hover: {
           intersect: false,
@@ -196,17 +216,6 @@ class PortfolioChartView extends View {
     return this._generateColor(+netChange) === "positive_green"
       ? "rgb(0,200,0)"
       : "rgb(253,82,64)";
-  }
-
-  _generateVerticalLine(e, active, chart) {
-    this.myChart.options.plugins.annotation.annotations.verticalLine = {
-      type: "line",
-      xMin: this.myChart.data.labels[active[0].index],
-      xMax: this.myChart.data.labels[active[0].index],
-      borderColor: this._generateRGB(this._data.netChange),
-      borderWidth: 2,
-    };
-    this.myChart.update();
   }
 }
 
