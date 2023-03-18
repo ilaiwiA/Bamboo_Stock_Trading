@@ -79,6 +79,12 @@ class PortfolioChartView extends View {
   }
 
   updateChart() {
+    const dates = [
+      ...this._data.quotes.preDates,
+      ...this._data.quotes.intraDates,
+      ...this._data.quotes.postDates,
+    ];
+
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -90,7 +96,7 @@ class PortfolioChartView extends View {
           }
         : "";
 
-    this.myChart.data.labels = this._data.quotes.dates.map((a) => {
+    this.myChart.data.labels = dates.map((a) => {
       return new Intl.DateTimeFormat(
         "en-US",
         this._data.quotes.timePeriod === "day"
@@ -117,6 +123,14 @@ class PortfolioChartView extends View {
 
     const rgb = this._generateRGB(this._data.netChange);
 
+    console.log(this._data.quotes);
+
+    const dates = [
+      ...this._data.quotes.preDates,
+      ...this._data.quotes.intraDates,
+      ...this._data.quotes.postDates,
+    ];
+
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -131,7 +145,7 @@ class PortfolioChartView extends View {
     this.myChart = new Chart(mainChart, {
       type: "line",
       data: {
-        labels: this._data.quotes.dates.map((a) => {
+        labels: dates.map((a) => {
           return new Intl.DateTimeFormat(
             "en-US",
             this._data.quotes.timePeriod === "day"
@@ -149,7 +163,17 @@ class PortfolioChartView extends View {
         borderColor: rgb,
 
         onHover(_, active) {
-          console.log(_);
+          // this.data.datasets[0].segment = {
+          //   borderColor: (ctx) => {
+          //     if (
+          //       this.data.labels[ctx.p0DataIndex] ===
+          //       this.data.labels[active[0].index]
+          //     ) {
+          //       return "orange";
+          //     } else return undefined;
+          //   },
+          // };
+          console.log(this.data.labels);
           this.options.plugins.annotation.annotations.verticalLine = {
             type: "line",
             xMin: this.data.labels[active[0].index],
@@ -164,6 +188,7 @@ class PortfolioChartView extends View {
           mode: "index",
           intersect: false,
           axis: "x",
+          animation: false,
         },
 
         hover: {
@@ -202,7 +227,7 @@ class PortfolioChartView extends View {
             },
           },
           x: {
-            display: false,
+            display: true,
             grid: {
               display: false,
             },

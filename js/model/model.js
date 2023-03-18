@@ -54,14 +54,55 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
           `${periodType === "day" ? "" : periodType}`
       )
     )[0];
+    data.sort((a, b) => a.datetime - b.datetime);
 
     return {
-      dates: data
-        .sort((a, b) => a.datetime - b.datetime)
+      // dates: data
+      //   .sort((a, b) => a.datetime - b.datetime)
+      //   .map((a) => a.datetime),
+
+      preDates: data
+        .filter((a) => {
+          console.log(
+            new Date(a.datetime).getHours(),
+            new Date(a.datetime).getMinutes(),
+            Boolean(
+              (new Date(a.datetime).getHours() <= 8 &&
+                new Date(a.datetime).getMinutes() < 30) ||
+                new Date(a.datetime).getHours < 8
+            )
+          );
+          if (
+            (new Date(a.datetime).getHours() <= 8 &&
+              new Date(a.datetime).getMinutes() < 30) ||
+            new Date(a.datetime).getHours < 8
+          ) {
+            return a.datetime;
+          }
+        })
         .map((a) => a.datetime),
-      // .concat(
-      //   Array(+`${periodType === "day" ? `${AFTERHOURS_MINUTES}` : 0}`).fill()
-      // ),
+
+      intraDates: data
+        .filter((a) => {
+          if (
+            (new Date(a.datetime).getHours() >= 8 &&
+              new Date(a.datetime).getMinutes() > 30) ||
+            (new Date(a.datetime).getHours() >= 8 &&
+              new Date(a.datetime).getHours() <= 17)
+          ) {
+            return a.datetime;
+          }
+        })
+        .map((a) => a.datetime),
+
+      postDates: data
+        .filter((a) => {
+          if (new Date(a.datetime).getHours() >= 17) {
+            return a.datetime;
+          }
+        })
+        .map((a) => a.datetime),
+
       prices: data,
       timePeriod: periodType,
     };
