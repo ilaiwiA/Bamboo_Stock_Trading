@@ -57,25 +57,16 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
     data.sort((a, b) => a.datetime - b.datetime);
 
     return {
-      // dates: data
-      //   .sort((a, b) => a.datetime - b.datetime)
-      //   .map((a) => a.datetime),
+      dates: data
+        .sort((a, b) => a.datetime - b.datetime)
+        .map((a) => a.datetime),
 
       preDates: data
         .filter((a) => {
-          console.log(
-            new Date(a.datetime).getHours(),
-            new Date(a.datetime).getMinutes(),
-            Boolean(
-              (new Date(a.datetime).getHours() <= 8 &&
-                new Date(a.datetime).getMinutes() < 30) ||
-                new Date(a.datetime).getHours < 8
-            )
-          );
           if (
             (new Date(a.datetime).getHours() <= 8 &&
               new Date(a.datetime).getMinutes() < 30) ||
-            new Date(a.datetime).getHours < 8
+            new Date(a.datetime).getHours() < 8
           ) {
             return a.datetime;
           }

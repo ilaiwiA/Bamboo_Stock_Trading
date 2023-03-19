@@ -79,12 +79,6 @@ class PortfolioChartView extends View {
   }
 
   updateChart() {
-    const dates = [
-      ...this._data.quotes.preDates,
-      ...this._data.quotes.intraDates,
-      ...this._data.quotes.postDates,
-    ];
-
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -96,7 +90,7 @@ class PortfolioChartView extends View {
           }
         : "";
 
-    this.myChart.data.labels = dates.map((a) => {
+    this.myChart.data.labels = this._data.quotes.dates.map((a) => {
       return new Intl.DateTimeFormat(
         "en-US",
         this._data.quotes.timePeriod === "day"
@@ -123,14 +117,6 @@ class PortfolioChartView extends View {
 
     const rgb = this._generateRGB(this._data.netChange);
 
-    console.log(this._data.quotes);
-
-    const dates = [
-      ...this._data.quotes.preDates,
-      ...this._data.quotes.intraDates,
-      ...this._data.quotes.postDates,
-    ];
-
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -145,7 +131,7 @@ class PortfolioChartView extends View {
     this.myChart = new Chart(mainChart, {
       type: "line",
       data: {
-        labels: dates.map((a) => {
+        labels: this._data.quotes.dates.map((a) => {
           return new Intl.DateTimeFormat(
             "en-US",
             this._data.quotes.timePeriod === "day"
@@ -163,6 +149,7 @@ class PortfolioChartView extends View {
         borderColor: rgb,
 
         onHover(_, active) {
+          const currentLabel = this.data.labels[active[0].index];
           // this.data.datasets[0].segment = {
           //   borderColor: (ctx) => {
           //     if (
@@ -173,14 +160,14 @@ class PortfolioChartView extends View {
           //     } else return undefined;
           //   },
           // };
-          console.log(this.data.labels);
           this.options.plugins.annotation.annotations.verticalLine = {
             type: "line",
-            xMin: this.data.labels[active[0].index],
-            xMax: this.data.labels[active[0].index],
+            xMin: currentLabel,
+            xMax: currentLabel,
             borderColor: "#b8b8b8",
             borderWidth: 2,
           };
+
           this.update();
         },
 
@@ -216,6 +203,9 @@ class PortfolioChartView extends View {
           legend: {
             display: false,
           },
+          clearHover: {
+            test: "hey",
+          },
         },
 
         scales: {
@@ -227,13 +217,26 @@ class PortfolioChartView extends View {
             },
           },
           x: {
-            display: true,
+            display: false,
             grid: {
               display: false,
             },
           },
         },
       },
+      plugins: [
+        {
+          id: "clearHover",
+          afterEvent(chart, args, options) {
+            const event = args.event;
+            if (event.type === "mouseout") {
+              chart.options.plugins.annotation.annotations.verticalLine = null;
+              chart.data.datasets[0].segment = null;
+              chart.update();
+            }
+          },
+        },
+      ],
     });
   }
 
