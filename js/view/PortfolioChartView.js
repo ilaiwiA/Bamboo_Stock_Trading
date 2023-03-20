@@ -6,18 +6,6 @@ Chart.register(annotationPlugin);
 
 class PortfolioChartView extends View {
   _parentElement = document.querySelector(".main-container");
-  _dailyPrice = {
-    hour: "numeric",
-    minute: "numeric",
-  };
-
-  _pastPrice = {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-  };
 
   constructor() {
     super();
@@ -38,18 +26,7 @@ class PortfolioChartView extends View {
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">
-          <div class="chart-info">
-          ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
-            <h1>${Number(this._data.lastPrice).toFixed(2)}</h1>
-            <span class="${this._generateColor(
-              +this._data.netChange
-            )}">${this._generateSymbol(+this._data.netChange)}${Number(
-      this._data.netChange
-    ).toFixed(2)} <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
-      this._data.netPercentChangeInDouble === 0 ? "" : "%"
-    })</span></span>
-            <span>Today</span>
-          </div>
+        ${this._generatePriceHTML()}
           <canvas id="portfolio-chart"></canvas>
         </div>
 
@@ -78,7 +55,32 @@ class PortfolioChartView extends View {
         `;
   }
 
+  _generatePriceHTML() {
+    console.log(this._data.quotes);
+    return `
+    <div class="chart-info">
+    ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
+      <h1 class="ticker-price">$${Number(this._data.lastPrice).toFixed(2)}</h1>
+      <span class="${this._generateColor(
+        +this._data.netChange
+      )} ticker-change">${this._generateSymbol(+this._data.netChange)}${Number(
+      this._data.netChange
+    ).toFixed(2)} <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
+      this._data.netPercentChangeInDouble === 0 ? "" : "%"
+    })</span></span>
+      <span>Today</span>
+    </div>
+    `;
+  }
+
   updateChart() {
+    const rgb = this._generateRGB(
+      this._data.quotes.timePeriod === "day"
+        ? this._data.netChange
+        : this._data.quotes.prices.slice(-1)[0].close -
+            this._data.quotes.prices[0].close
+    );
+
     const dailyLine =
       this._data.quotes.timePeriod === "day"
         ? {
@@ -90,14 +92,7 @@ class PortfolioChartView extends View {
           }
         : "";
 
-    this.myChart.data.labels = this._data.quotes.dates.map((a) => {
-      return new Intl.DateTimeFormat(
-        "en-US",
-        this._data.quotes.timePeriod === "day"
-          ? this._dailyPrice
-          : this._pastPrice
-      ).format(a);
-    });
+    this.myChart.data.labels = this._data.quotes.dates;
 
     this.myChart.data.datasets[0].data = this._data.quotes.prices.map(
       (a) => a.close
@@ -105,17 +100,41 @@ class PortfolioChartView extends View {
 
     this.myChart.options.plugins.annotation.annotations.line1 = dailyLine;
 
-    this.myChart.options.borderColor = this._generateRGB(this._data.netChange);
+    this.myChart.options.borderColor = rgb;
 
     this.myChart.update();
   }
 
-  _updatePrice() {}
+  _updatePrice(currentPrice, previousPrice) {
+    const tickerPrice = document.querySelector(".ticker-price");
+    const tickerNetChange = document.querySelector(".ticker-change");
+
+    const netChangeColor = tickerNetChange.classList[0];
+    const netChange = (currentPrice - previousPrice).toFixed(2);
+    const netChangePercent = (
+      ((currentPrice - previousPrice) / previousPrice) *
+      100
+    ).toFixed(2);
+
+    tickerPrice.innerHTML = "$" + currentPrice.toFixed(2);
+
+    tickerNetChange.classList.replace(
+      netChangeColor,
+      this._generateColor(netChangePercent)
+    );
+
+    tickerNetChange.textContent = `${netChange} (${netChangePercent}%)`;
+  }
 
   _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
 
-    const rgb = this._generateRGB(this._data.netChange);
+    const rgb = this._generateRGB(
+      this._data.quotes.timePeriod === "day"
+        ? this._data.netChange // default
+        : this._data.quotes.prices.slice(-1)[0].close -
+            this._data.quotes.prices[0].close
+    );
 
     const dailyLine =
       this._data.quotes.timePeriod === "day"
@@ -131,14 +150,7 @@ class PortfolioChartView extends View {
     this.myChart = new Chart(mainChart, {
       type: "line",
       data: {
-        labels: this._data.quotes.dates.map((a) => {
-          return new Intl.DateTimeFormat(
-            "en-US",
-            this._data.quotes.timePeriod === "day"
-              ? this._dailyPrice
-              : this._pastPrice
-          ).format(a);
-        }),
+        labels: this._data.quotes.dates,
         datasets: [
           {
             data: this._data.quotes.prices.map((a) => a.close),
@@ -148,28 +160,7 @@ class PortfolioChartView extends View {
       options: {
         borderColor: rgb,
 
-        onHover(_, active) {
-          const currentLabel = this.data.labels[active[0].index];
-          // this.data.datasets[0].segment = {
-          //   borderColor: (ctx) => {
-          //     if (
-          //       this.data.labels[ctx.p0DataIndex] ===
-          //       this.data.labels[active[0].index]
-          //     ) {
-          //       return "orange";
-          //     } else return undefined;
-          //   },
-          // };
-          this.options.plugins.annotation.annotations.verticalLine = {
-            type: "line",
-            xMin: currentLabel,
-            xMax: currentLabel,
-            borderColor: "#b8b8b8",
-            borderWidth: 2,
-          };
-
-          this.update();
-        },
+        onHover: this._onHover.bind(this),
 
         interaction: {
           mode: "index",
@@ -227,14 +218,7 @@ class PortfolioChartView extends View {
       plugins: [
         {
           id: "clearHover",
-          afterEvent(chart, args, options) {
-            const event = args.event;
-            if (event.type === "mouseout") {
-              chart.options.plugins.annotation.annotations.verticalLine = null;
-              chart.data.datasets[0].segment = null;
-              chart.update();
-            }
-          },
+          afterEvent: this._onMouseOut.bind(this),
         },
       ],
     });
@@ -244,6 +228,74 @@ class PortfolioChartView extends View {
     return this._generateColor(+netChange) === "positive_green"
       ? "rgb(0,200,0)"
       : "rgb(253,82,64)";
+  }
+
+  _onHover(e, active, chart) {
+    const rgb = this._generateRGB(
+      this._data.quotes.timePeriod === "day"
+        ? this._data.netChange
+        : this._data.quotes.prices.slice(-1)[0].close -
+            this._data.quotes.prices[0].close
+    );
+
+    const currentLabel = chart.data.labels[active[0].index];
+    const currentPrice = chart.data.datasets[0].data[active[0].index];
+    let currentSection;
+
+    if (this._data.quotes.timePeriod === "day") {
+      chart.options.borderColor = rgb.slice(0, -1) + ",.25)";
+
+      if (this._data.quotes.preDates.includes(currentLabel)) {
+        currentSection = "preDates";
+      } else if (this._data.quotes.intraDates.includes(currentLabel))
+        currentSection = "intraDates";
+      else currentSection = "postDates";
+
+      chart.data.datasets[0].segment = {
+        borderColor: (ctx) => {
+          return this._data.quotes[`${currentSection}`].includes(
+            chart.data.labels[ctx.p0DataIndex]
+          )
+            ? rgb
+            : undefined;
+        },
+      };
+    }
+
+    chart.options.plugins.annotation.annotations.verticalLine = {
+      type: "line",
+      xMin: currentLabel,
+      xMax: currentLabel,
+      borderColor: "#b8b8b8",
+      borderWidth: 2,
+    };
+
+    this._updatePrice(
+      +currentPrice.toFixed(2),
+      +this._data.lastPrice + Math.abs(+this._data.netChange)
+    );
+    chart.update();
+  }
+
+  _onMouseOut(chart, args, options) {
+    const event = args.event;
+    if (event.type === "mouseout") {
+      const rgb = this._generateRGB(
+        this._data.quotes.timePeriod === "day"
+          ? this._data.netChange
+          : this._data.quotes.prices.slice(-1)[0].close -
+              this._data.quotes.prices[0].close
+      );
+      chart.options.plugins.annotation.annotations.verticalLine = null;
+      chart.data.datasets[0].segment = null;
+      chart.options.borderColor = rgb;
+
+      this._updatePrice(
+        +this._data.lastPrice,
+        +this._data.lastPrice + Math.abs(+this._data.netChange)
+      );
+      chart.update();
+    }
   }
 }
 

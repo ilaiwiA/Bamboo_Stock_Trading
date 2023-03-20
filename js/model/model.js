@@ -1,7 +1,9 @@
 import {
   AFTERHOURS_MINUTES,
   DAILY_MINUTES,
+  DAILY_PRICE_CONFIG,
   NEWS_LIMIT,
+  PAST_PRICE_CONFIG,
   URL,
   WATCH_LIST,
 } from "../config.js";
@@ -54,45 +56,27 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
           `${periodType === "day" ? "" : periodType}`
       )
     )[0];
-    data.sort((a, b) => a.datetime - b.datetime);
+
+    // data.sort((a, b) => a.datetime - b.datetime);
+
+    const dates = data.map((a) => {
+      return new Intl.DateTimeFormat(
+        "en-US",
+        periodType === "day" ? DAILY_PRICE_CONFIG : PAST_PRICE_CONFIG
+      ).format(a.datetime);
+    });
+
+    const preMarket = dates.findIndex((a) => a.includes("8:30"));
+    const postMarket = dates.findIndex((a) => a.includes("3:00"));
 
     return {
-      dates: data
-        .sort((a, b) => a.datetime - b.datetime)
-        .map((a) => a.datetime),
+      dates: dates,
 
-      preDates: data
-        .filter((a) => {
-          if (
-            (new Date(a.datetime).getHours() <= 8 &&
-              new Date(a.datetime).getMinutes() < 30) ||
-            new Date(a.datetime).getHours() < 8
-          ) {
-            return a.datetime;
-          }
-        })
-        .map((a) => a.datetime),
+      preDates: dates.filter((_, i) => i < preMarket),
 
-      intraDates: data
-        .filter((a) => {
-          if (
-            (new Date(a.datetime).getHours() >= 8 &&
-              new Date(a.datetime).getMinutes() > 30) ||
-            (new Date(a.datetime).getHours() >= 8 &&
-              new Date(a.datetime).getHours() <= 17)
-          ) {
-            return a.datetime;
-          }
-        })
-        .map((a) => a.datetime),
+      intraDates: dates.filter((_, i) => i >= preMarket && i <= postMarket),
 
-      postDates: data
-        .filter((a) => {
-          if (new Date(a.datetime).getHours() >= 17) {
-            return a.datetime;
-          }
-        })
-        .map((a) => a.datetime),
+      postDates: dates.filter((_, i) => i > postMarket),
 
       prices: data,
       timePeriod: periodType,
@@ -172,7 +156,6 @@ export const updateStockQuotes = async function (date) {
     if (!state.stock) return;
 
     state.stock.quotes = await generateStockQuotes(state.stock.symbol, date);
-    console.log(state.stock.quotes);
     state.stock.quotes.timePeriod = date;
   } catch (error) {
     throw new Error("Ticker not Found");
