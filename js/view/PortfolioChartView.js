@@ -56,7 +56,6 @@ class PortfolioChartView extends View {
   }
 
   _generatePriceHTML() {
-    console.log(this._data.quotes);
     return `
     <div class="chart-info">
     ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
@@ -68,7 +67,9 @@ class PortfolioChartView extends View {
     ).toFixed(2)} <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
       this._data.netPercentChangeInDouble === 0 ? "" : "%"
     })</span></span>
-      <span>Today</span>
+      <span class="ticker-date">${
+        this._generateDate(this._data.quotes?.timePeriod) || ""
+      }</span>
     </div>
     `;
   }
@@ -102,28 +103,12 @@ class PortfolioChartView extends View {
 
     this.myChart.options.borderColor = rgb;
 
-    this.myChart.update();
-  }
-
-  _updatePrice(currentPrice, previousPrice) {
-    const tickerPrice = document.querySelector(".ticker-price");
-    const tickerNetChange = document.querySelector(".ticker-change");
-
-    const netChangeColor = tickerNetChange.classList[0];
-    const netChange = (currentPrice - previousPrice).toFixed(2);
-    const netChangePercent = (
-      ((currentPrice - previousPrice) / previousPrice) *
-      100
-    ).toFixed(2);
-
-    tickerPrice.innerHTML = "$" + currentPrice.toFixed(2);
-
-    tickerNetChange.classList.replace(
-      netChangeColor,
-      this._generateColor(netChangePercent)
+    this._updatePrice(
+      +this._data.lastPrice,
+      +this._data.quotes.prices[0].close
     );
 
-    tickerNetChange.textContent = `${netChange} (${netChangePercent}%)`;
+    this.myChart.update();
   }
 
   _generateChart() {
@@ -222,12 +207,64 @@ class PortfolioChartView extends View {
         },
       ],
     });
+    this._updatePrice(
+      +this._data.lastPrice,
+      +this._data.quotes.prices[0].close
+    );
   }
 
   _generateRGB(netChange) {
     return this._generateColor(+netChange) === "positive_green"
       ? "rgb(0,200,0)"
       : "rgb(253,82,64)";
+  }
+
+  _generateDate(date) {
+    switch (date) {
+      case "day":
+        return "Today";
+
+      case "week":
+        return "Past week";
+
+      case "month":
+        return "Past month";
+
+      case "3month":
+        return "Past 3 months";
+
+      case "ytd":
+        return "Year to date";
+
+      case "all":
+        return "Past 5 years";
+
+      default:
+        break;
+    }
+  }
+
+  _updatePrice(currentPrice, previousPrice) {
+    const tickerPrice = document.querySelector(".ticker-price");
+    const tickerNetChange = document.querySelector(".ticker-change");
+    const tickerDate = document.querySelector(".ticker-date");
+
+    const netChangeColor = tickerNetChange.classList[0];
+    const netChange = (currentPrice - previousPrice).toFixed(2);
+    const netChangePercent = (
+      ((currentPrice - previousPrice) / previousPrice) *
+      100
+    ).toFixed(2);
+
+    tickerPrice.innerHTML = "$" + currentPrice.toFixed(2);
+
+    tickerNetChange.classList.replace(
+      netChangeColor,
+      this._generateColor(netChangePercent)
+    );
+
+    tickerNetChange.textContent = `${netChange} (${netChangePercent}%)`;
+    tickerDate.textContent = this._generateDate(this._data.quotes.timePeriod);
   }
 
   _onHover(e, active, chart) {
@@ -270,10 +307,14 @@ class PortfolioChartView extends View {
       borderWidth: 2,
     };
 
-    this._updatePrice(
-      +currentPrice.toFixed(2),
-      +this._data.lastPrice + Math.abs(+this._data.netChange)
-    );
+    if (this._data.quotes.timePeriod === "day") {
+      this._updatePrice(+currentPrice.toFixed(2), +this._data.closePrice);
+    } else {
+      this._updatePrice(
+        +currentPrice.toFixed(2),
+        +this._data.quotes.prices[0].close
+      );
+    }
     chart.update();
   }
 
@@ -292,7 +333,7 @@ class PortfolioChartView extends View {
 
       this._updatePrice(
         +this._data.lastPrice,
-        +this._data.lastPrice + Math.abs(+this._data.netChange)
+        +this._data.quotes.prices[0].close
       );
       chart.update();
     }

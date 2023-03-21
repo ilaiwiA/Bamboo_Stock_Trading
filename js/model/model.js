@@ -74,9 +74,15 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
 
       preDates: dates.filter((_, i) => i < preMarket),
 
-      intraDates: dates.filter((_, i) => i >= preMarket && i <= postMarket),
+      intraDates: dates.filter(
+        (_, i) =>
+          i >= preMarket &&
+          i <= (postMarket === -1 ? dates.length - 1 : postMarket)
+      ),
 
-      postDates: dates.filter((_, i) => i > postMarket),
+      postDates: dates.filter(
+        (_, i) => i > (postMarket === -1 ? dates.length - 1 : postMarket)
+      ),
 
       prices: data,
       timePeriod: periodType,

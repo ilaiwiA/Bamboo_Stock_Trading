@@ -1,4 +1,5 @@
 import View from "./View.js";
+import defaultStockIMG from "url:/images/stock_img.jpg";
 
 class NewsView extends View {
   _parentElement = document.querySelector(".main-container");
@@ -58,7 +59,7 @@ class NewsView extends View {
       </div>
         <div class = "news-image">
             <img
-            src="${data.banner_image || "images/stock_img.jpg"}"
+            src="${data.banner_image || defaultStockIMG}"
             alt=""
             />
       </div>

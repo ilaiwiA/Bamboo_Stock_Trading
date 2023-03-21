@@ -253,7 +253,7 @@ aside {
 .purchase-form {
   display: flex;
   flex-direction: column;
-  gap: 1.25em;
+  gap: 2em;
 }
 .purchase-form section {
   display: flex;
