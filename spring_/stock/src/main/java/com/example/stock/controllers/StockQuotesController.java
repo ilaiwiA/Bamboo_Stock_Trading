@@ -1,5 +1,6 @@
 package com.example.stock.controllers;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
@@ -46,6 +47,8 @@ public class StockQuotesController {
         String frequencyType = "daily";
         String frequency = "1";
         if(periodType.equals("day")) {
+            if(LocalTime.now().getHour() >= 17) return "https://api.tiingo.com/iex/"+ ticker + "/prices?resampleFreq=5min&afterHours=true&token=10a4700444c2337bec9894d387dae95a222774ee";
+
             return "https://api.tiingo.com/iex/"+ ticker + "/prices?resampleFreq=1min&afterHours=true&token=10a4700444c2337bec9894d387dae95a222774ee";
     
             // LocalDate today = LocalDate.now(); // dependency for stockdata.org
