@@ -1,4 +1,4 @@
-package com.example.stock.controllers;
+package com.example.stock.controllers.StockControllers;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,4 +1,4 @@
-package com.example.stock.controllers;
+package com.example.stock.controllers.StockControllers;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
