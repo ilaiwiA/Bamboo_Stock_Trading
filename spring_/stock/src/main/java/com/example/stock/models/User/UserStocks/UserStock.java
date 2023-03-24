@@ -1,9 +1,11 @@
 package com.example.stock.models.User.UserStocks;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class UserStocks {
+@AllArgsConstructor
+public class UserStock {
     String ticker;
     String date;
 
