@@ -57,8 +57,6 @@ const generateStockQuotes = async function (ticker, periodType = "week") {
       )
     )[0];
 
-    // data.sort((a, b) => a.datetime - b.datetime);
-
     const dates = data.map((a) => {
       return new Intl.DateTimeFormat(
         "en-US",
@@ -132,15 +130,16 @@ const generateNewsLimit = function (data) {
 };
 
 // Load Data
-export const loadStockList = async function (
-  panelType,
-  stockList = "AMD,SPY,QQQ,AMZN,TSLA,AAPL,BBBY,GME"
-) {
+export const loadStockList = async function (panelType) {
   try {
-    if (stockList.length === 0) return delete state[`${panelType}`];
+    const stockList = [
+      ...Object.values(await getJSON(URL + "user/" + `${panelType}`)),
+    ];
+
     const data = [
       ...Object.entries(await getJSON(URL + "stocks/" + stockList)),
     ];
+
     state[`${panelType}`] = generateStockList(data);
   } catch (error) {
     throw error;

@@ -114,6 +114,8 @@ class PortfolioChartView extends View {
   _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
 
+    this._data;
+
     const rgb = this._generateRGB(
       this._data.quotes.timePeriod === "day"
         ? this._data.netChange // default

@@ -48,7 +48,9 @@ class AutoCompleteView extends View {
         return;
       }
 
-      for (let i = 0; i < results.length; i++) {
+      const resultsLength = results.length >= 10 ? 10 : results.length;
+
+      for (let i = 0; i < resultsLength; i++) {
         this.resultsHTML.innerHTML += `<li class='ticker'>${results[i]}</li>`;
       }
     }

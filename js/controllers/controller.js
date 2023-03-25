@@ -22,18 +22,14 @@ const controllerLoadPortfollio = async function () {
     StockListView.renderLoad();
     NewsView.renderLoad();
 
-    if (model.state[`${WATCH_LIST}1`])
-      await model.loadStockList(WATCH_LIST, model.state[`${WATCH_LIST}1`]);
-
-    if (model.state.userStocks) await model.loadStockList(USER_STOCK);
-
     await model.loadStockList(USER_STOCK);
+    await model.loadStockList(WATCH_LIST);
     await model.loadNews();
 
     PortfolioChartView.clear();
     StockListView.clear();
 
-    PortfolioChartView.render(model.state[USER_STOCK][0]);
+    // PortfolioChartView.render(model.state.stock);
     StockListView.render(model.state[USER_STOCK], USER_STOCK);
     StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
     if (model.state.stock.news) NewsView.render(model.state.stock);
@@ -68,7 +64,7 @@ const controllerChangePage = async function () {
     StockListView.clear();
 
     PortfolioChartView.render(model.state.stock);
-    PortfolioChartView._generateChart("week");
+
     PurchaseView.render(model.state.stock);
     StockDetailsView.render(model.state.stock);
     if (model.state.stock.news) NewsView.render(model.state.stock);

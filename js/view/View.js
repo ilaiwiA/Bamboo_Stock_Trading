@@ -1,10 +1,13 @@
 export default class View {
-  render(data) {
+  render(data, panelType) {
+    if (!data) return;
+
     this._data = data;
 
-    const html = this._generateHTML();
+    const html = this._generateHTML(panelType);
 
     this._parentElement.insertAdjacentHTML("beforeend", html);
+    this._generateChart?.();
   }
 
   _clear() {

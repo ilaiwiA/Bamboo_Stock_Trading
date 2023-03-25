@@ -218,6 +218,7 @@ aside {
 }
 
 .stocks .ticker-graph {
+  max-width: 90px;
   justify-self: center;
 }
 .stocks .ticker-price {

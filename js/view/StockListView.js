@@ -1,5 +1,9 @@
+import { Chart } from "chart.js/auto";
+import annotationPlugin from "chartjs-plugin-annotation";
 import { USER_STOCK, WATCH_LIST } from "../config.js";
 import View from "./View.js";
+
+Chart.register(annotationPlugin);
 
 class StockListView extends View {
   _parentElement = document.querySelector(".aside-container");
@@ -17,15 +21,15 @@ class StockListView extends View {
     );
   }
 
-  render(data, panelType) {
-    if (!data) return;
+  // render(data, panelType) {
+  //   if (!data) return;
 
-    this._data = data;
+  //   this._data = data;
 
-    const html = this._generateHTML(panelType);
+  //   const html = this._generateHTML(panelType);
 
-    this._parentElement.insertAdjacentHTML("beforeend", html);
-  }
+  //   this._parentElement.insertAdjacentHTML("beforeend", html);
+  // }
 
   _generateHTML = function (panelType) {
     return `
@@ -52,7 +56,7 @@ class StockListView extends View {
             }
         </div>
     
-        <div class="ticker-graph">jwadjaj</div>
+        <canvas class="ticker-graph">GRAPH</canvas>
     
         <div class="ticker-price ticker">
         <p>${data.lastPrice}<p>
@@ -63,6 +67,10 @@ class StockListView extends View {
     </a>
     `;
   };
+
+  // _generateChart() {
+  //   const mainChart = document.querySelector(".ticker-graph");
+  // }
 }
 
 export default new StockListView();
