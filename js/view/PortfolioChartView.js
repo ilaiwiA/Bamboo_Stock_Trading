@@ -105,8 +105,8 @@ class PortfolioChartView extends View {
 
     this._updatePrice(
       +this._data.lastPrice,
-      +this._data.quotes.prices[0].close
-    );
+      this._data.quotes.timePeriod === "day" ? +this._data.lastPrice - +this._data.netChange : +this._data.quotes.prices[0].close
+      );
 
     this.myChart.update();
   }
@@ -335,7 +335,7 @@ class PortfolioChartView extends View {
 
       this._updatePrice(
         +this._data.lastPrice,
-        +this._data.quotes.prices[0].close
+        this._data.quotes.timePeriod === "day" ? +this._data.lastPrice - +this._data.netChange : +this._data.quotes.prices[0].close
       );
       chart.update();
     }

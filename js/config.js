@@ -1,6 +1,7 @@
 export const TIME_OUT = 5;
 
-export const URL = "http://192.168.0.215:8080/api/";
+// export const URL = "http://192.168.0.215:8080/api/"; // window
+export const URL = "http://192.168.0.198:8080/api/" // macbook
 
 export const USER_STOCK = "stocklist";
 export const WATCH_LIST = "watchlist";
