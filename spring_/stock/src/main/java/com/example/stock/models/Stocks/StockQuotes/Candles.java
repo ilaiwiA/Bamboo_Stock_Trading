@@ -1,24 +1,19 @@
 package com.example.stock.models.Stocks.StockQuotes;
 
-import java.time.Instant;
-
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
-public class IntradayStockQuotes {
+public class Candles {
     @JsonProperty("open")
     Double open;
 
@@ -34,14 +29,6 @@ public class IntradayStockQuotes {
     @JsonProperty("volume")
     Double volume;
 
-    //tiingo api
-    @JsonSetter("date")
-    String date;
-    
-
-    /// USE WITH TIINGO API IF NEEDED
-    @JsonGetter("datetime")
-    Long getDate() {
-        return Instant.parse(date).toEpochMilli();
-    }
+    @JsonProperty("datetime")
+    Long datetime;
 }

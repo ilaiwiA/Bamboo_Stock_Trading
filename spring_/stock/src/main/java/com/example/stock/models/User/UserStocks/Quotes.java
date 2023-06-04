@@ -13,28 +13,26 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class UserStock {
+@NoArgsConstructor
+@AllArgsConstructor
+public class Quotes {
 
     @Id
-    // @GeneratedValue(strategy = GenerationType.AUTO)
     @SequenceGenerator(
-        name = "stock_seq",
-        sequenceName = "stock_seq",
+        name = "quote_seq",
+        sequenceName = "quote_seq",
         allocationSize = 1
     )
 
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
-        generator = "stock_seq"
+        generator = "quote_seq"
     )
+
     private Integer stockID;
 
-    String ticker;
-    Long date;
-
-    Double quantity;
-    Double avgPrice;
+    Double close;
+    Long datetime;
+    Double previous;
 }

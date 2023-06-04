@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Stock {
     private String assetType;
     private String symbol;
     private String description;
-    private String lastPrice;
+    private Double lastPrice;
     private Double openPrice;
     private Double highPrice;
     private Double lowPrice;
@@ -30,4 +29,10 @@ public class Stock {
     private Double peRatio;
     private Double divAmount;
     private Double netPercentChangeInDouble;
+
+    private Double regularMarketLastPrice;
+    private Long regularMarketTradeTimeInLong;
+
+    private Long quoteTimeInLong;
+    private Long tradeTimeInLong;
 }

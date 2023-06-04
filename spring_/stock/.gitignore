@@ -31,3 +31,11 @@ build/
 
 ### VS Code ###
 .vscode/
+
+target
+
+java_pid*
+auth_*
+test
+
+application.properties
