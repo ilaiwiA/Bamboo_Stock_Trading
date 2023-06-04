@@ -1,0 +1,108 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  /* main */
+  --positive_green: #00c800;
+  --negative_red: #fd5240;
+  --NEUTRAL: #b2b2b2;
+
+  /* body */
+  --light__gray__body: #7b7b7b;
+  --light__gray__highlight: #c5c5c5;
+
+  --ff_main: "Nunito Sans", sans-serif;
+
+  --aside_height: 135px;
+}
+
+body {
+  font-family: var(--ff_main);
+  display: grid;
+  /* grid-template-columns: 4fr 2fr; */
+  grid-template-columns: 1.5fr 1fr;
+  height: 100vh;
+}
+
+.background-art {
+  background-image: url("images/bamboo_art_background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1.5em;
+  width: 100%;
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin: 1em;
+}
+
+.login-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.login-form .form-redirect {
+  font-size: 12px;
+}
+
+.login-form .form-redirect a {
+  font-weight: 700;
+  text-decoration: underline;
+  color: black;
+}
+
+.login-form h1 {
+  font-weight: 600;
+}
+
+.login-form form label {
+  font-size: 0.85em;
+  font-weight: 300;
+}
+
+.login-form form input {
+  width: 250px;
+  padding-left: 6px;
+  padding: 0.5em;
+}
+
+.login-form button {
+  min-width: 75px;
+  font-size: 12px;
+  padding: 1em;
+  border: none;
+  border-radius: 3em;
+  font-weight: 600;
+  background-color: black;
+  color: whitesmoke;
+}
+
+/* register form */
+.login-form-register {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.login-form-register {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+}
+
+button {
+  cursor: pointer;
+}

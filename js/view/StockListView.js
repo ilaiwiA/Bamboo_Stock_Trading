@@ -21,22 +21,20 @@ class StockListView extends View {
     );
   }
 
-  // render(data, panelType) {
-  //   if (!data) return;
+  _generateHTML = function () {
+    return `${this._generatePanelTypes()
+      .map(this._generatePanel.bind(this))
+      .join("")}`;
+  };
 
-  //   this._data = data;
-
-  //   const html = this._generateHTML(panelType);
-
-  //   this._parentElement.insertAdjacentHTML("beforeend", html);
-  // }
-
-  _generateHTML = function (panelType) {
+  _generatePanel = function (panelType) {
     return `
-        <div class="side-container">
+        <div class="side-container ${panelType}">
           <h1>${panelType === WATCH_LIST ? "Watchlist" : "My Stocks"}</h1>
           <div class="stocks-panel panel">
-          ${this._data.map(this._generateStocks.bind(this)).join("")}
+          ${this._user[`${panelType}`]
+            .map(this._generateStocks.bind(this))
+            .join("")}
           </div>
         </div>
         `;
@@ -49,7 +47,7 @@ class StockListView extends View {
             <p>${data.symbol}</p>
             ${
               data.quantity
-                ? `<p class= "ticker-sub">${data.quantity} ${
+                ? `<p class= "ticker-sub user-shares">${data.quantity} ${
                     data.quantity > 1 ? "Shares" : "Share"
                   }`
                 : ""
@@ -68,9 +66,95 @@ class StockListView extends View {
     `;
   };
 
-  // _generateChart() {
-  //   const mainChart = document.querySelector(".ticker-graph");
-  // }
+  _generateChart() {
+    const panelType = this._generatePanelTypes();
+
+    panelType.map(this.createChart.bind(this));
+  }
+
+  createChart(panelType) {
+    if (!this._user[`${panelType}`][0].quotes) return;
+
+    const tickers = this._parentElement
+      .querySelector(`.${panelType}`)
+      .querySelector(".stocks-panel");
+
+    for (let i = 0; i < tickers.children.length; i++) {
+      const dailyLine = {
+        type: "line",
+        yMax: this._user[`${panelType}`][i].closePrice,
+        yMin: this._user[`${panelType}`][i].closePrice,
+        borderColor: "rgb(123, 123, 123)",
+        borderDash: [1, 5],
+      };
+
+      const rgb = this._generateRGB(this._user[`${panelType}`][i].netChange);
+
+      new Chart(tickers.children[i].querySelector("canvas"), {
+        type: "line",
+        data: {
+          labels: this._user[`${panelType}`][i].quotes.dates,
+          datasets: [
+            {
+              data: this._user[`${panelType}`][i].quotes.prices.map(
+                (a) => a.close
+              ),
+            },
+          ],
+        },
+        options: {
+          borderColor: rgb,
+
+          hover: {
+            mode: null,
+          },
+
+          animation: {
+            animation: false,
+          },
+
+          elements: {
+            point: {
+              radius: 0,
+            },
+            line: {
+              borderWidth: 2,
+            },
+          },
+
+          plugins: {
+            annotation: {
+              annotations: {
+                line1: dailyLine,
+              },
+            },
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              enabled: false,
+            },
+          },
+
+          scales: {
+            y: {
+              display: false,
+              // beginAtZero: true,
+              grid: {
+                display: false,
+              },
+            },
+            x: {
+              display: false,
+              grid: {
+                display: false,
+              },
+            },
+          },
+        },
+      });
+    }
+  }
 }
 
 export default new StockListView();

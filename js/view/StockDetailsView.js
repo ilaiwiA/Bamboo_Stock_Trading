@@ -8,6 +8,8 @@ class StockDetailsView extends View {
   }
 
   _generateAboutSection() {
+    if (!this._data.summary || this._data.summary.description === "None")
+      return "";
     return `
         <section>
           <h1>About</h1>
@@ -49,11 +51,11 @@ class StockDetailsView extends View {
               <li>
                 <p><b>Market cap</b></p>
                 <p>${
-                  Number.isFinite(this._data.summary.marketCapitalization)
+                  Number.isFinite(this._data.summary?.marketCapitalization)
                     ? Intl.NumberFormat("en-US", {
                         notation: "compact",
                         maximumFractionDigits: 2,
-                      }).format(this._data.summary.marketCapitalization)
+                      }).format(this._data.summary?.marketCapitalization)
                     : "-"
                 }</p>
               </li>

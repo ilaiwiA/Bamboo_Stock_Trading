@@ -1,10 +1,121 @@
 import View from "./View.js";
 
+import checkMarkIMG from "url:/images/checkmark.svg";
+import plusSignIMG from "url:/images/plus-sign.svg";
+
 class PurchaseView extends View {
   _parentElement = document.querySelector(".aside-container");
 
   constructor() {
     super();
+
+    this.addHandlerReview();
+  }
+
+  addHandlerTransactionType() {}
+
+  addHandlerReview() {
+    this._parentElement.addEventListener(
+      "submit",
+      this.reviewPurchase.bind(this)
+    );
+  }
+
+  addHandlerPurchaseForm(handler) {
+    const a = this;
+
+    this._parentElement.addEventListener("click", function (e) {
+      if (e.target.value?.toLowerCase() === "cancel") handler();
+
+      if (e.target.closest(".purchase-panel-header")?.children.length > 1) {
+        const id = e.target.id;
+
+        e.target.style = `border-bottom: 1px solid var(--${a._generateColor(
+          a._data.netChange
+        )})`;
+
+        e.target.classList.toggle("active");
+
+        const siblingElement =
+          id === "buy"
+            ? e.target.nextElementSibling
+            : e.target.previousElementSibling;
+
+        if (!siblingElement) return;
+
+        siblingElement.style = "";
+        siblingElement.classList.toggle("active");
+
+        a._data.tradeType = id;
+
+        a._updateAvailableBal();
+      }
+    });
+  }
+
+  addHandlerSubmit(handler) {
+    this._submitHandler = handler;
+  }
+
+  reviewPurchase(e) {
+    e.preventDefault();
+
+    const orderType = e.target
+      .closest(".purchase-panel")
+      .querySelector(".active").id;
+    const button = e.target.querySelector(".btn-submit");
+
+    if (!button) return;
+
+    const type = this._parentElement.querySelector(".active").id;
+    const orderBuyIn = e.target.querySelector(".order-value").id.slice(6);
+    const orderValue = +e.target.querySelector(`#order-${orderBuyIn}`).value;
+    const orderEstCost = e.target
+      .querySelector("#estimated-price")
+      .innerHTML.slice(1)
+      .replace(",", "");
+
+    if (button.value.toLowerCase() === "submit") {
+      return this._submitHandler(
+        orderBuyIn,
+        orderValue,
+        this._data.symbol,
+        orderType
+      );
+    }
+
+    const parameterSuccess = [
+      button,
+      this._generateReviewMessageSuccess(
+        orderBuyIn,
+        orderValue,
+        this._data.lastPrice,
+        type
+      ),
+      this._generateCancelButton(this._data.netChange),
+    ];
+
+    const parameterFailure = [
+      button,
+      this._generateReviewMessageFailure(
+        orderBuyIn,
+        orderBuyIn === "Share" ? orderEstCost : orderValue
+      ),
+      this._generateCancelButton(this._data.netChange),
+      false,
+    ];
+
+    //orderValue <= 0 || !this._user.availableBal
+
+    if (orderType === "buy") {
+      this._checkValidPurchase(orderBuyIn, orderValue)
+        ? this.renderPurchaseReview.call(...parameterSuccess)
+        : this.renderPurchaseReview.call(...parameterFailure);
+    } else if (orderType === "sell") {
+      this._checkValidSell(orderBuyIn, orderValue)
+        ? this.renderPurchaseReview.call(...parameterSuccess)
+        : this.renderPurchaseReview.call(...parameterFailure);
+    }
   }
 
   addHandlerInput(handler) {
@@ -14,8 +125,10 @@ class PurchaseView extends View {
     );
   }
 
-  addHandlerPurchaseCost(handler) {
-    this._parentElement.querySelector(".");
+  renderPurchaseReview(html, buttonHtml, success = true) {
+    this.insertAdjacentHTML("beforebegin", html);
+    this.insertAdjacentHTML("afterend", buttonHtml);
+    success ? (this.value = "Submit") : this.remove();
   }
 
   addHandlerWatchlist(handler) {
@@ -32,7 +145,13 @@ class PurchaseView extends View {
 
   updatePurchasePanel(e) {
     e.preventDefault();
-    if (e.target.id === "order-type") return this(e.target.value);
+    if (e.target.id === "order-type") {
+      const purchaseID = e.target
+        .closest(".purchase-panel")
+        .querySelector(".active").id;
+
+      return this(e.target.value, purchaseID);
+    }
 
     const parent = e.target.closest(".aside-container");
 
@@ -57,19 +176,25 @@ class PurchaseView extends View {
     }
   }
 
+  _updateAvailableBal() {
+    const userBalance = this._parentElement.querySelector(".user-available");
+
+    userBalance.innerHTML = `${this._generateAvailableBal()}`;
+  }
+
   updateWatchlistIMG() {
     const button = this._parentElement.querySelector("#btn_watchlist");
     const img = button.querySelector("img");
 
-    if (img.src.includes("plus")) img.src = "images/checkmark.svg";
-    else img.src = "images/plus-sign.svg";
+    if (img.src.includes("plus")) img.src = checkMarkIMG;
+    else img.src = plusSignIMG;
   }
 
   _generateHTML() {
     return `
     <div class="purchase-container side-container" id = '${this._data.symbol}'>
           <div class="purchase-panel panel">
-            <h2>Buy ${this._data.symbol}</h2>
+          ${this._generateHeaderHTML()}
             <hr />
             <form action="" class="purchase-form">
               <section>
@@ -78,18 +203,12 @@ class PurchaseView extends View {
               </section>
 
               <section>
-              ${this._generatePurchaseLabel(
-                this._generatePurchaseType(this._data.purchaseType)
-              )}
+              ${this._generatePurchaseLabelHTML()}
               </section>
 
               <section>
-                <label for="order-${this._generatePurchaseType(
-                  this._data.purchaseType
-                )}">${this._generatePurchaseType(
-      this._data.purchaseType
-    )}</label>
-                <input type="number" min="0" class= "order-value" id="order-${this._generatePurchaseType(
+                <label for="order-${this._generatePurchaseType()}">${this._generatePurchaseType()}</label>
+                <input type="number" min="0" class= "order-value" step="0.01" id="order-${this._generatePurchaseType(
                   this._data.purchaseType
                 )}" placeholder = '0'/>
               </section>
@@ -106,7 +225,7 @@ class PurchaseView extends View {
                 <p>${
                   this._data.purchaseType === "Dollars"
                     ? "Est. Quantity"
-                    : "Estimated Cost"
+                    : "Est. Price"
                 }</p>
                 <p id="estimated-price">${
                   this._data.purchaseType === "Dollars" ? "" : "$"
@@ -120,16 +239,42 @@ class PurchaseView extends View {
             </form>
             <hr />
 
-            <p class="user-available">$${
-              this._data.availableBal || "0.00"
-            }<span> available</span></p>
+            ${this._generateBalanceHTML()}
+
           </div>
-          ${this._generateSubLabel()}
+          ${this._generateSubLabelHTML()}
         </div>
     `;
   }
 
-  _generatePurchaseLabel(data) {
+  _generateHeaderHTML() {
+    const activeClass = `class = "active" style= "border-bottom: 1px solid var(--${this._generateColor(
+      this._data.netChange
+    )})"`;
+
+    return `
+    <section class="purchase-panel-header">
+    <h2 id="buy" ${
+      !this._data.tradeType ||
+      !this._currentStock ||
+      this._data.tradeType === "buy"
+        ? activeClass
+        : ""
+    }>Buy ${this._data.symbol}</h2>
+    ${
+      this._currentStock
+        ? `<h2 id="sell" ${
+            this._data.tradeType === "sell" ? activeClass : ""
+          }>Sell ${this._data.symbol}</h2>`
+        : ""
+    }
+  </section>
+    `;
+  }
+
+  _generatePurchaseLabelHTML() {
+    const data = this._data.purchaseType ? this._data.purchaseType : "Shares";
+
     return `
     <label for="order-type">Buy in</label>
     <select name="order-type" id="order-type">
@@ -143,19 +288,43 @@ class PurchaseView extends View {
     `;
   }
 
-  _generateSubLabel() {
+  _generateBalanceHTML() {
+    return `
+    <section class="current-available">
+      <p class="user-available">${this._generateAvailableBal()}</p>
+    </section>
+    `;
+  }
+
+  _generateSubLabelHTML() {
     return `
     <button class="btn-alternative ${this._generateColor(
       this._data.netChange
     )}_button btn-subPanel" id= 'btn_watchlist'>
     <img
       class="${this._generateColor(this._data.netChange)}_symbol"
-      src="images/${this._data.bookmarked ? "checkmark" : "plus-sign"}.svg"
+      src="${this._data.bookmarked ? checkMarkIMG : plusSignIMG}"
       alt=""
     />
     Add to Watchlist
     </button>
     `;
+  }
+
+  _generateAvailableBal() {
+    if (
+      !this._currentStock ||
+      !this._data.tradeType ||
+      this._data.tradeType === "buy"
+    )
+      return `${this._formatCurrency(+this._user.availableBal)} available`;
+
+    if (!this._data.purchaseType || this._data.purchaseType === "Shares")
+      return `${this._currentStock.quantity} ${this._currentStock.ticker} available`;
+    else
+      return `${this._formatCurrency(
+        +this._currentStock.quantity * +this._data.lastPrice
+      )} available`;
   }
 
   _generateCost(quantityShares) {
@@ -165,9 +334,75 @@ class PurchaseView extends View {
     return quantityMoney / Number(this._data.lastPrice);
   }
 
-  _generatePurchaseType(data) {
-    if (data) return data;
-    return "Shares";
+  _generatePurchaseType() {
+    return this._data.purchaseType ? this._data.purchaseType : "Shares";
+  }
+
+  _generateReviewMessageSuccess(orderBuyIn, quantity, price, type = "buy") {
+    return `
+    <section class="order-summary">
+    <h3>Order Summary </h3>
+    ${
+      orderBuyIn === "Shares"
+        ? `You are placing a market order to ${type} ${quantity} ${
+            quantity === 1 ? "share" : "shares"
+          } of ${
+            this._data.symbol
+          }. Your pending order will execute at ${price} per share or better.`
+        : `You are placing a market order to ${type} ${quantity} ${
+            quantity === 1 ? "dollar" : "dollars"
+          } of ${this._data.symbol}. 
+    Your pending order will execute at the best market price.`
+    }</section>`;
+  }
+
+  _generateReviewMessageFailure(orderBuyIn, failureRes) {
+    return `
+    <section class="order-summary">
+    <h3>${
+      failureRes <= 0 ? "Order not valid." : "Not enough buying power"
+    } </h3>
+
+    ${
+      failureRes <= 0
+        ? `Your order must be greater than 0 ${
+            orderBuyIn === "Shares" ? "shares" : "dollars"
+          }.`
+        : "You do not have enough buying power in your account to place this order."
+    }
+
+    </section>
+    `;
+  }
+
+  _generateCancelButton(newChange) {
+    return `
+    <input type="button" 
+    class="btn-alternative" 
+    value="Cancel" 
+    style="color: var(--${this._generateColor(newChange)}); 
+    border: 1px solid var(--${this._generateColor(newChange)})"
+    />`;
+  }
+
+  _checkValidPurchase(type, orderValue) {
+    if (type === "Shares") {
+      return orderValue * this._data.lastPrice <= this._user.availableBal;
+    } else if (type === "Dollars") {
+      return orderValue <= this._user.availableBal;
+    }
+  }
+
+  _checkValidSell(type, orderValue) {
+    const ticker = this._user.userStocks.find(
+      (a) => a.ticker === this._data.symbol
+    );
+
+    if (type === "Shares") {
+      return orderValue <= ticker.quantity;
+    } else if (type === "Dollars") {
+      return orderValue / this._data.lastPrice <= ticker.quantity;
+    }
   }
 }
 

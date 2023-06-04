@@ -1,4 +1,4 @@
-import { Chart } from "chart.js/auto";
+import { Chart, Tooltip } from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
 import View from "./View.js";
 
@@ -26,7 +26,7 @@ class PortfolioChartView extends View {
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">
-        ${this._generatePriceHTML()}
+        ${this._data.symbol ? this._generatePriceHTML() : ""}
           <canvas id="portfolio-chart"></canvas>
         </div>
 
@@ -46,7 +46,9 @@ class PortfolioChartView extends View {
         <div class="sub-panel" id="buying-power">
           <div class="portfolio-bp">
             <p>Buying Power</p>
-            <p>$${this._data.availableBal || "0.00"}</p>
+            <p id="available-bal">${this._formatCurrency(
+              this._user.availableBal || "0.00"
+            )}</p>
          </div>
         </div>
         `
@@ -56,17 +58,30 @@ class PortfolioChartView extends View {
   }
 
   _generatePriceHTML() {
+    const title = this._data.summary?.name
+      ? this._data.summary.name.indexOf("Inc") != -1
+        ? this._data.summary.name.slice(
+            0,
+            this._data.summary.name.indexOf("Inc")
+          )
+        : this._data.summary.name
+      : -1;
+
     return `
     <div class="chart-info">
-    ${this._data.symbol ? `<h1>${this._data.symbol}</h1>` : ""}
+    ${title != -1 ? `<h1>${title}</h1>` : `<h1>${this._data.symbol}</h1>`}
       <h1 class="ticker-price">$${Number(this._data.lastPrice).toFixed(2)}</h1>
       <span class="${this._generateColor(
         +this._data.netChange
       )} ticker-change">${this._generateSymbol(+this._data.netChange)}${Number(
       this._data.netChange
-    ).toFixed(2)} <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
+    ).toFixed(2)} 
+        
+        <span>(${this._data.netPercentChangeInDouble.toFixed(2)}${
       this._data.netPercentChangeInDouble === 0 ? "" : "%"
-    })</span></span>
+    })</span>
+      </span>
+        
       <span class="ticker-date">${
         this._generateDate(this._data.quotes?.timePeriod) || ""
       }</span>
@@ -105,16 +120,16 @@ class PortfolioChartView extends View {
 
     this._updatePrice(
       +this._data.lastPrice,
-      this._data.quotes.timePeriod === "day" ? +this._data.lastPrice - +this._data.netChange : +this._data.quotes.prices[0].close
-      );
+      this._data.quotes.timePeriod === "day"
+        ? +this._data.lastPrice - +this._data.netChange
+        : +this._data.quotes.prices[0].close
+    );
 
     this.myChart.update();
   }
 
   _generateChart() {
     const mainChart = document.querySelector("#portfolio-chart");
-
-    this._data;
 
     const rgb = this._generateRGB(
       this._data.quotes.timePeriod === "day"
@@ -133,6 +148,26 @@ class PortfolioChartView extends View {
             borderDash: [1, 5],
           }
         : "";
+
+    Tooltip.positioners.top = function (elements, eventPosition) {
+      const {
+        chartArea: { top },
+        scales: { x },
+      } = this.chart;
+
+      const xIndex = x.getValueForPixel(eventPosition.x);
+
+      const xIndexData = this.chart.data.datasets[0].data[xIndex];
+
+      const dataIndex = this.chart.data.datasets[0].data.length;
+
+      return {
+        x: xIndexData
+          ? x.getPixelForValue(xIndex)
+          : x.getPixelForValue(dataIndex - 1),
+        y: top,
+      };
+    };
 
     this.myChart = new Chart(mainChart, {
       type: "line",
@@ -169,6 +204,7 @@ class PortfolioChartView extends View {
             radius: 0,
             hoverRadius: 6,
             backgroundColor: rgb,
+            zindex: 1,
           },
         },
 
@@ -181,8 +217,22 @@ class PortfolioChartView extends View {
           legend: {
             display: false,
           },
-          clearHover: {
-            test: "hey",
+          tooltip: {
+            enabled: true,
+            backgroundColor: "#ffffff",
+            displayColors: false,
+            titleColor: "#939393",
+            bodyColor: "rgba(0, 0, 0, 0)",
+            xAlign: "center",
+            yAlign: "center",
+            titleFont: {
+              weight: "lighter",
+              size: "16",
+            },
+            position: "top",
+            callbacks: {
+              label: () => null,
+            },
           },
         },
 
@@ -209,16 +259,11 @@ class PortfolioChartView extends View {
         },
       ],
     });
-    this._updatePrice(
-      +this._data.lastPrice,
-      +this._data.quotes.prices[0].close
-    );
-  }
 
-  _generateRGB(netChange) {
-    return this._generateColor(+netChange) === "positive_green"
-      ? "rgb(0,200,0)"
-      : "rgb(253,82,64)";
+    // this._updatePrice(
+    //   +this._data.lastPrice,
+    //   +this._data.quotes.prices[0].close
+    // );
   }
 
   _generateDate(date) {
@@ -269,7 +314,14 @@ class PortfolioChartView extends View {
     tickerDate.textContent = this._generateDate(this._data.quotes.timePeriod);
   }
 
+  renderUserBalance(data) {
+    const availableBal = this._parentElement.querySelector("#available-bal");
+    availableBal.textContent = `${this._formatCurrency(data.availableBal)}`;
+  }
+
   _onHover(e, active, chart) {
+    if (active.length <= 0) return;
+
     const rgb = this._generateRGB(
       this._data.quotes.timePeriod === "day"
         ? this._data.netChange
@@ -305,9 +357,12 @@ class PortfolioChartView extends View {
       type: "line",
       xMin: currentLabel,
       xMax: currentLabel,
-      borderColor: "#b8b8b8",
+      borderColor: "#BFBFBF",
       borderWidth: 2,
+      drawTime: "beforeDraw",
     };
+
+    chart.options.elements.point.backgroundColor = rgb;
 
     if (this._data.quotes.timePeriod === "day") {
       this._updatePrice(+currentPrice.toFixed(2), +this._data.closePrice);
@@ -335,7 +390,9 @@ class PortfolioChartView extends View {
 
       this._updatePrice(
         +this._data.lastPrice,
-        this._data.quotes.timePeriod === "day" ? +this._data.lastPrice - +this._data.netChange : +this._data.quotes.prices[0].close
+        this._data.quotes.timePeriod === "day"
+          ? +this._data.lastPrice - +this._data.netChange
+          : +this._data.quotes.prices[0].close
       );
       chart.update();
     }

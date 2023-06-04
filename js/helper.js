@@ -16,3 +16,13 @@ export const getJSON = async function (url) {
     throw error;
   }
 };
+
+export const getPayload = function (data) {
+  return {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-type": "application/json",
+    },
+  };
+};

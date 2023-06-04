@@ -1,7 +1,6 @@
 // import * as model from "../model/model.js";
 
 import * as model from "../model/model.js";
-import { WATCH_LIST, USER_STOCK } from "../config.js";
 
 import StockListView from "../view/StockListView.js";
 import PurchaseView from "../view/PurchaseView.js";
@@ -9,6 +8,8 @@ import NewsView from "../view/NewsView.js";
 import StockDetailsView from "../view/StockDetailsView.js";
 import PortfolioChartView from "../view/PortfolioChartView.js";
 import MissingView from "../view/MissingView.js";
+import UserStockDetailsView from "../view/UserStockDetailsView.js";
+import HeaderListView from "../view/HeaderListView.js";
 import AutoCompleteView from "../view/AutoCompleteView.js";
 
 // Load portfollio based on HASH
@@ -22,17 +23,18 @@ const controllerLoadPortfollio = async function () {
     StockListView.renderLoad();
     NewsView.renderLoad();
 
-    await model.loadStockList(USER_STOCK);
-    await model.loadStockList(WATCH_LIST);
-    await model.loadNews();
+    await model.loadUser();
+    await model.loadPortfolio();
+
+    // await model.loadNews();
 
     PortfolioChartView.clear();
     StockListView.clear();
 
-    // PortfolioChartView.render(model.state.stock);
-    StockListView.render(model.state[USER_STOCK], USER_STOCK);
-    StockListView.render(model.state[WATCH_LIST], WATCH_LIST);
-    if (model.state.stock.news) NewsView.render(model.state.stock);
+    PortfolioChartView.render(model.state);
+
+    StockListView.render(model.state);
+    if (model.state.stock.news) NewsView.render(model.state);
 
     //load user stocks and watch list
     //load user portfolio
@@ -50,24 +52,29 @@ const controllerChangePage = async function () {
 
     if (!ticker) return;
 
+    await model.loadUser(ticker);
+
     PortfolioChartView.renderLoad();
     PurchaseView.renderLoad();
     NewsView.renderLoad();
 
     window.scrollTo(0, 0);
 
+    await model.loadWatchList();
+
     await model.loadStock(ticker);
     await model.loadStockSummary(ticker);
-    await model.loadNews(ticker);
+    // await model.loadNews(ticker);
 
     PortfolioChartView.clear();
     StockListView.clear();
 
-    PortfolioChartView.render(model.state.stock);
+    PortfolioChartView.render(model.state);
 
-    PurchaseView.render(model.state.stock);
-    StockDetailsView.render(model.state.stock);
-    if (model.state.stock.news) NewsView.render(model.state.stock);
+    PurchaseView.render(model.state);
+    UserStockDetailsView.render(model.state);
+    StockDetailsView.render(model.state);
+    if (model.state.stock.news) NewsView.render(model.state);
   } catch (error) {
     if (error.message === "Ticker not Found") {
       MissingView.clear();
@@ -78,10 +85,36 @@ const controllerChangePage = async function () {
 };
 
 // Change purchase type based on form purchase change
-const controllerPurchaseType = function (type) {
-  model.updatePurchaseType(type);
+const controllerPurchaseType = function (type, tradeType) {
+  model.updatePurchaseType(type, tradeType);
+
   PurchaseView.clear();
-  PurchaseView.render(model.state.stock);
+  PurchaseView.render(model.state);
+};
+
+const controllerPurchaseCancel = function (cancel) {
+  PurchaseView.clear();
+  PurchaseView.render(model.state);
+};
+
+const controllerPurchaseSubmit = async function (
+  orderBuyIn,
+  orderValue,
+  symbol,
+  orderType
+) {
+  console.log("Submitted");
+
+  await model.updateStock(orderBuyIn, orderValue.toString(), symbol, orderType);
+  await model.updateUser();
+
+  PortfolioChartView.clear();
+  PurchaseView.clear();
+
+  PortfolioChartView.render(model.state);
+  PurchaseView.render(model.state);
+  UserStockDetailsView.render(model.state);
+  StockDetailsView.render(model.state);
 };
 
 // Controller for 404 button so user can return to the home page
@@ -105,20 +138,18 @@ const controllerWatchlist = function (ticker) {
 const controllerPortfolioDate = async function (date) {
   await model.updateStockQuotes(date);
   PortfolioChartView.updateChart();
-  // PortfolioChartView.render(model.state.stock);
-  // PortfolioChartView._generateChart(date);
 };
 
 //initialize event handlers
 const init = function () {
-  // StockListView.addHandlerChangePage(controllerChangePage);
-  StockListView.addHandlerRender(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
   PortfolioChartView.addHandlerPortfolio(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolioDate(controllerPortfolioDate);
 
   PurchaseView.addHandlerInput(controllerPurchaseType);
   PurchaseView.addHandlerWatchlist(controllerWatchlist);
+  PurchaseView.addHandlerPurchaseForm(controllerPurchaseCancel);
+  PurchaseView.addHandlerSubmit(controllerPurchaseSubmit);
 
   NewsView.addHandlerTicker(controllerChangePage);
 

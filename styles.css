@@ -8,9 +8,11 @@
   /* main */
   --positive_green: #00c800;
   --negative_red: #fd5240;
+  --NEUTRAL: #b2b2b2;
 
   /* body */
   --light__gray__body: #7b7b7b;
+  --light__gray__highlight: #c5c5c5;
 
   --ff_main: "Nunito Sans", sans-serif;
 
@@ -37,6 +39,13 @@ header {
   gap: 5em;
   font-weight: 700;
   font-size: 1.25em;
+}
+
+header nav li {
+  cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 header img {
@@ -96,7 +105,7 @@ form input:focus {
 }
 
 form li:hover {
-  background-color: #e6e6e6;
+  background-color: var(--light__gray__highlight);
   cursor: pointer;
 }
 
@@ -200,6 +209,33 @@ aside {
   border-radius: 0.25em;
 }
 
+/* user stock info */
+.sub-panel-stocks {
+  display: flex;
+  gap: 1em;
+}
+
+.user-stock-panel {
+  width: 50%;
+  border: 1px solid var(--light__gray__highlight);
+  padding: 1.25em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  border-radius: 0.25em;
+  justify-content: space-between;
+}
+
+.user-stock-panel hr {
+  border: none;
+  border-top: 1px solid var(--light__gray__highlight);
+}
+
+.user-stock-stats {
+  display: flex;
+  justify-content: space-between;
+}
+
 /* stock content panel */
 
 .stocks {
@@ -213,14 +249,16 @@ aside {
 }
 
 .stocks:hover {
-  background-color: #e6e6e6;
+  background-color: var(--light__gray__highlight);
   cursor: pointer;
 }
 
 .stocks .ticker-graph {
   max-width: 90px;
+  max-height: 45px;
   justify-self: center;
 }
+
 .stocks .ticker-price {
   text-align: right;
   justify-self: end;
@@ -232,16 +270,28 @@ aside {
   font-weight: 600;
 }
 
+.stocks .user-shares {
+  color: var(--light__gray__body);
+  font-weight: 400;
+  font-size: 0.8em;
+}
+
 /* Purchase Panel */
 
 .purchase-panel {
-  padding: 1em;
-  gap: 1em;
+  padding: 0 1em;
+  gap: 0em;
   margin-bottom: 1em;
 }
 
+.purchase-panel .purchase-panel-header {
+  display: flex;
+  flex-direction: row;
+
+  gap: 1em;
+}
+
 .purchase-panel hr {
-  margin: 0 -1em;
   border: none;
   background-color: lightgray;
   height: 1px;
@@ -249,13 +299,40 @@ aside {
 
 .purchase-panel h2 {
   font-weight: 700;
+  font-size: 22px;
+  padding: 1em 0;
+  border-bottom: 1px solid white;
+  cursor: pointer;
+}
+
+.purchase-panel .current-available {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25em;
+  padding: 1em 0;
+  font-weight: 700;
 }
 
 .purchase-form {
   display: flex;
   flex-direction: column;
   gap: 2em;
+  margin: 1em 0;
 }
+
+.purchase-form .order-summary {
+  flex-direction: column;
+  gap: 0.25em;
+  margin-top: 1em;
+  font-size: 17px;
+}
+
+.purchase-form .order-summary h3 {
+  align-self: baseline;
+}
+
 .purchase-form section {
   display: flex;
   justify-content: space-between;
@@ -352,7 +429,7 @@ input::-webkit-inner-spin-button {
 }
 
 .news-panel:hover {
-  background-color: #e6e6e6;
+  background-color: var(--light__gray__highlight);
   cursor: pointer;
 }
 
@@ -415,12 +492,28 @@ input::-webkit-inner-spin-button {
 
 @keyframes loadingGradient {
   50% {
-    background-color: #e6e6e6;
+    background-color: var(--light__gray__highlight);
   }
 
   100% {
     background-color: white;
   }
+}
+
+/* footer */
+
+footer {
+  font-size: 1em;
+  text-align: center;
+  height: 2.5em;
+}
+
+footer p {
+  font-weight: lighter;
+}
+
+footer span {
+  font-weight: bold;
 }
 
 /* 404 Page */
@@ -490,4 +583,23 @@ input::-webkit-inner-spin-button {
 .negative_red_button {
   border: 1px solid var(--negative_red);
   color: var(--negative_red);
+}
+
+/* ANIMATIONS*/
+.loader {
+  border: 6px solid #f3f3f3; /* Light grey */
+  border-top: 6px solid #7b7b7b; /* Blue */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
