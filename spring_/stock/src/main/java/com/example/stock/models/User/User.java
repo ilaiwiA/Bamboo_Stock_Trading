@@ -52,9 +52,11 @@ public class User {
     @JsonIgnore
     private Integer userID;
 
-    String firstName;
-    String lastName;
-    String userName;
+    private String firstName;
+    private String lastName;
+    private String userName;
+
+    private String password;
 
     Long creationDate;
 
@@ -67,5 +69,5 @@ public class User {
         name = "portfolio_id",
         referencedColumnName = "portfolioID"
     )
-    Portfolio portfolio;
+    private Portfolio portfolio;
 }

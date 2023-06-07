@@ -32,7 +32,7 @@ public class UserStockServices {
     final long UNIX_MS_PER_DAY = 86400000L;
 
 
-    int userID = 4;
+    int userID = 1;
 
     @Autowired
     UserRepository userRepository;
@@ -89,8 +89,9 @@ public class UserStockServices {
         for (int i = 0; i < stocks.size(); i++) {
             Long recentDate = stocks.get(i).getDate();
             if(lastDate > stocks.get(i).getDate()){
-                recentDate = lastDate;
+                recentDate = getCurrentTimeStart();
             }
+
             ArrayList<Candles> stockList = stockServices.getHistoricalStockQuotes(stocks.get(i).getTicker(), "", getDateParameter(recentDate));
             if (stockList == null) continue;
 
@@ -130,7 +131,14 @@ public class UserStockServices {
                 for (int x = 0; x < stockList.size(); x++) {
 
 
-                    if(stockList.get(x).getDatetime().compareTo(portfolioQuotes.get(indexPointer).getDatetime()) < 0) {    
+                    if(indexPointer >= portfolioQuotes.size() - 1) {
+                        oldBalance = portfolioQuotes.get(indexPointer - 1).getClose();
+                        Quotes quotes = Quotes.builder().datetime(stockList.get(x).getDatetime()).close(oldBalance).build();
+
+                        portfolioQuotes.add(quotes);
+                    }
+
+                    if(stockList.get(x).getDatetime().compareTo(portfolioQuotes.get(indexPointer).getDatetime()) < 0) {
                         continue;
                     }
 
@@ -157,7 +165,7 @@ public class UserStockServices {
             }
         }
 
-        userRepository.saveAndFlush(user);
+        // userRepository.saveAndFlush(user);
 
         return portfolioQuotes;
     }
@@ -174,11 +182,26 @@ public class UserStockServices {
         if(periodType.equals("day")) {
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
 
-            calendar.set(Calendar.HOUR_OF_DAY, 18);
+            calendar.set(Calendar.HOUR_OF_DAY, 14);
             calendar.set(Calendar.MINUTE, 55);
             calendar.set(Calendar.SECOND,0);
             calendar.set(Calendar.MILLISECOND, 0);
-            calendar.add(Calendar.DATE, -1);
+
+            // if Tues - Sat get previous date (-1) if Sun (-2) if Mon (-3)
+            switch (calendar.get(Calendar.DAY_OF_WEEK)) {
+                case 2:
+                    calendar.add(Calendar.DATE, -3);
+                    break;
+                case 1:
+                    calendar.add(Calendar.DATE, -2);
+                    break;
+            
+                default:
+                    calendar.add(Calendar.DATE, -1);
+                    break;
+            } 
+            System.out.println(calendar.getTimeInMillis());
+
 
             Double prevQuote = portfolioQuotes.get(portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()))).getClose();
             portfolioQuotes.get(index).setPrevious(prevQuote);
@@ -357,6 +380,23 @@ public class UserStockServices {
     Double calculateAveragePrice(Double prevAvgPrice, Double prevQuantity, Double newPrice, Double newQuantity){
 
          return ((prevAvgPrice * prevQuantity) + (newPrice * newQuantity)) / (prevQuantity + newQuantity);
+    }
+
+    Long getCurrentTimeStart() {
+        Calendar calendar = Calendar.getInstance();
+        // if(calendar.get(Calendar.DAY_OF_WEEK) == 7){
+        //     calendar.set(Calendar.DAY_OF_WEEK, 6);
+        // } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1){
+        //     calendar.add(Calendar.DATE, -7);
+        //     calendar.set(Calendar.DAY_OF_WEEK, 6);
+        // }
+
+        calendar.set(Calendar.HOUR_OF_DAY, 6);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND, 0);   
+
+        return calendar.getTimeInMillis();
     }
 
     Long getCurrentTime() {

@@ -29,7 +29,7 @@ public class UserController {
     UserStockServices userStockServices;
 
     //hardcoded for now
-    int userID = 4;
+    int userID = 1;
 
     public void createUser() {
     }

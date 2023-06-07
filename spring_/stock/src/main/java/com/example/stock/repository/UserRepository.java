@@ -16,13 +16,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByLastNameContaining(String lastName);
 
     @Query("SELECT x from User x where x.userName = ?1")
-    User getUserByUserName(String name);
+    User findUserByUsername(String name);
 
     @Query("SELECT x from User x where x.userID = ?1")
     User getUserByID(int i);
-
-    @Query("SELECT x.userName from User x where x.userName = ?1")
-    String getUserName(String name);
 
 
     //update query
