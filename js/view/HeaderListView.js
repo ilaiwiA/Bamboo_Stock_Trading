@@ -5,7 +5,6 @@ class HeaderListView extends View {
 
   constructor() {
     super();
-    console.log(this._parentElement);
     this.addHandlerNav();
   }
 

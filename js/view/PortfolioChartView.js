@@ -70,7 +70,9 @@ class PortfolioChartView extends View {
     return `
     <div class="chart-info">
     ${title != -1 ? `<h1>${title}</h1>` : `<h1>${this._data.symbol}</h1>`}
-      <h1 class="ticker-price">$${Number(this._data.lastPrice).toFixed(2)}</h1>
+      <h1 class="ticker-price">${this._formatCurrency(
+        +this._data.lastPrice
+      )}</h1>
       <span class="${this._generateColor(
         +this._data.netChange
       )} ticker-change">${this._generateSymbol(+this._data.netChange)}${Number(
@@ -303,14 +305,17 @@ class PortfolioChartView extends View {
       100
     ).toFixed(2);
 
-    tickerPrice.innerHTML = "$" + currentPrice.toFixed(2);
+    // tickerPrice.innerHTML = "$" + currentPrice.toFixed(2);
+    tickerPrice.innerHTML = this._formatCurrency(currentPrice);
 
     tickerNetChange.classList.replace(
       netChangeColor,
       this._generateColor(netChangePercent)
     );
 
-    tickerNetChange.textContent = `${netChange} (${netChangePercent}%)`;
+    tickerNetChange.textContent = `${this._generateSymbol(
+      netChange
+    )}${netChange} (${netChangePercent}%)`;
     tickerDate.textContent = this._generateDate(this._data.quotes.timePeriod);
   }
 
