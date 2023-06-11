@@ -12,10 +12,20 @@ import UserStockDetailsView from "../view/UserStockDetailsView.js";
 import HeaderListView from "../view/HeaderListView.js";
 import AutoCompleteView from "../view/AutoCompleteView.js";
 
+// Load Login and Registration Page
+
+const controllerLogin = async function () {
+  try {
+    const login = window.location;
+    console.log("!  @  " + login);
+  } catch (error) {}
+};
+
 // Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
   try {
     const id = window.location.hash;
+    console.log("! " + id);
 
     if (id) return;
 
@@ -49,6 +59,8 @@ const controllerChangePage = async function () {
   try {
     const val = window.location.hash.indexOf("/") + 1;
     const ticker = window.location.hash.slice(val);
+
+    console.log("@ " + ticker);
 
     if (!ticker) return;
 
@@ -142,8 +154,9 @@ const controllerPortfolioDate = async function (date) {
 
 //initialize event handlers
 const init = function () {
-  PortfolioChartView.addHandlerPortfolio(controllerChangePage);
+  console.log(window.location);
   PortfolioChartView.addHandlerPortfolio(controllerLoadPortfollio);
+  PortfolioChartView.addHandlerPortfolio(controllerChangePage);
   PortfolioChartView.addHandlerPortfolioDate(controllerPortfolioDate);
 
   PurchaseView.addHandlerInput(controllerPurchaseType);

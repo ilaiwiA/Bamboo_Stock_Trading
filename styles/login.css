@@ -21,14 +21,16 @@
 
 body {
   font-family: var(--ff_main);
+}
+
+main {
   display: grid;
-  /* grid-template-columns: 4fr 2fr; */
-  grid-template-columns: 1.5fr 1fr;
+  grid-template-columns: 1.75fr 1fr;
   height: 100vh;
 }
 
 .background-art {
-  background-image: url("images/bamboo_art_background.jpg");
+  background-image: url("/images/bamboo_art_background.jpg");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -81,14 +83,23 @@ body {
 }
 
 .login-form button {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+
+  padding: 1.25em;
   min-width: 75px;
   font-size: 12px;
-  padding: 1em;
   border: none;
   border-radius: 3em;
   font-weight: 600;
   background-color: black;
+
   color: whitesmoke;
+}
+
+.login-form button p {
+  margin: 0.25em;
 }
 
 /* register form */
@@ -103,6 +114,48 @@ body {
   gap: 1.5em;
 }
 
-button {
-  cursor: pointer;
+.waitLoad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+/* ANIMATIONS*/
+.loader {
+  border: 12px solid #f3f3f3; /* Light grey */
+  border-top: 12px solid #7b7b7b; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  z-index: 100;
+  animation: spin 1s linear infinite;
+}
+
+.loader-button {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #7b7b7b; /* Blue */
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  z-index: 100;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
 }

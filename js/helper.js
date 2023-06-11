@@ -10,13 +10,14 @@ export const getJSON = async function (url) {
   try {
     const res = await Promise.race([fetch(url), timeOut(TIME_OUT)]);
 
+    if (res.status === 401) window.location.href = "/html/LoginPage.html";
+
     if (!res.ok) {
-      console.log(res);
-      throw new Error(`${res.ok}`);
+      throw new Error(`${res.status}`);
     }
     return await res.json();
   } catch (error) {
-    console.error(`${"🚨JSON🚨"} + ${error.headers}`);
+    console.error(`${"🚨JSON🚨"} + ${error}`);
     throw error;
   }
 };

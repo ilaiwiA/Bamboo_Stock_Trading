@@ -1,6 +1,7 @@
 export const TIME_OUT = 10;
 
 export const URL = "http://192.168.0.215:8080/api/"; // window
+export const URL_LOGIN = "http://192.168.0.215:8080/login";
 // export const URL = "http://192.168.0.198:8080/api/" // macbook
 
 export const USER_STOCK = "stocklist";
@@ -43,8 +44,6 @@ export const PAST_PRICE_CONFIG = {
   day: "numeric",
   year: "numeric",
 };
-
-// const tickerList = "/images/tickers.csv";
 
 import tickerList from "url:/images/tickers_noSpecialChart.csv"; //prevents chrome due to CORS
 
