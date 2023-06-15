@@ -39,3 +39,4 @@ auth_*
 test
 
 application.properties
+resources

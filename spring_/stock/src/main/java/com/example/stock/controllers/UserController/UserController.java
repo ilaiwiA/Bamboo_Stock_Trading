@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     UserStockServices userStockServices;
 
-    //hardcoded for now
+    // hardcoded for now
     int userID = 1;
 
     public void createUser() {
@@ -37,7 +37,6 @@ public class UserController {
     @CrossOrigin
     @GetMapping()
     public User getUser() {
-
         return userRepository.getUserByID(userID);
     }
 
@@ -70,7 +69,7 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/portfolio/{periodType}")
-    public List<Quotes> getPortfolioQuotes(@PathVariable("periodType") String periodType){
+    public List<Quotes> getPortfolioQuotes(@PathVariable("periodType") String periodType) {
         return userStockServices.generatePortfolio(periodType);
     }
 

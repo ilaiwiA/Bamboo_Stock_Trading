@@ -18,11 +18,9 @@ public class jpaUserDetailsService implements UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
-    
-    
+
     @Override
     public UserDetails loadUserByUsername(String username) {
-    
 
         User user = userRepository.findUserByUsername(username);
 
@@ -33,6 +31,5 @@ public class jpaUserDetailsService implements UserDetailsService {
         }
 
     }
-    
 
 }
