@@ -1,7 +1,5 @@
 package com.example.stock.tests;
 
-
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,16 +12,14 @@ public class NewsControllerTest {
 
     NewsData data;
 
-    @CrossOrigin
     @PostMapping("/api/news/test")
-    public void postNews(@RequestBody NewsData newsData ) {
-        data = newsData;    
+    public void postNews(@RequestBody NewsData newsData) {
+        data = newsData;
     }
-    @CrossOrigin
+
     @GetMapping("/api/news/test")
     public NewsData getNews() {
         return data;
     }
-
 
 }

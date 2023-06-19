@@ -21,14 +21,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT x from User x where x.userID = ?1")
     User getUserByID(int i);
 
-
-    //update query
+    // update query
     @Modifying
     @Transactional // place this in the service layer.
-    @Query(
-        value = "update tbl_users set user_name = ?1 where id = ?2",
-        nativeQuery = true
-    )
+    @Query(value = "update tbl_users set user_name = ?1 where id = ?2", nativeQuery = true)
     int updateUserNameById(String username, int id);
-    
+
+    boolean existsByUserName(String username);
+
 }

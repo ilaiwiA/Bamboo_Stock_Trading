@@ -15,7 +15,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.Cookie;
 
 @Component
 public class JwtTokenUtil {
@@ -34,7 +33,6 @@ public class JwtTokenUtil {
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = getAllClaimsFromToken(token);
-        System.out.println("CLAIMS RESOLVER: " + claimsResolver.apply(claims));
         return claimsResolver.apply(claims);
     }
 
@@ -70,19 +68,14 @@ public class JwtTokenUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
                 .signWith(getSignKey()).compact();
 
-        ResponseCookie cookie = ResponseCookie.from("Set-Cookie", token)
+        ResponseCookie cookie = ResponseCookie.from("jwt", token)
                 .httpOnly(true)
                 .secure(true)
-                .maxAge(Duration.ofHours(1))
+                .maxAge(Duration.ofHours(3))
+                .path("/")
                 .sameSite("None")
                 .build();
 
-        // Cookie cookie = new Cookie("token", token);
-        // cookie.setHttpOnly(true);
-        // cookie.setSecure(false);
-        // cookie.setPath("/");
-        // cookie.setMaxAge((int) ((System.currentTimeMillis() * 1000) +
-        // JWT_EXPIRATION));
         return cookie;
     }
 

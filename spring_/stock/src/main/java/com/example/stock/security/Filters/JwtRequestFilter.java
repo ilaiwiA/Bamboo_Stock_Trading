@@ -2,7 +2,7 @@ package com.example.stock.security.Filters;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,53 +18,61 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 
 @Component
+@AllArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    // private final JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    JwtTokenUtil jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    jpaUserDetailsService userDetailsService;
-
-    // private final jpaUserDetailsService userDetailsService;
+    private final jpaUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
         Cookie[] cookies = request.getCookies();
-        String requestToken = null;
+        String jwtToken = null;
 
-        if (cookies == null || cookies.length < 1) {
-            filterChain.doFilter(request, response);
-        }
-
-        for (Cookie cookie : cookies) {
-            if ("Set-Cookie".equals(cookie.getName())) {
-                requestToken = cookie.getValue();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    jwtToken = cookie.getValue();
+                    break;
+                }
             }
         }
 
-        if (requestToken != null)
+        if (jwtToken != null) {
+            String username = null;
+            try {
 
-        {
-            String jwtToken = requestToken;
-            String username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+                username = jwtTokenUtil.getUsernameFromToken(jwtToken);
+            } catch (Exception e) {
+                System.out.println(e);
+                filterChain.doFilter(request, response);
+            }
 
             if (username != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
-                            null, null);
+                            null, userDetails.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
+                    filterChain.doFilter(request, response);
+                } else {
+                    throw new BadCredentialsException("Invalid Token");
                 }
+            } else {
+                throw new BadCredentialsException("Invalid Token");
+
             }
+        } else {
+
             filterChain.doFilter(request, response);
         }
 

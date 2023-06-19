@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,15 +21,14 @@ public class StockQuotesController {
     @Autowired
     StockServices stockServices;
 
-    @CrossOrigin
     @GetMapping("/{ticker}/quotes/{periodType}")
-    public ArrayList<Candles> getHistoricalQuotes(@PathVariable("ticker") String ticker, @PathVariable("periodType") String periodType) {
+    public ArrayList<Candles> getHistoricalQuotes(@PathVariable("ticker") String ticker,
+            @PathVariable("periodType") String periodType) {
 
         return stockServices.getHistoricalStockQuotes(ticker, periodType, "historical");
     }
 
-    @CrossOrigin
-    @GetMapping(value ={"/{ticker}/quotes", "/{ticker}/quotes/", "/{ticker}/quotes/reduced"})
+    @GetMapping(value = { "/{ticker}/quotes", "/{ticker}/quotes/", "/{ticker}/quotes/reduced" })
     public ArrayList<Candles> getIntradayStockQuotes(@PathVariable("ticker") String ticker) {
         UriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequest();
         String periodType = builder.buildAndExpand().getPath().contains("reduced") ? "reduced" : "day";

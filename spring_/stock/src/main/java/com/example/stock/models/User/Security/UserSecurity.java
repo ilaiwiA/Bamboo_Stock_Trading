@@ -1,9 +1,11 @@
-package com.example.stock.models.User;
+package com.example.stock.models.User.Security;
 
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.stock.models.User.User;
 
 import lombok.AllArgsConstructor;
 
@@ -21,6 +23,10 @@ public class UserSecurity implements UserDetails {
     public String getUsername() {
 
         return user.getUserName();
+    }
+
+    public int getUserID() {
+        return user.getUserID();
     }
 
     @Override
@@ -50,5 +56,5 @@ public class UserSecurity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    
+
 }

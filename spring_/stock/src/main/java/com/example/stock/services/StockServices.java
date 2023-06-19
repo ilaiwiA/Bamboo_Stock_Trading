@@ -28,46 +28,56 @@ public class StockServices {
     String URL = "https://api.tdameritrade.com/v1/marketdata/";
     String API_KEY = "GEARZVA8KB2B3YEO65VPE2FBLHJYDBAI";
 
-
-
     public Stock getStockQuote(String ticker) {
         RestTemplate restTemplate = new RestTemplate();
 
-        ParameterizedTypeReference<Map<String, Stock>> stock = new ParameterizedTypeReference<Map<String,Stock>>() {}; 
-        
-        HttpEntity<String> headerEntity = new HttpEntity<String>(getHeader());   
+        ParameterizedTypeReference<Map<String, Stock>> stock = new ParameterizedTypeReference<Map<String, Stock>>() {
+        };
 
-        Stock currentStock = restTemplate.exchange(URL + ticker + "/quotes", HttpMethod.GET, headerEntity, stock).getBody().get(ticker);
+        HttpEntity<String> headerEntity = new HttpEntity<String>(getHeader());
+
+        Stock currentStock = restTemplate.exchange(URL + ticker + "/quotes", HttpMethod.GET, headerEntity, stock)
+                .getBody().get(ticker);
 
         validateStock(currentStock);
-        
+
         return currentStock;
     }
 
-    public Collection<Stock> getStockQuotes(String list)  {
+    public Collection<Stock> getStockQuotes(String list) {
         RestTemplate restTemplate = new RestTemplate();
 
-        ParameterizedTypeReference<Map<String, Stock>> stock = new ParameterizedTypeReference<Map<String,Stock>>() {}; 
-        
+        ParameterizedTypeReference<Map<String, Stock>> stock = new ParameterizedTypeReference<Map<String, Stock>>() {
+        };
+
         HttpEntity<String> headerEntity = new HttpEntity<String>(getHeader());
 
-        Map<String, Stock> stockList = restTemplate.exchange(URL + "quotes?symbol=" + list, HttpMethod.GET, headerEntity, stock).getBody();
+        Map<String, Stock> stockList = restTemplate
+                .exchange(URL + "quotes?symbol=" + list, HttpMethod.GET, headerEntity, stock).getBody();
 
         for (Map.Entry<String, Stock> entry : stockList.entrySet()) {
+            System.out.println(entry.getKey());
             validateStock(entry.getValue());
         }
 
         return stockList.values();
-    
+
     }
 
     public Candles getIntraDayStockWeekend(String ticker, String date) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> headerEntity = new HttpEntity<String>(getHeader());
 
-        ResponseEntity<StockQuotes> stockQuotes = restTemplate.exchange(getURL(ticker, "day", date), HttpMethod.GET, headerEntity, StockQuotes.class);
+        ResponseEntity<StockQuotes> stockQuotes = restTemplate.exchange(getURL(ticker, "day", date), HttpMethod.GET,
+                headerEntity, StockQuotes.class);
+
+        if (stockQuotes.getBody() == null)
+            return null;
 
         ArrayList<Candles> candleList = stockQuotes.getBody().candles;
+
+        if (candleList == null || candleList.size() < 1)
+            return null;
 
         return candleList.get(candleList.size() - 1);
     }
@@ -79,9 +89,11 @@ public class StockServices {
 
         ResponseEntity<StockQuotes> stockQuotes;
         try {
-            stockQuotes = restTemplate.exchange(getURL(ticker, periodType, getDateParameter()), HttpMethod.GET, headerEntity, StockQuotes.class);
+            stockQuotes = restTemplate.exchange(getURL(ticker, periodType, getDateParameter()), HttpMethod.GET,
+                    headerEntity, StockQuotes.class);
         } catch (Exception e) {
-            stockQuotes = restTemplate.exchange(getURL(ticker, periodType, ""), HttpMethod.GET, headerEntity, StockQuotes.class);
+            stockQuotes = restTemplate.exchange(getURL(ticker, periodType, ""), HttpMethod.GET, headerEntity,
+                    StockQuotes.class);
         }
 
         ArrayList<Candles> candleList = stockQuotes.getBody().candles;
@@ -90,31 +102,31 @@ public class StockServices {
         int DAY_OF_WEEK = calendar.get(Calendar.DAY_OF_WEEK);
         int HOUR_OF_DAY = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if(DAY_OF_WEEK != 1 && DAY_OF_WEEK != 7 && HOUR_OF_DAY >= 6 && HOUR_OF_DAY <= 19) {
+        if (DAY_OF_WEEK != 1 && DAY_OF_WEEK != 7 && HOUR_OF_DAY >= 6 && HOUR_OF_DAY <= 19) {
 
+            Stock stock = getStockQuote(ticker);
+            calendar.setTime(new Date(stock.getTradeTimeInLong()));
+            calendar.set(Calendar.MILLISECOND, 0);
+            calendar.set(Calendar.SECOND, 0);
+            Candles candle = Candles.builder().close(stock.getLastPrice()).datetime(calendar.getTimeInMillis()).build();
 
-        Stock stock = getStockQuote(ticker);
-        calendar.setTime(new Date(stock.getTradeTimeInLong()));
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        Candles candle = Candles.builder().close(stock.getLastPrice()).datetime(calendar.getTimeInMillis()).build();
-
-        candleList.add(candle);
+            candleList.add(candle);
         }
 
         return candleList;
     }
-    
+
     public ArrayList<Candles> getHistoricalStockQuotes(String ticker, String periodType, String date) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpEntity<String> headerEntity = new HttpEntity<String>(getHeader());
 
-        System.out.println(getURL(ticker, periodType , date));
+        System.out.println(getURL(ticker, periodType, date));
         try {
-            ResponseEntity<StockQuotes> stockQuotes = restTemplate.exchange(getURL(ticker, periodType , date), HttpMethod.GET, headerEntity, StockQuotes.class);
+            ResponseEntity<StockQuotes> stockQuotes = restTemplate.exchange(getURL(ticker, periodType, date),
+                    HttpMethod.GET, headerEntity, StockQuotes.class);
             return stockQuotes.getBody().candles;
-            
+
         } catch (Exception e) {
             return null;
         }
@@ -124,53 +136,64 @@ public class StockServices {
         String period = "1";
         String frequencyType = "daily";
         String frequency = "1";
-    
-        if(periodType.equals("day")) {
+
+        if (periodType.equals("day")) {
             frequencyType = "minute";
             frequency = "5";
 
-            return URL + ticker + "/pricehistory?periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + date;
-        };
+            return URL + ticker + "/pricehistory?periodType=" + periodType + "&period=" + period + "&frequencyType="
+                    + frequencyType + "&frequency=" + frequency + date;
+        }
+        ;
 
-        if(periodType.equals("reduced")) {
+        if (periodType.equals("reduced")) {
             frequencyType = "minute";
             frequency = "15";
             periodType = "day";
-            
-            return URL + ticker + "/pricehistory?periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + date;
-            };
-        
-        if(periodType.equals("week")) {
+
+            return URL + ticker + "/pricehistory?periodType=" + periodType + "&period=" + period + "&frequencyType="
+                    + frequencyType + "&frequency=" + frequency + date;
+        }
+        ;
+
+        if (periodType.equals("week")) {
             periodType = "day";
             period = "5";
             frequencyType = "minute";
             frequency = "10";
         }
 
-        if(periodType.equals("3month")) {
+        if (periodType.equals("3month")) {
             periodType = "month";
             period = "3";
         }
 
-        if(periodType.equals("all")) {
+        if (periodType.equals("all")) {
             periodType = "year";
             period = "5";
             frequencyType = "weekly";
             frequency = "1";
         }
 
-        // return URL + ticker + "/pricehistory" + "?periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false"; // historical api using OAUTH
-        // return URL + ticker + "/pricehistory?apikey=" + API_KEY + "&periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false"; api using basic auth
+        // return URL + ticker + "/pricehistory" + "?periodType=" + periodType +
+        // "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" +
+        // frequency + "&needExtendedHoursData=false"; // historical api using OAUTH
+        // return URL + ticker + "/pricehistory?apikey=" + API_KEY + "&periodType=" +
+        // periodType + "&period=" + period + "&frequencyType=" + frequencyType +
+        // "&frequency=" + frequency + "&needExtendedHoursData=false"; api using basic
+        // auth
 
-        if(!date.equals("historical")) return URL + ticker + "/pricehistory" +  "?frequency=5" + date + "&needExtendedHoursData=true";
+        if (!date.equals("historical"))
+            return URL + ticker + "/pricehistory" + "?frequency=5" + date + "&needExtendedHoursData=true";
 
-        return URL + ticker + "/pricehistory" + "?periodType=" + periodType + "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false"; // historical api using OAUTH
+        return URL + ticker + "/pricehistory" + "?periodType=" + periodType + "&period=" + period + "&frequencyType="
+                + frequencyType + "&frequency=" + frequency + "&needExtendedHoursData=false"; // historical api using
+                                                                                              // OAUTH
     }
-
 
     HttpHeaders getHeader() {
         HttpHeaders headers = new HttpHeaders();
-        
+
         String ACCESS_TOKEN = tokenServices.getAuthorizationToken();
 
         headers.add("Authorization", "Bearer " + ACCESS_TOKEN);
@@ -178,10 +201,11 @@ public class StockServices {
         return headers;
     }
 
-    String getDateParameter(){
+    String getDateParameter() {
         Calendar calendar = Calendar.getInstance();
 
-        if(calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7 || calendar.get(Calendar.HOUR_OF_DAY) < 7){
+        if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7
+                || calendar.get(Calendar.HOUR_OF_DAY) < 7) {
             return "";
         }
 
@@ -191,7 +215,7 @@ public class StockServices {
         return "&startDate=" + startDate + "&endDate=" + endDate;
     }
 
-    Long getStartDate(Calendar calendar){
+    Long getStartDate(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 7);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -209,21 +233,21 @@ public class StockServices {
         return calendar.getTimeInMillis();
     }
 
-    void validateStock(Stock stock){
+    void validateStock(Stock stock) {
         Calendar calendar = Calendar.getInstance();
         Calendar stockTime = Calendar.getInstance();
 
         stockTime.setTime(new Date(stock.getRegularMarketTradeTimeInLong()));
 
+        if (calendar.get(Calendar.DAY_OF_WEEK) == stockTime.get(Calendar.DAY_OF_WEEK))
+            return;
 
-        if( calendar.get(Calendar.DAY_OF_WEEK) == stockTime.get(Calendar.DAY_OF_WEEK)) return;
+        if (calendar.get(Calendar.DAY_OF_WEEK) >= 2 && calendar.get(Calendar.DAY_OF_WEEK) <= 6)
+            return;
 
-        if (calendar.get(Calendar.DAY_OF_WEEK) >= 2 && calendar.get(Calendar.DAY_OF_WEEK) <= 6) return;
-
-        if (calendar.get(Calendar.DAY_OF_WEEK) < 7){
+        if (calendar.get(Calendar.DAY_OF_WEEK) < 7) {
             calendar.add(Calendar.DATE, -7);
         }
-
 
         // SET THE LAST PRICE TO THURSDAY
         calendar.set(Calendar.DAY_OF_WEEK, 5);
@@ -233,9 +257,12 @@ public class StockServices {
 
         Candles candleThursday = getIntraDayStockWeekend(stock.getSymbol(), date);
 
+        if (candleThursday == null)
+            return;
+
         stock.setClosePrice(candleThursday.getClose());
         stock.setNetChange(stock.getLastPrice() - stock.getClosePrice());
         stock.setNetPercentChangeInDouble((stock.getNetChange() / stock.getLastPrice()) * 100);
     }
-    
+
 }
