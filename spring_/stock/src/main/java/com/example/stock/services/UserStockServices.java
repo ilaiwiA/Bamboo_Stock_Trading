@@ -2,6 +2,7 @@ package com.example.stock.services;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 @Service
 public class UserStockServices {
 
+    final long UNIX_MS_PER_MIN = 60000L;
     final long UNIX_MS_PER_5MIN = 300000L;
     final long UNIX_MS_PER_DAY = 86400000L;
 
@@ -50,8 +52,13 @@ public class UserStockServices {
 
         if (portfolioQuotes.size() == 0)
             createPortfolio(user, portfolioQuotes);
-        else
+
+        if (stocks.size() > 0)
             updatePortfolio(user, portfolioQuotes, stocks);
+        else
+            fillPortfolio(portfolioQuotes);
+
+        // return portfolioQuotes;
 
         return getPortfolioQuotesByDate(portfolioQuotes, periodType);
     }
@@ -73,9 +80,6 @@ public class UserStockServices {
 
         Collections.sort(stocks, new DateComparator());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date(stocks.get(0).getDate()));
-
         long diff;
         if (lastDate < stocks.get(0).getDate()) {
             long msDiff = Math.abs(stocks.get(0).getDate() - lastDate);
@@ -91,19 +95,51 @@ public class UserStockServices {
         }
 
         for (int i = 0; i < stocks.size(); i++) {
+            System.out.println();
+            System.out.println();
+
+            Double prevValue = 0D;
+
             Long recentDate = stocks.get(i).getDate();
-            if (lastDate > stocks.get(i).getDate()) {
-                recentDate = getCurrentTimeStart();
+            if (lastDate > recentDate) {
+                recentDate = lastDate;
             }
 
+            // ArrayList<Candles> stockList =
+            // stockServices.getHistoricalStockQuotes(stocks.get(i).getTicker(), "",
+            // getDateParameter(recentDate));
+
+            /////////////////////////// EXPERIMENTAL
+
             ArrayList<Candles> stockList = stockServices.getHistoricalStockQuotes(stocks.get(i).getTicker(), "",
-                    getDateParameter(recentDate));
+                    getDateParameter(getLatestMarketTime(recentDate)));
+
+            ///////////////////////////
+
             if (stockList == null)
                 continue;
 
-            int index = portfolioQuotes
-                    .indexOf(getStockDate(portfolioQuotes, getStockDateCandles(stockList, recentDate).getDatetime()));
-            Double prevValue = 0D;
+            int index;
+
+            try {
+
+                index = portfolioQuotes
+                        .indexOf(getStockDate(portfolioQuotes,
+                                getStockDateCandles(stockList, recentDate).getDatetime()));
+
+            } catch (Exception e) {
+                index = -1;
+            }
+
+            System.out.println("RECENT DATE: " + recentDate + "  lastDate: " + lastDate);
+            int stockListIndex = stockList.indexOf(getStockDateCandles(stockList,
+                    recentDate));
+
+            if (stockListIndex == -1)
+                continue;
+
+            System.out.println("INDEX: " + stockListIndex);
+            System.out.println(prevValue);
 
             if (index == -1) {
                 Double total = 0D;
@@ -118,13 +154,19 @@ public class UserStockServices {
                     }
                     ;
 
-                    if (stockList.get(x).getDatetime() < lastDate)
+                    if (stockList.get(x).getDatetime() < lastDate || stockList.get(x).getDatetime() < portfolioQuotes
+                            .get(portfolioQuotes.size() - 1).getDatetime()) {
                         continue; // double check this
+                    }
 
                     Double newQuote = (stockList.get(x).getClose() - stocks.get(i).getAvgPrice())
                             * stocks.get(i).getQuantity();
+
                     Double newValue = newQuote - prevValue;
                     Double oldBalance = portfolioQuotes.get(portfolioQuotes.size() - 1).getClose();
+
+                    System.out.println("ADD: " + newQuote + " " + newValue + " " + oldBalance + "    "
+                            + (newValue + oldBalance) + " " + x);
 
                     total += newValue;
 
@@ -134,12 +176,14 @@ public class UserStockServices {
                             .close(newValue + oldBalance).build();
                     portfolioQuotes.add(quotes);
                 }
+                System.out.println("TOT: " + total);
+
             } else {
                 int indexPointer = index;
                 Double total = 0D;
                 Double oldBalance = portfolioQuotes.get(indexPointer).getClose();
 
-                for (int x = 0; x < stockList.size(); x++) {
+                for (int x = stockListIndex; x < stockList.size(); x++) {
 
                     if (indexPointer >= portfolioQuotes.size() - 1) {
                         oldBalance = portfolioQuotes.get(indexPointer - 1).getClose();
@@ -147,6 +191,7 @@ public class UserStockServices {
                                 .build();
 
                         portfolioQuotes.add(quotes);
+
                     }
 
                     if (stockList.get(x).getDatetime().compareTo(portfolioQuotes.get(indexPointer).getDatetime()) < 0) {
@@ -157,35 +202,80 @@ public class UserStockServices {
                         portfolioQuotes.get(indexPointer).setClose(portfolioQuotes.get(indexPointer - 1).getClose());
 
                         x--;
-
                     }
 
                     if (stockList.get(x).getDatetime()
                             .compareTo(portfolioQuotes.get(indexPointer).getDatetime()) == 0) {
+
                         Double newQuote = (stockList.get(x).getClose() - stocks.get(i).getAvgPrice())
                                 * stocks.get(i).getQuantity();
                         Double newValue = newQuote - prevValue;
                         oldBalance = portfolioQuotes.get(indexPointer).getClose();
 
+                        System.out.println(
+                                stocks.get(i).getTicker() + " ADD" + "     " + newQuote + "    " + prevValue + "      "
+                                        + stockList.get(x).getDatetime());
                         prevValue = newQuote;
                         total += newValue;
 
                         portfolioQuotes.get(indexPointer).setClose(oldBalance + total);
-
                     }
                     indexPointer++;
                 }
+                System.out.println("TOT: " + total);
             }
         }
 
-        // userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user);
+
+        return portfolioQuotes;
+    }
+
+    List<Quotes> fillPortfolio(List<Quotes> portfolioQuotes) {
+        Quotes lastQuote = portfolioQuotes.get(portfolioQuotes.size() - 1);
+        Long lastDate = lastQuote.getDatetime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(lastDate));
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        lastDate = calendar.getTimeInMillis();
+
+        long currTime = getCurrentTime();
+
+        int min = calendar.get(Calendar.MINUTE);
+        int multipleFive = (int) (Math.ceil((double) min / 5) * 5);
+        if (min != multipleFive) {
+            calendar.set(Calendar.MINUTE, multipleFive);
+            lastDate = calendar.getTimeInMillis();
+            Quotes quotes = Quotes.builder().datetime(lastDate).close(lastQuote.getClose()).build();
+            portfolioQuotes.add(quotes);
+        }
+
+        long diff;
+
+        if (lastDate < currTime) {
+            long msDiff = Math.abs(currTime - lastDate);
+            diff = TimeUnit.MINUTES.convert(msDiff, TimeUnit.MILLISECONDS);
+        } else
+            diff = 0;
+
+        Long newDate = lastDate + UNIX_MS_PER_5MIN;
+        diff /= 5;
+
+        for (int i = 1; i <= diff; i++) {
+            Quotes quotes = Quotes.builder().datetime(newDate).close(lastQuote.getClose()).build();
+            portfolioQuotes.add(quotes);
+            newDate += UNIX_MS_PER_5MIN;
+        }
 
         return portfolioQuotes;
     }
 
     List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType) {
         Calendar calendar = Calendar.getInstance();
-        // calendar.setTime(new Date(getCurrentTime()));
+
         calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 0);
@@ -194,8 +284,14 @@ public class UserStockServices {
 
         if (periodType.equals("day")) {
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
+            if (index == -1) {
 
-            calendar.set(Calendar.HOUR_OF_DAY, 14);
+                portfolioQuotes.get(0).setPrevious(portfolioQuotes.get(0).getClose());
+
+                return portfolioQuotes;
+            }
+
+            calendar.set(Calendar.HOUR_OF_DAY, 18);
             calendar.set(Calendar.MINUTE, 55);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
@@ -213,11 +309,15 @@ public class UserStockServices {
                     calendar.add(Calendar.DATE, -1);
                     break;
             }
-            System.out.println(calendar.getTimeInMillis());
 
-            Double prevQuote = portfolioQuotes
-                    .get(portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()))).getClose();
-            portfolioQuotes.get(index).setPrevious(prevQuote);
+            int prevQuoteIndex = portfolioQuotes.indexOf(getLastStockDate(portfolioQuotes, calendar.getTimeInMillis()));
+
+            if (prevQuoteIndex != -1) {
+                Double prevQuote = portfolioQuotes.get(prevQuoteIndex).getClose();
+                portfolioQuotes.get(index).setPrevious(prevQuote);
+            } else
+                portfolioQuotes.get(index).setPrevious(portfolioQuotes.get(index).getClose());
+
             return portfolioQuotes.subList(index, portfolioQuotes.size() - 1);
         }
 
@@ -244,7 +344,14 @@ public class UserStockServices {
             calendar.setTime(new Date(portfolioQuotes.get(0).getDatetime()));
         }
 
-        return getStockDay(portfolioQuotes, periodType, calendar.getTimeInMillis());
+        List<Quotes> portfolio = getStockDay(portfolioQuotes, periodType, calendar.getTimeInMillis());
+
+        if (portfolio.size() == 0) {
+            return new ArrayList<Quotes>(Arrays.asList(portfolioQuotes.get(0)));
+        }
+
+        return portfolio;
+
     }
 
     public ResponseEntity<String> purchaseStock(ObjectNode json) {
@@ -275,7 +382,12 @@ public class UserStockServices {
                 calculateAveragePrice(stock.getAvgPrice(), stock.getQuantity(), currentStockQuote.getLastPrice(),
                         getQuantity(orderBuyIn, orderValue, currentStockQuote.getLastPrice())));
         stock.setQuantity(newQuantity);
-        stock.setDate(getCurrentTime());
+        // stock.setDate(getLatestMarketTime(new Date().getTime()));
+
+        ///////////// EXPIERMIENTAL
+        stock.setDate(new Date().getTime());
+
+        ///
 
         Double availableBal = portfolio.getAvailableBalance()
                 - (getQuantity(orderBuyIn, orderValue, currentStockQuote.getLastPrice())
@@ -311,7 +423,6 @@ public class UserStockServices {
                 .format(stock.getQuantity() - getQuantity(orderBuyIn, orderValue, currentStockQuote.getLastPrice())));
 
         stock.setQuantity(newQuantity);
-        stock.setDate(getCurrentTime());
 
         Double availableBal = portfolio.getAvailableBalance()
                 + (getQuantity(orderBuyIn, orderValue, currentStockQuote.getLastPrice())
@@ -351,11 +462,48 @@ public class UserStockServices {
         return new Quotes();
     }
 
-    Candles getStockDateCandles(List<Candles> stockList, Long date) {
-        Optional<Candles> object = stockList.stream().filter(a -> a.getDatetime().compareTo(date) >= 0).findFirst();
+    Quotes getLastStockDate(List<Quotes> stockList, Long date) {
+        Quotes quotes = new Quotes();
+        Optional<Quotes> object = stockList.stream().filter(a -> {
+            if (a.getDatetime().compareTo(date) < 0) {
+
+                quotes.setClose(a.getClose());
+                quotes.setDatetime(a.getDatetime());
+
+            }
+            return a.getDatetime().compareTo(date) == 0;
+        }).findFirst();
 
         if (object.isPresent())
             return object.get();
+
+        return quotes;
+    }
+
+    Candles getStockDateCandles(List<Candles> stockList, Long date) {
+        Candles candles = new Candles();
+        Calendar calendar = Calendar.getInstance();
+        Optional<Candles> object = stockList.stream().filter(a -> {
+
+            calendar.setTime(new Date(a.getDatetime()));
+
+            if (a.getDatetime().compareTo(date) <= 0) {
+                candles.setClose(a.getClose());
+                candles.setDatetime(a.getDatetime());
+                candles.setHigh(a.getHigh());
+                candles.setLow(a.getLow());
+                candles.setOpen(a.getOpen());
+                candles.setVolume(a.getVolume());
+            }
+
+            // todo return next date where hour 19 is max
+            return a.getDatetime().compareTo(date) >= 0;
+        }).findFirst();
+
+        if (object.isPresent())
+            return object.get();
+
+        System.out.println("NULL RETURNED FROM getStcokDateCandles");
 
         return null;
     }
@@ -372,10 +520,9 @@ public class UserStockServices {
         List<Quotes> filteredQuotes;
         List<Quotes> timeFilteredQuotes;
 
-        filteredQuotes = stockList.stream().filter(a -> {
-
-            return a.getDatetime().compareTo(date) == 0 || a.getDatetime().compareTo(date) == 1;
-        }).collect(Collectors.toList());
+        filteredQuotes = stockList.stream()
+                .filter(a -> a.getDatetime().compareTo(date) == 0 || a.getDatetime().compareTo(date) == 1)
+                .collect(Collectors.toList());
 
         timeFilteredQuotes = filteredQuotes.stream().filter(a -> {
 
@@ -386,7 +533,6 @@ public class UserStockServices {
             } else if (periodType.equals("week")) {
                 return calendarQuotes.get(Calendar.MINUTE) % 10 == 0;
             } else if (periodType.equals("month")) {
-                // return calendarQuotes.get(Calendar.MINUTE) == 0;
                 return (calendarQuotes.get(Calendar.HOUR_OF_DAY) == 12 && calendarQuotes.get(Calendar.MINUTE) == 0);
             }
 
@@ -406,12 +552,6 @@ public class UserStockServices {
 
     Long getCurrentTimeStart() {
         Calendar calendar = Calendar.getInstance();
-        // if(calendar.get(Calendar.DAY_OF_WEEK) == 7){
-        // calendar.set(Calendar.DAY_OF_WEEK, 6);
-        // } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1){
-        // calendar.add(Calendar.DATE, -7);
-        // calendar.set(Calendar.DAY_OF_WEEK, 6);
-        // }
 
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 0);
@@ -421,8 +561,10 @@ public class UserStockServices {
         return calendar.getTimeInMillis();
     }
 
-    Long getCurrentTime() {
+    Long getLatestMarketTime(Long date) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7) {
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 2) {
@@ -431,6 +573,33 @@ public class UserStockServices {
         }
 
         return calendar.getTimeInMillis();
+    }
+
+    Long getCurrentTime() {
+        Calendar currentTime = Calendar.getInstance();
+
+        Calendar minMarketTime = Calendar.getInstance();
+        minMarketTime.set(Calendar.HOUR_OF_DAY, 6);
+        minMarketTime.set(Calendar.MINUTE, 0);
+        minMarketTime.set(Calendar.SECOND, 0);
+        minMarketTime.set(Calendar.MILLISECOND, 0);
+
+        Calendar maxMarketTime = Calendar.getInstance();
+        maxMarketTime.set(Calendar.HOUR_OF_DAY, 18);
+        maxMarketTime.set(Calendar.MINUTE, 55);
+        maxMarketTime.set(Calendar.SECOND, 0);
+        maxMarketTime.set(Calendar.MILLISECOND, 0);
+
+        if (currentTime.getTimeInMillis() < minMarketTime.getTimeInMillis()) {
+            maxMarketTime.add(Calendar.DATE, -1);
+            return maxMarketTime.getTimeInMillis();
+        } else if (currentTime.getTimeInMillis() > minMarketTime.getTimeInMillis()
+                && currentTime.getTimeInMillis() > maxMarketTime.getTimeInMillis()) {
+            return maxMarketTime.getTimeInMillis();
+        }
+
+        return currentTime.getTimeInMillis();
+
     }
 
     String getDateParameter(Long startDate) {

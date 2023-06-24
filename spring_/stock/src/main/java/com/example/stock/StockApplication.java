@@ -18,7 +18,9 @@ public class StockApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:1234").allowCredentials(true);
+				registry.addMapping("/**").allowedOrigins("http://localhost:1234")
+						.allowedMethods("GET", "POST")
+						.allowCredentials(true);
 			}
 		};
 	}

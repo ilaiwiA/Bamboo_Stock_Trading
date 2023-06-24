@@ -1,6 +1,5 @@
 package com.example.stock.models.User.UserStocks;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,16 +18,9 @@ import lombok.NoArgsConstructor;
 public class Quotes {
 
     @Id
-    @SequenceGenerator(
-        name = "quote_seq",
-        sequenceName = "quote_seq",
-        allocationSize = 1
-    )
+    @SequenceGenerator(name = "quote_seq", sequenceName = "quote_seq", allocationSize = 1)
 
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "quote_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "quote_seq")
 
     private Integer stockID;
 

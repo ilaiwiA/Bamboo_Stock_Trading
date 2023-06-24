@@ -1,8 +1,8 @@
 package com.example.stock.controllers.UserController;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,12 +29,20 @@ public class PortfolioController {
     public void updateWatchlist(@RequestBody ObjectNode json) {
         String ticker = json.get("ticker").asText();
 
+        System.out.println(ticker);
+
         User user = userRepository.getUserByID(userSecurityService.getCurrentUserID());
 
         Portfolio portfolio = user.getPortfolio();
 
         List<String> userWatchList = portfolio.getWatchList();
-
+        if (userWatchList == null) {
+            List<String> watchList = new ArrayList<>();
+            watchList.add(ticker);
+            portfolio.setWatchList(watchList);
+            userRepository.save(user);
+            return;
+        }
         boolean update = userWatchList.remove(ticker);
 
         if (!update)

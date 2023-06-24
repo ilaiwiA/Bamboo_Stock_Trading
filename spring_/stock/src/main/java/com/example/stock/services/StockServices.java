@@ -56,7 +56,6 @@ public class StockServices {
                 .exchange(URL + "quotes?symbol=" + list, HttpMethod.GET, headerEntity, stock).getBody();
 
         for (Map.Entry<String, Stock> entry : stockList.entrySet()) {
-            System.out.println(entry.getKey());
             validateStock(entry.getValue());
         }
 
@@ -236,6 +235,9 @@ public class StockServices {
     void validateStock(Stock stock) {
         Calendar calendar = Calendar.getInstance();
         Calendar stockTime = Calendar.getInstance();
+
+        if (stock.getRegularMarketTradeTimeInLong() == null)
+            return;
 
         stockTime.setTime(new Date(stock.getRegularMarketTradeTimeInLong()));
 

@@ -1,5 +1,7 @@
 package com.example.stock.controllers.AuthController;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.example.stock.models.User.AuthRequest;
 import com.example.stock.models.User.User;
 import com.example.stock.models.User.Portfolio.Portfolio;
 import com.example.stock.models.User.Security.UserRegister;
+import com.example.stock.models.User.UserStocks.Quotes;
 import com.example.stock.security.Utility.JwtTokenUtil;
 import com.example.stock.services.UserServices;
 
@@ -48,13 +51,10 @@ public class AuthController {
 
     @PostMapping("/login")
     public String generateToken(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
-        System.out.println(authRequest.toString());
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(),
                         authRequest.getPassword()));
-
-        System.out.println(auth.toString());
 
         if (auth.isAuthenticated()) {
             response.setHeader(HttpHeaders.SET_COOKIE,
@@ -68,8 +68,14 @@ public class AuthController {
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid UserRegister userRegister, HttpServletResponse response) {
 
+        List<Quotes> portfolioQuotes = new ArrayList<>();
+
+        Quotes quote = new Quotes(null, userRegister.getStartingBalance(), new Date().getTime(), null);
+
+        portfolioQuotes.add(quote);
+
         Portfolio portfolio = Portfolio.builder().totalBalance(userRegister.getStartingBalance())
-                .availableBalance(userRegister.getStartingBalance()).build();
+                .availableBalance(userRegister.getStartingBalance()).portfolioQuotes(portfolioQuotes).build();
 
         User user = userServices.createUser(userRegister, portfolio);
 

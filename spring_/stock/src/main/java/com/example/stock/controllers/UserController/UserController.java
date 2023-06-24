@@ -1,7 +1,9 @@
 package com.example.stock.controllers.UserController;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,9 +58,16 @@ public class UserController {
     }
 
     @GetMapping("/watchlist")
-    public List<String> getWatchlist() {
+    public ResponseEntity<List<String>> getWatchlist() {
+        List<String> watchList = userRepository.getUserByID(userSecurityService.getCurrentUserID()).getPortfolio()
+                .getWatchList();
 
-        return userRepository.getUserByID(userSecurityService.getCurrentUserID()).getPortfolio().getWatchList();
+        if (watchList == null || watchList.size() < 1) {
+            System.out.println("CALLED");
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(watchList);
     }
 
     @GetMapping("/portfolio/{periodType}")

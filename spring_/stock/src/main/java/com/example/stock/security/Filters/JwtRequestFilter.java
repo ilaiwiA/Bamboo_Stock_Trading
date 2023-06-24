@@ -50,7 +50,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
             } catch (Exception e) {
-                System.out.println(e);
                 filterChain.doFilter(request, response);
             }
 

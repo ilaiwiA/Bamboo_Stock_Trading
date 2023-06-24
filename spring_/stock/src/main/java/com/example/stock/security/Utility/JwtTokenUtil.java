@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtTokenUtil {
 
-    private final int JWT_EXPIRATION = 1000 * 60 * 30;
+    private final int JWT_EXPIRATION = 1000 * 60 * 60;
 
     private final String JWT_KEY = "C728574F4F605DB08C92069BDFDBA00636AEBC805EC89E9384F4FD116C1C1538";
 
