@@ -105,16 +105,8 @@ public class UserStockServices {
                 recentDate = lastDate;
             }
 
-            // ArrayList<Candles> stockList =
-            // stockServices.getHistoricalStockQuotes(stocks.get(i).getTicker(), "",
-            // getDateParameter(recentDate));
-
-            /////////////////////////// EXPERIMENTAL
-
             ArrayList<Candles> stockList = stockServices.getHistoricalStockQuotes(stocks.get(i).getTicker(), "",
                     getDateParameter(getLatestMarketTime(recentDate)));
-
-            ///////////////////////////
 
             if (stockList == null)
                 continue;
@@ -122,10 +114,14 @@ public class UserStockServices {
             int index;
 
             try {
-
                 index = portfolioQuotes
                         .indexOf(getStockDate(portfolioQuotes,
                                 getStockDateCandles(stockList, recentDate).getDatetime()));
+
+                if (i == 0) {
+                    portfolioQuotes.remove(index);
+                    index = -1;
+                }
 
             } catch (Exception e) {
                 index = -1;
@@ -138,8 +134,11 @@ public class UserStockServices {
             if (stockListIndex == -1)
                 continue;
 
-            System.out.println("INDEX: " + stockListIndex);
-            System.out.println(prevValue);
+            if (lastDate == recentDate) {
+                prevValue = (stockList.get(stockListIndex - 1).getClose() - stocks.get(i).getAvgPrice())
+                        * stocks.get(i).getQuantity();
+
+            }
 
             if (index == -1) {
                 Double total = 0D;
@@ -165,9 +164,6 @@ public class UserStockServices {
                     Double newValue = newQuote - prevValue;
                     Double oldBalance = portfolioQuotes.get(portfolioQuotes.size() - 1).getClose();
 
-                    System.out.println("ADD: " + newQuote + " " + newValue + " " + oldBalance + "    "
-                            + (newValue + oldBalance) + " " + x);
-
                     total += newValue;
 
                     prevValue = newQuote;
@@ -175,9 +171,8 @@ public class UserStockServices {
                     Quotes quotes = Quotes.builder().datetime(stockList.get(x).getDatetime())
                             .close(newValue + oldBalance).build();
                     portfolioQuotes.add(quotes);
-                }
-                System.out.println("TOT: " + total);
 
+                }
             } else {
                 int indexPointer = index;
                 Double total = 0D;
@@ -185,13 +180,12 @@ public class UserStockServices {
 
                 for (int x = stockListIndex; x < stockList.size(); x++) {
 
-                    if (indexPointer >= portfolioQuotes.size() - 1) {
+                    if (indexPointer > portfolioQuotes.size() - 1) {
                         oldBalance = portfolioQuotes.get(indexPointer - 1).getClose();
                         Quotes quotes = Quotes.builder().datetime(stockList.get(x).getDatetime()).close(oldBalance)
                                 .build();
 
                         portfolioQuotes.add(quotes);
-
                     }
 
                     if (stockList.get(x).getDatetime().compareTo(portfolioQuotes.get(indexPointer).getDatetime()) < 0) {
@@ -212,9 +206,6 @@ public class UserStockServices {
                         Double newValue = newQuote - prevValue;
                         oldBalance = portfolioQuotes.get(indexPointer).getClose();
 
-                        System.out.println(
-                                stocks.get(i).getTicker() + " ADD" + "     " + newQuote + "    " + prevValue + "      "
-                                        + stockList.get(x).getDatetime());
                         prevValue = newQuote;
                         total += newValue;
 
@@ -222,7 +213,6 @@ public class UserStockServices {
                     }
                     indexPointer++;
                 }
-                System.out.println("TOT: " + total);
             }
         }
 
@@ -274,6 +264,7 @@ public class UserStockServices {
     }
 
     List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType) {
+        System.out.println("CALLED DATES");
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
@@ -318,7 +309,7 @@ public class UserStockServices {
             } else
                 portfolioQuotes.get(index).setPrevious(portfolioQuotes.get(index).getClose());
 
-            return portfolioQuotes.subList(index, portfolioQuotes.size() - 1);
+            return portfolioQuotes.subList(index, portfolioQuotes.size());
         }
 
         if (periodType.equals("week")) {
@@ -502,8 +493,6 @@ public class UserStockServices {
 
         if (object.isPresent())
             return object.get();
-
-        System.out.println("NULL RETURNED FROM getStcokDateCandles");
 
         return null;
     }
