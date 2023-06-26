@@ -14,6 +14,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.example.stock.models.Stocks.StockQuotes.Candles;
 import com.example.stock.services.StockServices;
 
+/*
+ * Controller for receiving quotes based on time period
+ */
 @RestController
 @RequestMapping("/api/stock")
 public class StockQuotesController {
@@ -21,6 +24,7 @@ public class StockQuotesController {
     @Autowired
     StockServices stockServices;
 
+    // Retrieve historical quotes based on a certain period type
     @GetMapping("/{ticker}/quotes/{periodType}")
     public ArrayList<Candles> getHistoricalQuotes(@PathVariable("ticker") String ticker,
             @PathVariable("periodType") String periodType) {
@@ -28,6 +32,7 @@ public class StockQuotesController {
         return stockServices.getHistoricalStockQuotes(ticker, periodType, "historical");
     }
 
+    // Retrieve live intraday quotes, different periodtypes change frequency time
     @GetMapping(value = { "/{ticker}/quotes", "/{ticker}/quotes/", "/{ticker}/quotes/reduced" })
     public ArrayList<Candles> getIntradayStockQuotes(@PathVariable("ticker") String ticker) {
         UriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentRequest();

@@ -9,6 +9,11 @@ import com.example.stock.models.User.User;
 
 import lombok.AllArgsConstructor;
 
+/*
+ * Implementation of UserDetails
+ * Overrides default
+ * Custom class that acts as a wrapper for the main user model
+ */
 @AllArgsConstructor
 public class UserSecurity implements UserDetails {
 

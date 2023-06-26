@@ -8,6 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Controller for stock quotes used by StockQuotes Model
+ * Fields designed for TDAmeritrade
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

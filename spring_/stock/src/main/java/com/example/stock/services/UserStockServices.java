@@ -264,7 +264,6 @@ public class UserStockServices {
     }
 
     List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType) {
-        System.out.println("CALLED DATES");
         Calendar calendar = Calendar.getInstance();
 
         calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));

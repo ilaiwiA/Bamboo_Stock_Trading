@@ -7,6 +7,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+/*
+ * API Token for TDAmeritrade api -> used for live intraday quotes
+ */
 @Entity
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,17 +17,12 @@ public class AuthorizationToken {
     @Id
     int id = 1;
 
-    @Column(
-        name = "access_token",
-        columnDefinition = "TEXT"
-    )
+    @Column(name = "access_token", columnDefinition = "TEXT")
     String access_token;
 
     Long expires_in;
 
-    @Column(
-        name = "expiration_time"
-    )
+    @Column(name = "expiration_time")
     Long expirationTime;
 
     public Object authorizati() {

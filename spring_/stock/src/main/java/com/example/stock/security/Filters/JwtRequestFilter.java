@@ -20,6 +20,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 
+/*
+ * JWT TOKEN FILTER -> VALIDATES TOKEN and validates user and token match
+ */
 @Component
 @AllArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -35,44 +38,49 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         String jwtToken = null;
 
+        // Parse cookie from request
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("jwt".equals(cookie.getName())) {
+                if ("jwt".equals(cookie.getName())) { // retrieve jwt token
                     jwtToken = cookie.getValue();
                     break;
                 }
             }
         }
 
-        if (jwtToken != null) {
+        if (jwtToken != null) { // if found extract username from token
             String username = null;
             try {
 
                 username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-            } catch (Exception e) {
+            } catch (Exception e) { // if token is not valid -> skip to next filter
                 filterChain.doFilter(request, response);
             }
 
             if (username != null &&
-                    SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
+                    SecurityContextHolder.getContext().getAuthentication() == null) { // if username is parsed from
+                                                                                      // token AND user is currently not
+                                                                                      // authenticated
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username); // retrieve user from
+                                                                                           // database
+                if (jwtTokenUtil.validateToken(jwtToken, userDetails)) { // if token is validated that it belongs to the
+                                                                         // user AND is not expired
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
                             null, userDetails.getAuthorities());
                     auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                     SecurityContextHolder.getContext().setAuthentication(auth);
-                    filterChain.doFilter(request, response);
+                    filterChain.doFilter(request, response); // ADD USER TO SECURITY CONTEXT AND GO TO NEXT FILTER
                 } else {
-                    throw new BadCredentialsException("Invalid Token");
+                    throw new BadCredentialsException("Invalid Token"); // if token is invalid throw exception
                 }
             } else {
-                throw new BadCredentialsException("Invalid Token");
+                throw new BadCredentialsException("Invalid Token"); // if token is invalid throw exception
 
             }
         } else {
 
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response); // if token is missing go to next filter
         }
 
     }

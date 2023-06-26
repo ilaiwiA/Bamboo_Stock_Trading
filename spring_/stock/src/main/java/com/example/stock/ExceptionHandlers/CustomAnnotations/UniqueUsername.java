@@ -11,6 +11,9 @@ import com.example.stock.ExceptionHandlers.CustomAnnotations.Validators.UniqueUs
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
+/*
+ * Validator for registration ->  interface for UniqueUsernameValidator
+ */
 @Target({ ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UniqueUsernameValidator.class)

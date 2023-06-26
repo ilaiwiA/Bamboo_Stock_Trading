@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Controller for stock quotes
+ * Fields designed for TDAmeritrade
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

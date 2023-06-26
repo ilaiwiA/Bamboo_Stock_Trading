@@ -18,6 +18,9 @@ import com.example.stock.security.Filters.JwtRequestFilter;
 
 import lombok.AllArgsConstructor;
 
+/*
+ * Enable spring security and config filter chain
+ */
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -32,12 +35,25 @@ public class WebSecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(handling -> handling.authenticationEntryPoint(customAuthenticationEntryPoint));
+                        .requestMatchers("/auth/**").permitAll() // Allow all requests to authentication endpoints ->
+                                                                 // registration, login, logout
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll() // allow options method to permit preflight
+                                                                         // requests
+                        .anyRequest().authenticated()) // secure all other endpoints
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class) // JWT FILTER
+                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // prevent
+                                                                                                                    // spring
+                                                                                                                    // security
+                                                                                                                    // from
+                                                                                                                    // saving
+                                                                                                                    // context
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(customAuthenticationEntryPoint)); // exception
+                                                                                                                   // handling
+                                                                                                                   // using
+                                                                                                                   // our
+                                                                                                                   // custom
+                                                                                                                   // entry
+                                                                                                                   // point
 
         return http.build();
     }

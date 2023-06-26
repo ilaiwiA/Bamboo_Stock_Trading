@@ -7,11 +7,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.stock.models.Stocks.StockSummary;
 
+/*
+ * Controller for company summary based on a certain ticker
+ */
 @RestController
 public class StockSummaryController {
 
-    // https://www.alphavantage.co/ api
-    // String API_KEY = "RNCVO8QHAI6LHJYT";
     String API_KEY = "WSKXEFPWRBXHEXXQ";
     String URL = "https://www.alphavantage.co/query?function=OVERVIEW";
 

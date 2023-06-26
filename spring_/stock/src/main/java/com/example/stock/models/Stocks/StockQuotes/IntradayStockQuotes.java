@@ -13,6 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+/*
+ * Controller for intraday live stock quotes
+ * Fields designed for TDAmeritrade
+ */
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,10 +38,9 @@ public class IntradayStockQuotes {
     @JsonProperty("volume")
     Double volume;
 
-    //tiingo api
+    // tiingo api
     @JsonSetter("date")
     String date;
-    
 
     /// USE WITH TIINGO API IF NEEDED
     @JsonGetter("datetime")

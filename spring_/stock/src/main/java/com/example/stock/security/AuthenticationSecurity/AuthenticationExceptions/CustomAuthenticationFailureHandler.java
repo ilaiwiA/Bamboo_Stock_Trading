@@ -10,6 +10,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/*
+ * Custom Failure handler
+ * Called on invalid credentials -> access secured page without authentication or invalid OR expired token
+ */
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     @Override
@@ -22,7 +26,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             response.addHeader("message", "invalid credentials");
         }
 
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'onAuthenticationFailure'");
     }
 

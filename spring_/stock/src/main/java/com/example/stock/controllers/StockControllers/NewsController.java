@@ -7,6 +7,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.stock.models.News.NewsData;
 
+/*
+ * News Controller -> fetch news both specific and general
+ */
 @RestController
 public class NewsController {
     String limit = "&limit=50";

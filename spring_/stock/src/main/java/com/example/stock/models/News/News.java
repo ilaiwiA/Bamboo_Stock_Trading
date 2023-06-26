@@ -1,4 +1,5 @@
 package com.example.stock.models.News;
+
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
@@ -6,8 +7,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+/*
+ * News model
+ * fields designed for alphavantage api
+ */
 public class News {
-    
+
     @JsonProperty("title")
     public String title;
 
@@ -32,13 +37,14 @@ public class News {
     public String symbol;
 
     @JsonSetter("ticker_sentiment")
-    public void setTickers(ArrayList<Ticker> tickerList){
+    public void setTickers(ArrayList<Ticker> tickerList) {
         this.tickerList = tickerList;
     }
 
     @JsonGetter("symbol")
-    public String getTicker(){
-        if(tickerList.size() > 0) return tickerList.get(0).ticker;
+    public String getTicker() {
+        if (tickerList.size() > 0)
+            return tickerList.get(0).ticker;
         return "";
     }
 

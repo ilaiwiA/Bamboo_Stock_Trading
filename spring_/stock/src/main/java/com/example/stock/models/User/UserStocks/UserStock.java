@@ -1,6 +1,5 @@
 package com.example.stock.models.User.UserStocks;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +10,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Model for stocks owned by the user -> saved by portfolio
+ */
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,16 +22,9 @@ public class UserStock {
 
     @Id
     // @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(
-        name = "stock_seq",
-        sequenceName = "stock_seq",
-        allocationSize = 1
-    )
+    @SequenceGenerator(name = "stock_seq", sequenceName = "stock_seq", allocationSize = 1)
 
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "stock_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_seq")
     private Integer stockID;
 
     String ticker;

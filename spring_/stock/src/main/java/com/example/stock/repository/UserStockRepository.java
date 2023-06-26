@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.stock.models.User.UserStocks.UserStock;
 
+// Portfolio stocks repository -> ONLY USED IN TESTING
 public interface UserStockRepository extends JpaRepository<UserStock, Long> {
 
     @Query("SELECT x from UserStock x where x.ticker = ?1")

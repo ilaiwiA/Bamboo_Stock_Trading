@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.stock.models.Stocks.Stock;
 import com.example.stock.services.StockServices;
 
+/*
+ * Controller to receive quotes for specific ticker using custom service class
+ */
 @RestController
 public class StockController {
 

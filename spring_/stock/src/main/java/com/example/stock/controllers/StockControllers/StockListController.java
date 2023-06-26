@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.stock.models.Stocks.Stock;
 import com.example.stock.services.StockServices;
 
+/*
+ * Controller to retrieve multiple stock quotes using custom services class
+ */
 @RestController
 public class StockListController {
 

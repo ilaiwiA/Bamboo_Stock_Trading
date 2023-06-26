@@ -20,35 +20,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Main user model
+ * Contains portfolio to store user stock details
+ * Email not required for ease of registration for user
+ */
 @Builder
 @Data
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tbl_users") /*
-    uniqueConstrains = @uniqueConstrains(
-        name = "firstName_constraint",
-        columnNames = "firstName"
-    )
-*/ 
+                            * uniqueConstrains = @uniqueConstrains(
+                            * name = "firstName_constraint",
+                            * columnNames = "firstName"
+                            * )
+                            */
 @Cacheable(false)
 public class User {
 
     @Id
-    @SequenceGenerator(
-        name = "user_seq",
-        sequenceName = "user_seq",
-        allocationSize = 1
-    )
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_seq", allocationSize = 1)
 
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "user_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
 
-    @Column(
-        name = "user_id"
-    )
+    @Column(name = "user_id")
     @JsonIgnore
     private Integer userID;
 
@@ -60,14 +56,7 @@ public class User {
 
     Long creationDate;
 
-    @OneToOne(
-        cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-        optional = false
-    )
-    @JoinColumn(
-        name = "portfolio_id",
-        referencedColumnName = "portfolioID"
-    )
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "portfolio_id", referencedColumnName = "portfolioID")
     private Portfolio portfolio;
 }

@@ -10,6 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Quotes model used by Portfolio
+ * Portfolio uses quotes to store user portfolio value
+ */
 @Entity
 @Data
 @Builder
@@ -26,5 +30,8 @@ public class Quotes {
 
     Double close;
     Long datetime;
+
+    // "previous" field used to by first time in a day to store valuation from the
+    // previous day -> used by client to render horizontal line
     Double previous;
 }

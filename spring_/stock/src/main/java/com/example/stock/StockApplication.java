@@ -13,6 +13,9 @@ public class StockApplication {
 		SpringApplication.run(StockApplication.class, args);
 	}
 
+	/*
+	 * Cors registry -> allow CORS request for all endpoints for frontend origin
+	 */
 	@Bean
 	WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {

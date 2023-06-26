@@ -7,6 +7,9 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.AllArgsConstructor;
 
+/*
+ * Validator -> checks if username is in repository and returns bool
+ */
 @AllArgsConstructor
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
     private final UserRepository userRepository;

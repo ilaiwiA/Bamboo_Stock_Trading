@@ -8,6 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * Model to store stock company summary
+ * Fields designed for Alphavantage
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,46 +20,46 @@ public class StockSummary {
 
     @JsonProperty("Symbol")
     private String Symbol;
-        
+
     @JsonProperty("AssetType")
     private String AssetType;
-    
+
     @JsonProperty("Name")
     private String Name;
 
     @JsonProperty("Description")
     private String Description;
-    
+
     @JsonProperty("Exchange")
     private String Exchange;
-    
+
     @JsonProperty("Currency")
     private String Currency;
-    
+
     @JsonProperty("Country")
     private String Country;
-    
+
     @JsonProperty("Sector")
     private String Sector;
-    
+
     @JsonProperty("Industry")
     private String Industry;
-    
+
     @JsonProperty("Address")
     private String Address;
-    
+
     @JsonProperty("MarketCapitalization")
     private String MarketCapitalization;
-    
+
     @JsonProperty("PERatio")
     private String PERatio;
-    
+
     @JsonProperty("DividendYield")
     private String DividendYield;
-    
+
     @JsonProperty("EPS")
     private String EPS;
-    
+
     @JsonProperty("TrailingPE")
     private String TrailingPE;
 
@@ -78,11 +82,9 @@ public class StockSummary {
     private String SharesOutstanding;
 
     @JsonProperty("DividendDate")
-    private String DividendDate;    
+    private String DividendDate;
 
     @JsonProperty("ExDividendDate")
     private String ExDividendDate;
-
-
 
 }

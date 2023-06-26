@@ -16,6 +16,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.AllArgsConstructor;
 
+/*
+ * Controller portfolio update watchlist
+ */
 @RestController
 @RequestMapping("/api/user/portfolio")
 @AllArgsConstructor
@@ -25,16 +28,19 @@ public class PortfolioController {
 
     private final UserSecurityService userSecurityService;
 
+    // Watchlist endpoint, called by client to update a users endpoint -> receives
+    // ticker as a request
     @PostMapping("/watchlist")
     public void updateWatchlist(@RequestBody ObjectNode json) {
         String ticker = json.get("ticker").asText();
 
-        System.out.println(ticker);
-
+        // Get current logged in user
         User user = userRepository.getUserByID(userSecurityService.getCurrentUserID());
 
+        // Get current user portfolio
         Portfolio portfolio = user.getPortfolio();
 
+        // If watchlist is empty -> create watchlist and populate it with current ticker
         List<String> userWatchList = portfolio.getWatchList();
         if (userWatchList == null) {
             List<String> watchList = new ArrayList<>();
@@ -43,13 +49,14 @@ public class PortfolioController {
             userRepository.save(user);
             return;
         }
-        boolean update = userWatchList.remove(ticker);
+        boolean update = userWatchList.remove(ticker); // Removes ticker from watchlist -> if successful ticker was
+                                                       // already watchlisted so we remove it
 
-        if (!update)
+        if (!update) // if remove returns false, ticker was not in watchlist so we add it
             userWatchList.add(ticker);
 
-        portfolio.setWatchList(userWatchList);
+        portfolio.setWatchList(userWatchList); // update portfolio
 
-        userRepository.save(user);
+        userRepository.save(user); // save to database
     }
 }

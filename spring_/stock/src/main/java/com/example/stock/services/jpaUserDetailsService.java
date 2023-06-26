@@ -12,6 +12,10 @@ import com.example.stock.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
+/*
+ * UserDetailsSerice custom implementation
+ * Used by Spring Security
+ */
 @Service
 @AllArgsConstructor
 public class jpaUserDetailsService implements UserDetailsService {
@@ -22,12 +26,11 @@ public class jpaUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
 
-        User user = userRepository.findUserByUsername(username);
-
         try {
-            return new UserSecurity(user);
+            User user = userRepository.findUserByUsername(username);
+            return new UserSecurity(user); // maps user to custom UserSecurity object
         } catch (Exception e) {
-            throw new UsernameNotFoundException("Username not found " + username);
+            throw new UsernameNotFoundException("Username not found " + username); // exception if not found
         }
 
     }

@@ -22,6 +22,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/*
+ * User portfolio model 
+ * Stores user owned stocks, watchlist and available balance
+ * 
+ */
 @Data
 @Builder
 @Entity
@@ -31,52 +36,33 @@ public class Portfolio {
 
     @Id
     // @GeneratedValue(strategy = GenerationType.AUTO)
-    @SequenceGenerator(
-        name = "portfolio_seq",
-        sequenceName = "portfolio_seq",
-        allocationSize = 1
-    )
+    @SequenceGenerator(name = "portfolio_seq", sequenceName = "portfolio_seq", allocationSize = 1)
 
-    @GeneratedValue(
-        strategy = GenerationType.SEQUENCE,
-        generator = "portfolio_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "portfolio_seq")
     @JsonIgnore
     private Integer portfolioID;
 
-    @OneToMany(
-        cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-        orphanRemoval = true    
-        )
-    @JoinColumn(
-        name = "portfolio_id",
-        referencedColumnName = "portfolioID"
-    )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "portfolio_id", referencedColumnName = "portfolioID")
     List<UserStock> stocks;
 
-    @OneToMany(
-        cascade = CascadeType.ALL,
-        fetch = FetchType.EAGER,
-        orphanRemoval = true    
-        )
-    @JoinColumn(
-        name = "portfolio_id",
-        referencedColumnName = "portfolioID"
-    )
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumn(name = "portfolio_id", referencedColumnName = "portfolioID")
     List<Quotes> portfolioQuotes;
 
     List<String> watchList;
 
+    // Only used for initialization
     Double totalBalance;
 
     Double availableBalance;
 
+    // retrieve stocks as String list instead of objects
     @JsonGetter("stockList")
     public List<String> getUserStocks() {
         ArrayList<String> userStocks = new ArrayList<>();
 
-        for (int i = 0; i < stocks.size(); i++ ){
+        for (int i = 0; i < stocks.size(); i++) {
             userStocks.add(stocks.get(i).getTicker());
         }
         return userStocks;

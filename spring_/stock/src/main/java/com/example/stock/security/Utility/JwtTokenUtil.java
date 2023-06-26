@@ -16,6 +16,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+// JWT TOKEN SERVICE
+// RESPONSIBLE FOR GENERATING AND VALIDATING TOKEB
 @Component
 public class JwtTokenUtil {
 
@@ -23,11 +25,11 @@ public class JwtTokenUtil {
 
     private final String JWT_KEY = "C728574F4F605DB08C92069BDFDBA00636AEBC805EC89E9384F4FD116C1C1538";
 
-    public String getUsernameFromToken(String token) {
+    public String getUsernameFromToken(String token) { // extract subject from token
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    public Date getExpirationFromToken(String token) {
+    public Date getExpirationFromToken(String token) { // extract expiration date from token
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
@@ -36,7 +38,7 @@ public class JwtTokenUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims getAllClaimsFromToken(String token) {
+    private Claims getAllClaimsFromToken(String token) { // retrieve claim by decrypting using JWT_KEY
         return Jwts
                 .parserBuilder()
                 .setSigningKey(getSignKey())
@@ -49,18 +51,20 @@ public class JwtTokenUtil {
         return getExpirationFromToken(token).before(new Date());
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token, UserDetails userDetails) { // Validates that token username is same as
+                                                                          // authetication username and NOT expired
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public ResponseCookie generateToken(String userName) {
+    public ResponseCookie generateToken(String userName) { // generate Token on successful login
         Map<String, Object> claims = new HashMap<>();
 
         return createToken(claims, userName);
     }
 
-    private ResponseCookie createToken(Map<String, Object> claims, String userName) {
+    private ResponseCookie createToken(Map<String, Object> claims, String userName) { // create token and add it to
+                                                                                      // cookie with 3 hr expiration
         String token = Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userName)
