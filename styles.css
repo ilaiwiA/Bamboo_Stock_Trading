@@ -17,6 +17,9 @@
   --ff_main: "Nunito Sans", sans-serif;
 
   --aside_height: 135px;
+
+  --panel_height_from: 500;
+  --panel_height_to: 815;
 }
 
 body {
@@ -35,6 +38,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  z-index: 100;
 
   gap: 5em;
   font-weight: 700;
@@ -117,12 +122,18 @@ form li:hover {
 }
 
 .main-container {
-  /* min-width: 1200px; */
   width: 1200px;
+  min-width: 800px;
   margin: 0 1em;
   display: flex;
   flex-direction: column;
   gap: 1em;
+}
+
+/* autocomplete */
+.auto-ticker {
+  display: flex;
+  justify-content: space-between;
 }
 
 /* main portfolio */
@@ -282,6 +293,9 @@ aside {
   padding: 0 1em;
   gap: 0em;
   margin-bottom: 1em;
+
+  height: 550;
+  transition: height 0.25s ease-out;
 }
 
 .purchase-panel .purchase-panel-header {
@@ -299,10 +313,12 @@ aside {
 
 .purchase-panel h2 {
   font-weight: 700;
-  font-size: 22px;
+  font-size: 1.4em;
   padding: 1em 0;
   border-bottom: 1px solid white;
   cursor: pointer;
+
+  transition: border-bottom 0.5s;
 }
 
 .purchase-panel .current-available {
@@ -313,6 +329,7 @@ aside {
   gap: 0.25em;
   padding: 1em 0;
   font-weight: 700;
+  border-top: 1px solid lightgray;
 }
 
 .purchase-form {
@@ -346,6 +363,14 @@ select {
   padding-left: 6px;
 }
 
+.purchase-form .form-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  width: 100%;
+  background-color: white;
+}
+
 /* remove arrow */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
@@ -374,6 +399,7 @@ input::-webkit-inner-spin-button {
   font-weight: 600;
   margin-top: 1em;
   width: inherit;
+  cursor: pointer;
 }
 
 .user-available {
@@ -430,6 +456,7 @@ input::-webkit-inner-spin-button {
 
 .news-panel:hover {
   background-color: var(--light__gray__highlight);
+  filter: brightness(0.75);
   cursor: pointer;
 }
 
@@ -445,7 +472,7 @@ input::-webkit-inner-spin-button {
 }
 
 .news-publisher-time {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .news-title {
@@ -586,6 +613,8 @@ footer span {
 }
 
 /* ANIMATIONS*/
+
+/* loading animation */
 .loader {
   border: 6px solid #f3f3f3; /* Light grey */
   border-top: 6px solid #7b7b7b; /* Blue */
@@ -601,5 +630,34 @@ footer span {
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+/* text slide in animation */
+.animateReview {
+  animation: slideDown 0.5s;
+}
+
+.animateGrow {
+  animation: growPanel 55s;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-65%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes growPanel {
+  from {
+    height: var(--panel_height_from);
+    /* height: 500; */
+  }
+  to {
+    /* height: 815; */
+    height: var(--panel_height_to);
   }
 }

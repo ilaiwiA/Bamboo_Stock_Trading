@@ -10,12 +10,16 @@ class HeaderListView extends View {
 
   addHandlerNav(handler) {
     this._parentElement.addEventListener("click", function (e) {
-      console.log(e.target);
-
       if (e.target.id === "portfolio") window.location.href = "#";
 
       if (e.target.id === "account") console.log("account");
 
+      if (e.target.id === "logout") handler();
+    });
+  }
+
+  addHandlerLogout(handler) {
+    this._parentElement.addEventListener("click", function (e) {
       if (e.target.id === "logout") handler();
     });
   }

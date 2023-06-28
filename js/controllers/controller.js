@@ -12,20 +12,10 @@ import UserStockDetailsView from "../view/UserStockDetailsView.js";
 import HeaderListView from "../view/HeaderListView.js";
 import AutoCompleteView from "../view/AutoCompleteView.js";
 
-// Load Login and Registration Page
-
-const controllerLogin = async function () {
-  try {
-    const login = window.location;
-    console.log("!  @  " + login);
-  } catch (error) {}
-};
-
 // Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
   try {
     const id = window.location.hash;
-    console.log("! " + id);
 
     if (id) return;
 
@@ -36,7 +26,7 @@ const controllerLoadPortfollio = async function () {
     await model.loadUser();
     await model.loadPortfolio();
 
-    // await model.loadNews();
+    await model.loadNews();
 
     PortfolioChartView.clear();
     StockListView.clear();
@@ -50,7 +40,9 @@ const controllerLoadPortfollio = async function () {
     //load user portfolio
     //load current news
   } catch (error) {
-    console.error(error);
+    if (error.message === "401") {
+      window.location.href = "/html/LoginPage.html";
+    }
   }
 };
 
@@ -60,11 +52,11 @@ const controllerChangePage = async function () {
     const val = window.location.hash.indexOf("/") + 1;
     const ticker = window.location.hash.slice(val);
 
-    console.log("@ " + ticker);
-
     if (!ticker) return;
 
     await model.loadUser(ticker);
+
+    console.log("TEST");
 
     PortfolioChartView.renderLoad();
     PurchaseView.renderLoad();
@@ -76,7 +68,7 @@ const controllerChangePage = async function () {
 
     await model.loadStock(ticker);
     await model.loadStockSummary(ticker);
-    // await model.loadNews(ticker);
+    await model.loadNews(ticker);
 
     PortfolioChartView.clear();
     StockListView.clear();
@@ -91,8 +83,12 @@ const controllerChangePage = async function () {
     if (error.message === "Ticker not Found") {
       MissingView.clear();
       MissingView.render();
+    } else {
+      console.error(error);
+      if (error.message === "401") {
+        window.location.href = "/html/LoginPage.html";
+      }
     }
-    console.error(error);
   }
 };
 
@@ -148,13 +144,22 @@ const controllerWatchlist = function (ticker) {
 };
 
 const controllerPortfolioDate = async function (date) {
+  console.log("called");
   await model.updateStockQuotes(date);
   PortfolioChartView.updateChart();
 };
 
+//Auth Controllers
+const controllerLogout = function () {
+  try {
+    model.logout();
+  } catch (error) {
+    // window.location.href = "/html/LoginPage.html";
+  }
+};
+
 //initialize event handlers
 const init = function () {
-  console.log(window.location);
   PortfolioChartView.addHandlerPortfolio(controllerLoadPortfollio);
   PortfolioChartView.addHandlerPortfolio(controllerChangePage);
   PortfolioChartView.addHandlerPortfolioDate(controllerPortfolioDate);
@@ -164,9 +169,11 @@ const init = function () {
   PurchaseView.addHandlerPurchaseForm(controllerPurchaseCancel);
   PurchaseView.addHandlerSubmit(controllerPurchaseSubmit);
 
-  NewsView.addHandlerTicker(controllerChangePage);
+  // NewsView.addHandlerTicker(controllerChangePage);
 
   MissingView.addHandlerHomeButton(controller404Button);
+
+  HeaderListView.addHandlerLogout(controllerLogout);
 };
 
 init();

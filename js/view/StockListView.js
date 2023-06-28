@@ -1,6 +1,6 @@
 import { Chart } from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
-import { USER_STOCK, WATCH_LIST } from "../config.js";
+import { TOP_LIST, USER_STOCK, WATCH_LIST } from "../config.js";
 import View from "./View.js";
 
 Chart.register(annotationPlugin);
@@ -28,9 +28,12 @@ class StockListView extends View {
   };
 
   _generatePanel = function (panelType) {
+    //<h1>${panelType === WATCH_LIST ? "Watchlist" : "My Stocks"}</h1>
+    console.log(panelType);
+
     return `
         <div class="side-container ${panelType}">
-          <h1>${panelType === WATCH_LIST ? "Watchlist" : "My Stocks"}</h1>
+          <h1>${this._generatePanelType(panelType)}</h1>
           <div class="stocks-panel panel">
           ${this._user[`${panelType}`]
             .map(this._generateStocks.bind(this))
@@ -38,6 +41,18 @@ class StockListView extends View {
           </div>
         </div>
         `;
+  };
+
+  _generatePanelType = function (panelType) {
+    switch (panelType) {
+      case WATCH_LIST:
+        return "Watchlist";
+      case USER_STOCK:
+        return "My Stocks";
+
+      case TOP_LIST:
+        return "Top Stocks";
+    }
   };
 
   _generateStocks = function (data) {

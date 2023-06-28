@@ -25,7 +25,11 @@ class PurchaseView extends View {
     const a = this;
 
     this._parentElement.addEventListener("click", function (e) {
-      if (e.target.value?.toLowerCase() === "cancel") handler();
+      if (e.target.value?.toLowerCase() === "cancel") {
+        const panel = e.target.closest(".purchase-panel");
+        panel.style.height = `550px`;
+        handler();
+      }
 
       if (e.target.closest(".purchase-panel-header")?.children.length > 1) {
         const id = e.target.id;
@@ -65,6 +69,8 @@ class PurchaseView extends View {
       .querySelector(".active").id;
     const button = e.target.querySelector(".btn-submit");
 
+    const buttonContainer = e.target.querySelector(".form-buttons");
+
     if (!button) return;
 
     const type = this._parentElement.querySelector(".active").id;
@@ -85,7 +91,7 @@ class PurchaseView extends View {
     }
 
     const parameterSuccess = [
-      button,
+      buttonContainer,
       this._generateReviewMessageSuccess(
         orderBuyIn,
         orderValue,
@@ -96,7 +102,7 @@ class PurchaseView extends View {
     ];
 
     const parameterFailure = [
-      button,
+      buttonContainer,
       this._generateReviewMessageFailure(
         orderBuyIn,
         orderBuyIn === "Share" ? orderEstCost : orderValue
@@ -104,6 +110,8 @@ class PurchaseView extends View {
       this._generateCancelButton(this._data.netChange),
       false,
     ];
+
+    console.log(parameterSuccess, parameterFailure);
 
     //orderValue <= 0 || !this._user.availableBal
 
@@ -126,9 +134,29 @@ class PurchaseView extends View {
   }
 
   renderPurchaseReview(html, buttonHtml, success = true) {
+    console.log(buttonHtml);
+    console.log(this);
+    const panel = this.closest(".purchase-panel");
+    const availableText = panel.querySelector(".current-available");
+
+    const text = availableText.outerHTML;
+    availableText.remove();
+
+    this.classList.add("animateReview");
+
     this.insertAdjacentHTML("beforebegin", html);
-    this.insertAdjacentHTML("afterend", buttonHtml);
-    success ? (this.value = "Submit") : this.remove();
+    this.insertAdjacentHTML("beforeend", buttonHtml);
+    this.insertAdjacentHTML("beforeend", text);
+    success
+      ? (this.querySelector(".btn-submit").value = "Submit")
+      : this.querySelector(".btn-submit").remove();
+
+    let panelHeight = panel.offsetHeight + this.offsetHeight;
+    if (success) panelHeight += 20;
+    console.log(panelHeight);
+
+    panel.style.height = `${panelHeight}px`;
+    availableText.style.maxHeight = "800px";
   }
 
   addHandlerWatchlist(handler) {
@@ -233,11 +261,13 @@ class PurchaseView extends View {
                 </p>
               </section>
 
-              <input type="submit" class="btn-submit btn-alternative" value="Review" style="background-color: var(--${this._generateColor(
-                `${this._data.netChange}`
-              )}" />
+
+              <div class="form-buttons">
+                <input type="submit" class="btn-submit btn-alternative" value="Review" style="background-color: var(--${this._generateColor(
+                  `${this._data.netChange}`
+                )}" />
+              </div>
             </form>
-            <hr />
 
             ${this._generateBalanceHTML()}
 
@@ -370,7 +400,6 @@ class PurchaseView extends View {
           }.`
         : "You do not have enough buying power in your account to place this order."
     }
-
     </section>
     `;
   }
@@ -387,7 +416,10 @@ class PurchaseView extends View {
 
   _checkValidPurchase(type, orderValue) {
     if (type === "Shares") {
-      return orderValue * this._data.lastPrice <= this._user.availableBal;
+      return (
+        orderValue * this._data.lastPrice <= this._user.availableBal &&
+        orderValue > 0
+      );
     } else if (type === "Dollars") {
       return orderValue <= this._user.availableBal;
     }

@@ -42,13 +42,14 @@ main {
   align-items: baseline;
   gap: 1.5em;
   width: 100%;
+  /* padding-left: 2em; */
 }
 
 .login-form form {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  margin: 1em;
+  margin-left: 1em;
 }
 
 .login-form .form-field {
@@ -68,6 +69,7 @@ main {
 }
 
 .login-form h1 {
+  font-size: 2em;
   font-weight: 600;
 }
 
@@ -77,7 +79,7 @@ main {
 }
 
 .login-form form input {
-  width: 250px;
+  min-width: 325px;
   padding-left: 6px;
   padding: 0.5em;
 }
@@ -88,7 +90,9 @@ main {
   cursor: pointer;
 
   padding: 1.25em;
-  min-width: 75px;
+
+  /* min-width: 75px; */
+  max-width: 100px;
   font-size: 12px;
   border: none;
   border-radius: 3em;
@@ -102,16 +106,78 @@ main {
   margin: 0.25em;
 }
 
+.login-form .form-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.form-extra #login-failure {
+  background-color: #f3f3f3;
+  border-radius: 0.25em;
+  padding: 1em;
+  width: 325px;
+
+  font-size: 14px;
+}
+
+.main-form {
+  width: 800px;
+}
+
 /* register form */
 .login-form-register {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  column-gap: 1.5em;
 }
 
-.login-form-register {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5em;
+.register-success {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-success img {
+  width: 500px;
+}
+
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.success-message h1 {
+  font-weight: 800;
+  font-size: 1.75em;
+}
+
+.success-message #redirect-manual {
+  font-size: 0.75em;
+  color: black;
+  text-decoration: underline;
+}
+
+/* registrations error labels */
+.label-error {
+  display: flex;
+  align-items: end;
+  gap: 0.5em;
+
+  margin-top: 0.25em;
+}
+
+.label-error p {
+  color: #fd5240;
+  font-weight: 600;
+}
+
+.label-error img {
+  width: 22px;
+  align-self: flex-start;
 }
 
 .waitLoad {

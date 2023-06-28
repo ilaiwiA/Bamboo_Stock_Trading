@@ -8,9 +8,17 @@ const timeOut = function (sec) {
 
 export const getJSON = async function (url) {
   try {
-    const res = await Promise.race([fetch(url), timeOut(TIME_OUT)]);
+    let header = new Headers();
 
-    if (res.status === 401) window.location.href = "/html/LoginPage.html";
+    let request = new Request(url, {
+      method: "GET",
+      headers: header,
+      credentials: "include",
+    });
+
+    const res = await Promise.race([fetch(request), timeOut(TIME_OUT)]);
+
+    if (res.status === 204) return;
 
     if (!res.ok) {
       throw new Error(`${res.status}`);
@@ -22,12 +30,16 @@ export const getJSON = async function (url) {
   }
 };
 
-export const getPayload = function (data) {
-  return {
+export const postJSON = async function (url, data) {
+  let header = new Headers();
+  header.append("Content-type", "application/json");
+
+  let request = new Request(url, {
     method: "POST",
+    headers: header,
+    credentials: "include",
     body: JSON.stringify(data),
-    headers: {
-      "Content-type": "application/json",
-    },
-  };
+  });
+
+  return await fetch(request);
 };

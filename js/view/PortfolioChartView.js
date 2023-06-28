@@ -26,7 +26,7 @@ class PortfolioChartView extends View {
     return `
     <div class="portfolio-container">
         <div class="portfolio-chart-container">
-        ${this._data.symbol ? this._generatePriceHTML() : ""}
+        ${this._generatePriceHTML()}
           <canvas id="portfolio-chart"></canvas>
         </div>
 
@@ -69,7 +69,13 @@ class PortfolioChartView extends View {
 
     return `
     <div class="chart-info">
-    ${title != -1 ? `<h1>${title}</h1>` : `<h1>${this._data.symbol}</h1>`}
+    ${
+      title != -1
+        ? `<h1>${title}</h1>`
+        : `<h1>${
+            this._data.symbol === "portfolio" ? "" : this._data.symbol || ""
+          }</h1>`
+    }
       <h1 class="ticker-price">${this._formatCurrency(
         +this._data.lastPrice
       )}</h1>
@@ -110,6 +116,16 @@ class PortfolioChartView extends View {
           }
         : "";
 
+    const max = Math.max.apply(
+      this,
+      this._data.quotes.prices.map((a) => a.close)
+    );
+
+    const min = Math.min.apply(
+      this,
+      this._data.quotes.prices.map((a) => a.close)
+    );
+
     this.myChart.data.labels = this._data.quotes.dates;
 
     this.myChart.data.datasets[0].data = this._data.quotes.prices.map(
@@ -119,6 +135,9 @@ class PortfolioChartView extends View {
     this.myChart.options.plugins.annotation.annotations.line1 = dailyLine;
 
     this.myChart.options.borderColor = rgb;
+
+    this.myChart.options.scales.y.max =
+      max - min !== 0 ? max + (max - min) / 5 : undefined;
 
     this._updatePrice(
       +this._data.lastPrice,
@@ -171,6 +190,18 @@ class PortfolioChartView extends View {
       };
     };
 
+    const min = Math.min.apply(
+      null,
+      this._data.quotes.prices.map((a) => a.close)
+    );
+
+    const max = Math.max.apply(
+      null,
+      this._data.quotes.prices.map((a) => a.close)
+    );
+
+    console.log(max + max * 0.01);
+
     this.myChart = new Chart(mainChart, {
       type: "line",
       data: {
@@ -185,6 +216,12 @@ class PortfolioChartView extends View {
         borderColor: rgb,
 
         onHover: this._onHover.bind(this),
+
+        layout: {
+          padding: {
+            top: 15,
+          },
+        },
 
         interaction: {
           mode: "index",
@@ -241,10 +278,10 @@ class PortfolioChartView extends View {
         scales: {
           y: {
             display: false,
-            // beginAtZero: true,
             grid: {
               display: false,
             },
+            max: max - min !== 0 ? max + (max - min) / 5 : undefined,
           },
           x: {
             display: false,

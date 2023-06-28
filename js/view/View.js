@@ -1,4 +1,4 @@
-import { USER_STOCK, WATCH_LIST } from "../config";
+import { TOP_LIST, USER_STOCK, WATCH_LIST } from "../config";
 
 export default class View {
   render(data) {
@@ -39,6 +39,7 @@ export default class View {
     return [
       this._user.stocklist ? USER_STOCK : undefined,
       this._user.watchlist ? WATCH_LIST : undefined,
+      this._user.toplist ? TOP_LIST : undefined,
     ].filter((a) => a);
   }
 
@@ -57,9 +58,11 @@ export default class View {
   }
 
   _generateRGB(netChange) {
-    return this._generateColor(+netChange) === "positive_green"
-      ? "rgb(0,200,0)"
-      : "rgb(253,82,64)";
+    const color = this._generateColor(+netChange);
+    if (color === "positive_green") return "rgb(0,200,0)";
+    else if (color === "negative_red") return "rgb(253,82,64)";
+
+    return "rgb(178, 178, 178)";
   }
 
   _formatCurrency(val) {

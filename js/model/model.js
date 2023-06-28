@@ -7,14 +7,17 @@ import {
   NEWS_LIMIT,
   PAST_PRICE_CONFIG,
   RECENT_PRICE_CONFIG,
+  TOP_LIST,
   UNIX_MS_PER_5_MINUTE,
   UNIX_MS_PER_MINUTE,
   URL,
+  URL_AUTH,
+  URL_LOGIN,
   USER_STOCK,
   WATCH_LIST,
   tickers,
 } from "../config.js";
-import { getJSON, getPayload } from "../helper.js";
+import { getJSON, getPayload, postJSON } from "../helper.js";
 
 export const state = {
   stock: {},
@@ -46,6 +49,7 @@ const generateStock = async function (ticker) {
     return data;
   } catch (error) {
     console.error(`${"🚨🚨🚨"} + ${error}`);
+    window.location = "/";
   }
 };
 
@@ -66,6 +70,7 @@ const generateStockQuotes = async function (
           `${sideChart ? "reduced" : ""}`;
 
     const data = await getJSON(endpointURL);
+
     const timeStart = new Date();
     let dailyTimeData = [];
     let dailyPriceData = [];
@@ -107,6 +112,7 @@ const generateStockQuotes = async function (
 
       dailyPriceData = dailyTimeData
         .map((val, i) => {
+          console.log(data[x], val, x, data.length - 1);
           if (x === data.length - 1 && val <= new Date().getTime()) {
             const a = { ...data[x] };
             a.datetime = val;
@@ -189,7 +195,12 @@ const generateNewsObject = function (data, ticker) {
   try {
     if (!data.feed) return;
 
-    const filterSource = data.feed.filter((a) => a.source !== "Benzinga");
+    const filterSource = data.feed.filter(
+      (a) =>
+        a.source !== "Benzinga" ||
+        a.symbol.includes("CRYPTO") ||
+        a.symbol.includes("FOREX")
+    );
 
     const filterSymbol = filterSource.filter((a) => a.symbol === ticker);
 
@@ -214,27 +225,38 @@ const generateNewsLimit = function (data) {
 
 // load user
 export const loadUser = async function (ticker) {
-  const {
-    firstName,
-    userName,
-    portfolio: {
-      stocks,
-      watchList,
-      stockList,
-      availableBalance: availableBal,
-      totalBalance,
-    },
-  } = await getJSON(URL + "user");
+  try {
+    const {
+      firstName,
+      userName,
+      portfolio: {
+        stocks,
+        watchList,
+        stockList,
+        availableBalance: availableBal,
+        totalBalance,
+      },
+    } = await getJSON(URL + "user");
 
-  state["firstName"] = firstName;
-  state["userName"] = userName;
-  state[`availableBal`] = availableBal;
-  state[`totalBal`] = totalBalance.toFixed(2);
-  state["userStocks"] = stocks;
+    state["firstName"] = firstName;
+    state["userName"] = userName;
+    state[`availableBal`] = availableBal;
+    state[`totalBal`] = totalBalance.toFixed(2);
+    state["userStocks"] = stocks;
 
-  if (!ticker) {
-    await loadStockList(watchList, WATCH_LIST);
-    await loadStockList(stockList, USER_STOCK);
+    if (!ticker) {
+      await loadStockList(watchList, WATCH_LIST);
+      await loadStockList(stockList, USER_STOCK);
+    }
+
+    if (!watchList && stockList.length < 1 && !ticker) {
+      await loadStockList(
+        ["AAPL", "MSFT", "GOOG", "AMZN", "NVDA", "TSLA"],
+        TOP_LIST
+      );
+    }
+  } catch (error) {
+    throw new Error(401);
   }
 };
 
@@ -243,8 +265,7 @@ export const loadPortfolio = async function () {
     const data = await generateStockQuotes("portfolio", "day", false);
 
     state.stock = {};
-    state.stock.symbol = "Ahmed";
-    state.stock.netPercentChangeInDouble = 4.693877551020411;
+    state.stock.symbol = "portfolio";
     state.stock.lastPrice = data.prices[data.prices.length - 1].close;
     state.stock.netChange = state.stock.lastPrice - data.prices[0].previous;
     state.stock.netPercentChangeInDouble =
@@ -279,9 +300,11 @@ export const loadStockList = async function (stockList, panelType) {
 
 export const loadWatchList = async function () {
   try {
-    state.watched = [
-      ...Object.values(await getJSON(URL + "user/" + `${WATCH_LIST}`)),
-    ];
+    const data = await getJSON(URL + "user/" + `${WATCH_LIST}`);
+
+    if (!data) return;
+
+    state.watched = [...Object.values(data)];
   } catch (error) {
     throw error;
   }
@@ -307,7 +330,7 @@ export const updateStockQuotes = async function (date) {
     }
 
     const ticker =
-      state.stock.symbol === "Ahmed" ? "portfolio" : state.stock.symbol;
+      state.stock.symbol === "portfolio" ? "portfolio" : state.stock.symbol;
 
     state.stock.quotes = await generateStockQuotes(ticker, date);
     state.stock.quotes.timePeriod = date;
@@ -390,7 +413,7 @@ export const updateWatchlist = async function (ticker) {
       3. if watchlust exists and ticker is not found, add to state then push change to server.
     */
 
-    await fetch(URL + "user/portfolio/watchlist", getPayload({ ticker }));
+    const res = await postJSON(URL + "user/portfolio/watchlist", { ticker });
   } catch (error) {
     console.error(error);
   }
@@ -405,14 +428,12 @@ export const updateStock = async function (
   try {
     const status =
       orderType === "buy"
-        ? await fetch(
-            URL + "user/purchase",
-            getPayload({ orderBuyIn, orderValue, symbol })
-          )
-        : await fetch(
-            URL + "user/sell",
-            getPayload({ orderBuyIn, orderValue, symbol })
-          );
+        ? await postJSON(URL + "user/purchase", {
+            orderBuyIn,
+            orderValue,
+            symbol,
+          })
+        : await postJSON(URL + "user/sell", { orderBuyIn, orderValue, symbol });
 
     if ((await status.text()) === "all shares sold")
       delete state.stock.tradeType;
@@ -435,5 +456,15 @@ export const updateUser = async function () {
     state["userStocks"] = stocks;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const logout = async function () {
+  try {
+    const response = await getJSON(URL_AUTH + "logout");
+    if (response.response === "success")
+      window.location.href = "/html/LoginPage.html";
+  } catch (error) {
+    throw error;
   }
 };

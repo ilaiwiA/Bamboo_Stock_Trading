@@ -83,13 +83,12 @@ class UserStockDetailsView extends View {
   }
 
   _generateTodayReturnHTML() {
-    console.log(this._data.closePrice);
-    console.log(this._data.netChange);
-
     const returnDollars = this._currentStock.quantity * this._data.netChange;
     const todayReturnDollars = this._formatCurrency(returnDollars);
     const todayReturnPercentage = this._data.netPercentChangeInDouble;
 
+    //todo
+    // if user purchases, date is set the current date causing total return to display instead of todays returns
     if (
       new Date().getFullYear() ===
         new Date(this._currentStock.date).getFullYear() &&

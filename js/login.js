@@ -1,7 +1,8 @@
-import { URL_LOGIN } from "./config";
+import { URL_AUTH } from "./config";
 
 const form = document.querySelector("#login-form");
 const button = document.querySelector("#button-submit");
+const failure = document.querySelector("#login-failure");
 
 window.addEventListener("load", function () {
   console.log("called");
@@ -15,21 +16,36 @@ form.addEventListener("submit", function (e) {
 
   const data = new FormData(form);
 
+  const credentials = {
+    username: data.get("formName"),
+    password: data.get("formPass"),
+  };
+
+  loginFetch(credentials);
+
   console.log("submitted");
 });
 
-const loginFetch = async function () {
+const loginFetch = async function (auth) {
   let header = new Headers();
-  header.append("Accept", "application/json");
-  header.append("Authroization");
+  header.append("Content-Type", "application/json");
 
-  let request = new Request(URL_LOGIN, {
-    method: "GET",
+  let request = new Request(URL_AUTH + "login", {
+    method: "POST",
     headers: header,
+    body: JSON.stringify(auth),
     credentials: "include",
   });
 
-  const response = fetch(request);
+  const response = await fetch(request);
 
-  console.log(response);
+  if (!response.ok) return loginFailure();
+
+  window.location.href = "/";
+};
+
+const loginFailure = function () {
+  failure.classList.remove("hidden");
+
+  button.innerHTML = `<p>Log in</p>`;
 };

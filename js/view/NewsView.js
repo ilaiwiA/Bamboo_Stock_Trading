@@ -4,11 +4,15 @@ import defaultStockIMG from "url:/images/stock_img.jpg";
 class NewsView extends View {
   _parentElement = document.querySelector(".main-container");
 
-  addHandlerTicker(handler) {
-    this._parentElement.addEventListener("click", function (e) {
-      e.preventDefault();
+  constructor() {
+    super();
+    this.addHandlerTicker();
+  }
 
+  addHandlerTicker() {
+    this._parentElement.addEventListener("click", function (e) {
       if (!e.target.closest(".news-tickers")) return;
+      e.preventDefault();
 
       const id = e.target
         .closest(".news-tickers")
@@ -44,7 +48,7 @@ class NewsView extends View {
     <p class="news-teaser">${data.summary}</p>
 
     ${
-      !this._data.symbol && data.symbol.length > 0
+      this._data.symbol && data.symbol.length > 0
         ? `
     <div class="news-tickers">
       <span class="news-ticker">${data.symbol}</span>

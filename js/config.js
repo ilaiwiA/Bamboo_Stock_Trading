@@ -1,11 +1,12 @@
 export const TIME_OUT = 10;
 
-export const URL = "http://192.168.0.215:8080/api/"; // window
-export const URL_LOGIN = "http://192.168.0.215:8080/login";
+export const URL = "https://192.168.0.215:8080/api/"; // window
+export const URL_AUTH = "https://192.168.0.215:8080/auth/";
 // export const URL = "http://192.168.0.198:8080/api/" // macbook
 
 export const USER_STOCK = "stocklist";
 export const WATCH_LIST = "watchlist";
+export const TOP_LIST = "toplist";
 
 export const NEWS_LIMIT = 10;
 
@@ -45,8 +46,27 @@ export const PAST_PRICE_CONFIG = {
   year: "numeric",
 };
 
-import tickerList from "url:/images/tickers_noSpecialChart.csv"; //prevents chrome due to CORS
+// import tickerList from "url:/images/tickers_noSpecialChart.csv"; //prevents chrome due to CORS
+import tickerList from "url:/images/tickers_noSpecialChart_withName.csv"; //prevents chrome due to CORS
 
 export const tickers = fetch(tickerList)
   .then((a) => a.text())
-  .then((a) => a.split(","));
+  .then((a) =>
+    a
+      .split("\n")
+      .map((a) => {
+        const tickerArr = a.split(",");
+        tickerArr[1] = tickerArr[1]?.slice(0, -1);
+
+        if (
+          tickerArr[1] === "undefined" ||
+          !tickerArr[1] ||
+          tickerArr[1].length < 1 ||
+          tickerArr[0] === "ZZZ"
+        ) {
+          return;
+        }
+        return tickerArr;
+      })
+      .filter((a) => a)
+  );
