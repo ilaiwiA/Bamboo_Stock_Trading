@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,9 @@ public class StockServices {
     TokenServices tokenServices;
 
     String URL = "https://api.tdameritrade.com/v1/marketdata/";
-    String API_KEY = "GEARZVA8KB2B3YEO65VPE2FBLHJYDBAI";
+
+    @Value("tda.api.key")
+    String API_KEY;
 
     public Stock getStockQuote(String ticker) {
         RestTemplate restTemplate = new RestTemplate();
@@ -174,14 +177,6 @@ public class StockServices {
             frequency = "1";
         }
 
-        // return URL + ticker + "/pricehistory" + "?periodType=" + periodType +
-        // "&period=" + period + "&frequencyType=" + frequencyType + "&frequency=" +
-        // frequency + "&needExtendedHoursData=false"; // historical api using OAUTH
-        // return URL + ticker + "/pricehistory?apikey=" + API_KEY + "&periodType=" +
-        // periodType + "&period=" + period + "&frequencyType=" + frequencyType +
-        // "&frequency=" + frequency + "&needExtendedHoursData=false"; api using basic
-        // auth
-
         if (!date.equals("historical"))
             return URL + ticker + "/pricehistory" + "?frequency=5" + date + "&needExtendedHoursData=true";
 
@@ -204,7 +199,7 @@ public class StockServices {
         Calendar calendar = Calendar.getInstance();
 
         if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7
-                || calendar.get(Calendar.HOUR_OF_DAY) < 7) {
+                || calendar.get(Calendar.HOUR_OF_DAY) < 6) {
             return "";
         }
 

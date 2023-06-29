@@ -1,5 +1,6 @@
 package com.example.stock.controllers.StockControllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,8 +18,9 @@ public class NewsController {
 
     String URL = "https://www.alphavantage.co/query?function=NEWS_SENTIMENT";
     String tickersOption = "&tickers=";
-    // String API_KEY = "RNCVO8QHAI6LHJYT"; //BASIC KEY
-    String API_KEY = "WSKXEFPWRBXHEXXQ";
+
+    @Value("alpha.api.key")
+    String API_KEY;
 
     @GetMapping("/api/news")
     public NewsData getNews() {
