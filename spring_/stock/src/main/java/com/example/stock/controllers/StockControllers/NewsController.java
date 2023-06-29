@@ -19,7 +19,7 @@ public class NewsController {
     String URL = "https://www.alphavantage.co/query?function=NEWS_SENTIMENT";
     String tickersOption = "&tickers=";
 
-    @Value("alpha.api.key")
+    @Value("${alpha.api.key}")
     String API_KEY;
 
     @GetMapping("/api/news")

@@ -26,7 +26,7 @@ public class TokenServices {
     @Autowired
     TokenRepository tokenRepository;
 
-    @Value("refresh_token")
+    @Value("${refresh_token}")
     private String token;
 
     // expiration time length provided by tdameritrade

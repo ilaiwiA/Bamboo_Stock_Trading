@@ -28,7 +28,7 @@ public class StockServices {
 
     String URL = "https://api.tdameritrade.com/v1/marketdata/";
 
-    @Value("tda.api.key")
+    @Value("${tda.api.key}")
     String API_KEY;
 
     public Stock getStockQuote(String ticker) {

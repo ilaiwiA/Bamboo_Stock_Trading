@@ -14,7 +14,7 @@ import com.example.stock.models.Stocks.StockSummary;
 @RestController
 public class StockSummaryController {
 
-    @Value("alpha.api.key")
+    @Value("${alpha.api.key}")
     String API_KEY;
 
     String URL = "https://www.alphavantage.co/query?function=OVERVIEW";
