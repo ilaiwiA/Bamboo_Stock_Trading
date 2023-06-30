@@ -43,3 +43,12 @@ export const postJSON = async function (url, data) {
 
   return await fetch(request);
 };
+
+export const isMarketOpen = function () {
+  const date = new Date();
+  if (date.getDay() === 0 || date.getDay() === 6) return false;
+
+  if (date.getHours() < 6 || date.getHours > 19) return false;
+
+  return true;
+};

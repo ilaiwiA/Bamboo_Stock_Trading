@@ -11,6 +11,8 @@ import MissingView from "../view/MissingView.js";
 import UserStockDetailsView from "../view/UserStockDetailsView.js";
 import HeaderListView from "../view/HeaderListView.js";
 import AutoCompleteView from "../view/AutoCompleteView.js";
+import { CHART_UPDATE_INTERVAL } from "../config.js";
+import { isMarketOpen } from "../helper.js";
 
 // Load portfollio based on HASH
 const controllerLoadPortfollio = async function () {
@@ -33,6 +35,13 @@ const controllerLoadPortfollio = async function () {
 
     PortfolioChartView.render(model.state);
 
+    setInterval(async () => {
+      if (model.state.stock.quotes.timePeriod != "day" || !isMarketOpen())
+        return;
+      await model.updateStockQuotes("day");
+      PortfolioChartView.updateChart();
+    }, CHART_UPDATE_INTERVAL);
+
     StockListView.render(model.state);
     if (model.state.stock.news) NewsView.render(model.state);
 
@@ -41,7 +50,7 @@ const controllerLoadPortfollio = async function () {
     //load current news
   } catch (error) {
     if (error.message === "401") {
-      window.location.href = "/html/LoginPage.html";
+      window.location.href = "/LoginPage.html";
     }
   }
 };
@@ -55,8 +64,6 @@ const controllerChangePage = async function () {
     if (!ticker) return;
 
     await model.loadUser(ticker);
-
-    console.log("TEST");
 
     PortfolioChartView.renderLoad();
     PurchaseView.renderLoad();
@@ -75,6 +82,13 @@ const controllerChangePage = async function () {
 
     PortfolioChartView.render(model.state);
 
+    setInterval(async () => {
+      if (model.state.stock.quotes.timePeriod != "day" || !isMarketOpen())
+        return;
+      await model.updateStockQuotes("day");
+      PortfolioChartView.updateChart();
+    }, CHART_UPDATE_INTERVAL);
+
     PurchaseView.render(model.state);
     UserStockDetailsView.render(model.state);
     StockDetailsView.render(model.state);
@@ -86,7 +100,7 @@ const controllerChangePage = async function () {
     } else {
       console.error(error);
       if (error.message === "401") {
-        window.location.href = "/html/LoginPage.html";
+        window.location.href = "/LoginPage.html";
       }
     }
   }
@@ -111,8 +125,6 @@ const controllerPurchaseSubmit = async function (
   symbol,
   orderType
 ) {
-  console.log("Submitted");
-
   await model.updateStock(orderBuyIn, orderValue.toString(), symbol, orderType);
   await model.updateUser();
 
@@ -144,7 +156,6 @@ const controllerWatchlist = function (ticker) {
 };
 
 const controllerPortfolioDate = async function (date) {
-  console.log("called");
   await model.updateStockQuotes(date);
   PortfolioChartView.updateChart();
 };
@@ -154,7 +165,7 @@ const controllerLogout = function () {
   try {
     model.logout();
   } catch (error) {
-    // window.location.href = "/html/LoginPage.html";
+    // window.location.href = "/LoginPage.html";
   }
 };
 

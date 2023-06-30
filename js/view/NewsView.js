@@ -53,7 +53,9 @@ class NewsView extends View {
     <div class="news-tickers">
       <span class="news-ticker">${data.symbol}</span>
       <span class="${this._generateColor(+data.netChange)}">${
-            +data.netChange ? Number(+data.netChange).toFixed(2) + "%" : ""
+            +data.netPercentChangeInDouble
+              ? Number(+data.netPercentChangeInDouble).toFixed(2) + "%"
+              : ""
           }</span>
     </div>
     `

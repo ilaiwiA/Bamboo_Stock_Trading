@@ -111,10 +111,6 @@ class PurchaseView extends View {
       false,
     ];
 
-    console.log(parameterSuccess, parameterFailure);
-
-    //orderValue <= 0 || !this._user.availableBal
-
     if (orderType === "buy") {
       this._checkValidPurchase(orderBuyIn, orderValue)
         ? this.renderPurchaseReview.call(...parameterSuccess)
@@ -134,8 +130,6 @@ class PurchaseView extends View {
   }
 
   renderPurchaseReview(html, buttonHtml, success = true) {
-    console.log(buttonHtml);
-    console.log(this);
     const panel = this.closest(".purchase-panel");
     const availableText = panel.querySelector(".current-available");
 
@@ -152,8 +146,7 @@ class PurchaseView extends View {
       : this.querySelector(".btn-submit").remove();
 
     let panelHeight = panel.offsetHeight + this.offsetHeight;
-    if (success) panelHeight += 20;
-    console.log(panelHeight);
+    if (success) panelHeight += 40;
 
     panel.style.height = `${panelHeight}px`;
     availableText.style.maxHeight = "800px";

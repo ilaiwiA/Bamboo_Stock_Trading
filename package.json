@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "parcel index.html ./html/LoginPage.html ./html/Register.html",
-    "build": "parcel build index.html ./html/LoginPage.html ./html/Register.html"
+    "start": "parcel index.html ./LoginPage.html ./Register.html",
+    "build": "parcel build index.html ./LoginPage.html ./Register.html"
   },
   "author": "",
   "license": "ISC",

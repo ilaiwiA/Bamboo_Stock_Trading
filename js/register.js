@@ -10,7 +10,6 @@ const button = document.querySelector("#button-submit");
 const labels = document.querySelectorAll("label");
 
 window.addEventListener("load", function () {
-  console.log("called");
   this.document.querySelector(".waitLoad").classList.add("hidden");
 });
 
@@ -29,8 +28,6 @@ form.addEventListener("submit", function (e) {
   });
 
   registrationFetch(userRegistration);
-
-  console.log(userRegistration);
 });
 
 const registrationFetch = async function (data) {
@@ -79,7 +76,7 @@ const registrationSuccess = function () {
         <p id="redirect-msg">
         You will be redirected to the login page shortly...
         </p>
-        <a id="redirect-manual" href="/html/LoginPage.html">Click here if you are not redirected.</a>
+        <a id="redirect-manual" href="/LoginPage.html">Click here if you are not redirected.</a>
     </div>
   </section>
   `;
@@ -87,12 +84,11 @@ const registrationSuccess = function () {
   main.insertAdjacentHTML("beforeend", html);
 
   setTimeout(() => {
-    window.location.href = "/";
+    window.location.href = "/LoginPage.html";
   }, "2000");
 };
 
 const registrationFieldReset = function () {
-  console.log(labels);
   labels.forEach((a) => {
     a.innerHTML = "&nbsp;";
   });

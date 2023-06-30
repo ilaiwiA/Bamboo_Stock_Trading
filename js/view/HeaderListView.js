@@ -12,8 +12,6 @@ class HeaderListView extends View {
     this._parentElement.addEventListener("click", function (e) {
       if (e.target.id === "portfolio") window.location.href = "#";
 
-      if (e.target.id === "account") console.log("account");
-
       if (e.target.id === "logout") handler();
     });
   }

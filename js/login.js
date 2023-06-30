@@ -5,13 +5,11 @@ const button = document.querySelector("#button-submit");
 const failure = document.querySelector("#login-failure");
 
 window.addEventListener("load", function () {
-  console.log("called");
   this.document.querySelector(".waitLoad").classList.add("hidden");
 });
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
-  console.log(button.innerHTML);
   button.innerHTML = `<div class="loader-button"></div>`;
 
   const data = new FormData(form);
@@ -22,8 +20,6 @@ form.addEventListener("submit", function (e) {
   };
 
   loginFetch(credentials);
-
-  console.log("submitted");
 });
 
 const loginFetch = async function (auth) {

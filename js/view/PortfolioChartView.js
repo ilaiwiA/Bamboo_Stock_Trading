@@ -139,10 +139,16 @@ class PortfolioChartView extends View {
     this.myChart.options.scales.y.max =
       max - min !== 0 ? max + (max - min) / 5 : undefined;
 
+    const recentLivePrice = this.myChart.data.datasets[0].data.slice(-1)[0];
+    const recentPreviousPrice =
+      this._data.symbol === "portfolio"
+        ? this._data.closePrice
+        : +recentLivePrice - +this._data.netChange;
+
     this._updatePrice(
-      +this._data.lastPrice,
+      +recentLivePrice,
       this._data.quotes.timePeriod === "day"
-        ? +this._data.lastPrice - +this._data.netChange
+        ? recentPreviousPrice
         : +this._data.quotes.prices[0].close
     );
 
@@ -195,12 +201,14 @@ class PortfolioChartView extends View {
       this._data.quotes.prices.map((a) => a.close)
     );
 
-    const max = Math.max.apply(
+    let max = Math.max.apply(
       null,
       this._data.quotes.prices.map((a) => a.close)
     );
 
-    console.log(max + max * 0.01);
+    if (this._data.quotes.timePeriod === "day" && this._data.closePrice > max) {
+      max = this._data.closePrice;
+    }
 
     this.myChart = new Chart(mainChart, {
       type: "line",
@@ -217,9 +225,13 @@ class PortfolioChartView extends View {
 
         onHover: this._onHover.bind(this),
 
+        clip: false,
+
         layout: {
           padding: {
             top: 15,
+            left: 10,
+            right: 10,
           },
         },
 
@@ -298,11 +310,6 @@ class PortfolioChartView extends View {
         },
       ],
     });
-
-    // this._updatePrice(
-    //   +this._data.lastPrice,
-    //   +this._data.quotes.prices[0].close
-    // );
   }
 
   _generateDate(date) {

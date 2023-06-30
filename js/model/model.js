@@ -111,8 +111,7 @@ const generateStockQuotes = async function (
       let x = 0;
 
       dailyPriceData = dailyTimeData
-        .map((val, i) => {
-          console.log(data[x], val, x, data.length - 1);
+        .map((val, i, arr) => {
           if (x === data.length - 1 && val <= new Date().getTime()) {
             const a = { ...data[x] };
             a.datetime = val;
@@ -126,6 +125,10 @@ const generateStockQuotes = async function (
           if (val < data[x].datetime) {
             const a = { ...data[x] };
             a.datetime = val;
+
+            if (arr[i + 1] >= data[x + 1]?.datetime) {
+              x++;
+            }
             return a;
           } else if (val === data[x].datetime) {
             const a = { ...data[x] };
@@ -141,7 +144,7 @@ const generateStockQuotes = async function (
 
     const stockDates = dailyTimeData.length > 0 ? dailyTimeData : data;
 
-    const dates = stockDates.map((a) => {
+    const filteredDates = stockDates.map((a) => {
       return new Intl.DateTimeFormat(
         "en-US",
         periodType === "day"
@@ -151,6 +154,8 @@ const generateStockQuotes = async function (
           : PAST_PRICE_CONFIG
       ).format(a.datetime || a);
     });
+
+    const dates = [...filteredDates];
 
     const preMarket = dates.findIndex((a) => a.includes("8:30"));
     const postMarket = dates.findIndex((a) => a.includes("3:00"));
@@ -251,7 +256,7 @@ export const loadUser = async function (ticker) {
 
     if (!watchList && stockList.length < 1 && !ticker) {
       await loadStockList(
-        ["AAPL", "MSFT", "GOOG", "AMZN", "NVDA", "TSLA"],
+        ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA"],
         TOP_LIST
       );
     }
@@ -274,6 +279,7 @@ export const loadPortfolio = async function () {
       100;
     state.stock.closePrice = data.prices[0].previous;
     state.stock.quotes = data;
+    state.stock.quotes.timePeriod = "day";
   } catch (error) {
     console.error(error);
   }
@@ -379,13 +385,17 @@ export const loadNews = async function (ticker) {
         ? {
             symbol: a.symbol,
             netChange: a.netChange,
+            netPercentChangeInDouble: a.netPercentChangeInDouble,
           }
         : "";
     });
 
     news.forEach((a, i, arr) => {
       const index = stockData.findIndex((price) => price.symbol === a.symbol);
-      if (index !== -1) a.netChange = stockData[index].netChange;
+      if (index !== -1) {
+        a.netChange = stockData[index].netChange;
+        a.netPercentChangeInDouble = stockData[index].netPercentChangeInDouble;
+      }
     });
 
     state.stock.news = news;
@@ -463,7 +473,7 @@ export const logout = async function () {
   try {
     const response = await getJSON(URL_AUTH + "logout");
     if (response.response === "success")
-      window.location.href = "/html/LoginPage.html";
+      window.location.href = "/LoginPage.html";
   } catch (error) {
     throw error;
   }

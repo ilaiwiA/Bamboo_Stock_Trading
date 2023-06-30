@@ -28,9 +28,6 @@ class StockListView extends View {
   };
 
   _generatePanel = function (panelType) {
-    //<h1>${panelType === WATCH_LIST ? "Watchlist" : "My Stocks"}</h1>
-    console.log(panelType);
-
     return `
         <div class="side-container ${panelType}">
           <h1>${this._generatePanelType(panelType)}</h1>
