@@ -41,8 +41,6 @@ public class TokenServices {
     // recieve live quotes
     public String getAuthorizationToken() {
         AuthorizationToken authorizationToken = tokenRepository.getAuthorizationToken();
-        System.out.println("TOKEN !!!!!!!!!!!!!!! " + token);
-
         // if token is not valid -> get new one and save it place of old
         if (authorizationToken == null || authorizationToken.getAccess_token() == null
                 || authorizationToken.getExpirationTime() <= new Date().getTime() + expirationInterval) {
@@ -60,8 +58,6 @@ public class TokenServices {
         String URL = "https://api.tdameritrade.com/v1/oauth2/token";
         String data = "grant_type=refresh_token&refresh_token=" + token
                 + "&access_type=&code=&client_id=" + apiKey + "&redirect_uri=" + callbackURL;
-
-        System.out.println("URL: " + data);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
