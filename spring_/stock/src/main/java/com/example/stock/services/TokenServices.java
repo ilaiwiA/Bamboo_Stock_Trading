@@ -26,9 +26,14 @@ public class TokenServices {
     @Autowired
     TokenRepository tokenRepository;
 
-    @Value("${refresh_token}")
+    @Value("${callback.url}")
+    private String callbackURL;
+
+    @Value("${refresh.token}")
     private String token;
 
+    @Value("${tda.api.key}")
+    private String apiKey;
     // expiration time length provided by tdameritrade
     Long expirationInterval = (long) 120000;
 
@@ -54,7 +59,7 @@ public class TokenServices {
     private AuthorizationToken generateAuthorizationToken() {
         String URL = "https://api.tdameritrade.com/v1/oauth2/token";
         String data = "grant_type=refresh_token&refresh_token=" + token
-                + "&access_type=&code=&client_id=GEARZVA8KB2B3YEO65VPE2FBLHJYDBAI&redirect_uri=http%3A%2F%2F127.0.0.1";
+                + "&access_type=&code=&client_id=" + apiKey + "&redirect_uri=" + callbackURL;
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
