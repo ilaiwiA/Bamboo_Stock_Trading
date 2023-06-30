@@ -1,4 +1,4 @@
-import { TOP_LIST, USER_STOCK, WATCH_LIST } from "../config";
+import { TOP_LIST, USER_STOCK, WATCH_LIST } from "../config.js";
 
 export default class View {
   render(data) {
