@@ -61,6 +61,8 @@ public class TokenServices {
         String data = "grant_type=refresh_token&refresh_token=" + token
                 + "&access_type=&code=&client_id=" + apiKey + "&redirect_uri=" + callbackURL;
 
+        System.out.println("URL: " + data);
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 
