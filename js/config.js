@@ -53,7 +53,7 @@ export const PAST_PRICE_CONFIG = {
 };
 
 // import tickerList from "url:/images/tickers_noSpecialChart.csv"; //prevents chrome due to CORS
-import tickerList from "/images/tickers_noSpecialChart_withName.csv"; //prevents chrome due to CORS
+import tickerList from "/bamboo_front/images/tickers_noSpecialChart_withName.csv"; //prevents chrome due to CORS
 
 export const tickers = fetch(tickerList)
   .then((a) => a.text())

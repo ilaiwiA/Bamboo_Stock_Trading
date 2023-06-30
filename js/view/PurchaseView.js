@@ -1,7 +1,7 @@
 import View from "./View.js";
 
-import checkMarkIMG from "/images/checkmark.svg";
-import plusSignIMG from "/images/plus-sign.svg";
+import checkMarkIMG from "/bamboo_front/images/checkmark.svg";
+import plusSignIMG from "/bamboo_front/images/plus-sign.svg";
 
 class PurchaseView extends View {
   _parentElement = document.querySelector(".aside-container");

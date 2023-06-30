@@ -1,7 +1,7 @@
 import { URL_AUTH } from "./config";
 
-import ERROR_ICON from "/images/error-icon.png";
-import SUCCESS_ICON from "/images/successIconLarge.png";
+import ERROR_ICON from "/bamboo_front/images/error-icon.png";
+import SUCCESS_ICON from "/bamboo_front/images/successIconLarge.png";
 
 const main = document.querySelector("main");
 const register = document.querySelector(".login-form");
