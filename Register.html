@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="./images/favicon32.png"
+      type="image/x-icon"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/login.css" />
+    <script type="module" src="./js/register.js"></script>
+
+    <title>Bamboo Stock Trading</title>
+  </head>
+  <body>
+    <div class="waitLoad">
+      <div class="loader"></div>
+    </div>
+
+    <main>
+      <section class="background-art"></section>
+
+      <section class="login-form main-form">
+        <h1>Create an Account</h1>
+
+        <form id="register-form">
+          <div class="login-form-register">
+            <div class="form-field">
+              <label class="label-error" id="firstName"> &nbsp; </label>
+              <input
+                type="text"
+                placeholder="First Name"
+                id="formFirstName"
+                name="formFirstName"
+              />
+            </div>
+
+            <div class="form-field">
+              <label class="label-error" id="lastName"> &nbsp; </label>
+              <input
+                type="text"
+                placeholder="Last Name"
+                id="formLastName"
+                name="formLastName"
+              />
+            </div>
+
+            <div class="form-field">
+              <label class="label-error" id="userName"> &nbsp; </label>
+              <input
+                type="text"
+                placeholder="Username"
+                id="formName"
+                name="formName"
+              />
+            </div>
+
+            <div class="form-field">
+              <label class="label-error" id="startingBalance"> &nbsp; </label>
+
+              <input
+                type="number"
+                min="10000"
+                placeholder="Starting Balance ($)"
+                id="formStartBal"
+                name="formStartBal"
+              />
+            </div>
+
+            <div class="form-field">
+              <label class="label-error" id="password"> &nbsp; </label>
+
+              <input
+                type="password"
+                placeholder="Password"
+                id="formPass"
+                name="formPass"
+              />
+            </div>
+
+            <div class="form-field">
+              <label class="label-error"> &nbsp; </label>
+              <input
+                type="password"
+                placeholder="Re-enter Password"
+                id="formPassVerify"
+                name="formPassVerify"
+              />
+            </div>
+          </div>
+
+          <div class="form-extra">
+            <button type="submit" id="button-submit">
+              <p>Create Account</p>
+            </button>
+          </div>
+
+          <p class="form-redirect">
+            Already have an Account?
+            <a href="/LoginPage.html">Click here to login</a>
+          </p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
