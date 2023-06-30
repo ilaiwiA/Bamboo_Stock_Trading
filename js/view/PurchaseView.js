@@ -1,7 +1,7 @@
 import View from "./View.js";
 
-import checkMarkIMG from "url:/images/checkmark.svg";
-import plusSignIMG from "url:/images/plus-sign.svg";
+import checkMarkIMG from "/images/checkmark.svg";
+import plusSignIMG from "/images/plus-sign.svg";
 
 class PurchaseView extends View {
   _parentElement = document.querySelector(".aside-container");
