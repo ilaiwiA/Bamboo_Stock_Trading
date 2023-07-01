@@ -1,7 +1,7 @@
 import { LOGIN_REDIRECT, URL_AUTH } from "./config";
 
-import ERROR_ICON from "url:/images/error-icon.png";
-import SUCCESS_ICON from "url:/images/successIconLarge.png";
+import ERROR_ICON from "url:./images/error-icon.png";
+import SUCCESS_ICON from "url:./images/successIconLarge.png";
 
 const main = document.querySelector("main");
 const register = document.querySelector(".login-form");

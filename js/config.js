@@ -1,10 +1,10 @@
 export const TIME_OUT = 10;
 
-// export const URL = "https://192.168.0.215:8080/api/"; // window
-// export const URL_AUTH = "https://192.168.0.215:8080/auth/";
+export const URL = "https://192.168.0.215:8080/api/"; // window
+export const URL_AUTH = "https://192.168.0.215:8080/auth/";
 
-export const URL = "https://bamboospring-production.up.railway.app/api/"; // prod server
-export const URL_AUTH = "https://bamboospring-production.up.railway.app/auth/";
+// export const URL = "https://bamboospring-production.up.railway.app/api/"; // prod server
+// export const URL_AUTH = "https://bamboospring-production.up.railway.app/auth/";
 export const LOGIN_REDIRECT = "/Bamboo-Stock-Trading/Register.html";
 
 export const USER_STOCK = "stocklist";
@@ -54,7 +54,7 @@ export const PAST_PRICE_CONFIG = {
 };
 
 // import tickerList from "url:/images/tickers_noSpecialChart.csv"; //prevents chrome due to CORS
-import tickerList from "url:/images/tickers_noSpecialChart_withName.csv"; //prevents chrome due to CORS
+import tickerList from "url:./images/tickers_noSpecialChart_withName.csv"; //prevents chrome due to CORS
 
 export const tickers = fetch(tickerList)
   .then((a) => a.text())

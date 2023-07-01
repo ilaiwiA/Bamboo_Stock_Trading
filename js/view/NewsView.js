@@ -1,5 +1,5 @@
 import View from "./View.js";
-import defaultStockIMG from "url:/images/stock_img.jpg";
+import defaultStockIMG from "url:./images/stock_img.jpg";
 
 class NewsView extends View {
   _parentElement = document.querySelector(".main-container");
