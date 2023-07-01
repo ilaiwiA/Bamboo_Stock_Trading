@@ -548,12 +548,15 @@ public class UserStockServices {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(date);
 
+        System.out.println("HUH: " + calendar.get(Calendar.DAY_OF_WEEK));
+
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7) {
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
             calendar.add(Calendar.DATE, -7);
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         }
+        System.out.println("AHH: " + calendar.getTimeInMillis());
 
         return calendar.getTimeInMillis();
     }
