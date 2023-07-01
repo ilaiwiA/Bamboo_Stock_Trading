@@ -471,9 +471,10 @@ export const updateUser = async function () {
 
 export const logout = async function () {
   try {
+    console.log("LOGGED OUT");
     const response = await getJSON(URL_AUTH + "logout");
     if (response.response === "success")
-      window.location.href = "/LoginPage.html";
+      window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
   } catch (error) {
     throw error;
   }

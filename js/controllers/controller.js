@@ -50,7 +50,9 @@ const controllerLoadPortfollio = async function () {
     //load current news
   } catch (error) {
     if (error.message === "401") {
-      window.location.href = "/LoginPage.html";
+      console.error(error);
+
+      window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
     }
   }
 };
@@ -100,7 +102,8 @@ const controllerChangePage = async function () {
     } else {
       console.error(error);
       if (error.message === "401") {
-        window.location.href = "/LoginPage.html";
+        console.error(error);
+        window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
       }
     }
   }

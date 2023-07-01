@@ -37,7 +37,7 @@ const loginFetch = async function (auth) {
 
   if (!response.ok) return loginFailure();
 
-  window.location.href = "/";
+  window.location.href = "/Bamboo-Stock-Trading/";
 };
 
 const loginFailure = function () {

@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html ./LoginPage.html ./Register.html",
-    "build": "parcel build index.html ./LoginPage.html ./Register.html"
+    "build": "parcel build index.html ./LoginPage.html ./Register.html --public-url ./",
+    "prepush": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "author": "",
   "license": "ISC",
