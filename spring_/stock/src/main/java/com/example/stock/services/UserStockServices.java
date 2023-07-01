@@ -282,7 +282,6 @@ public class UserStockServices {
 
         if (stocks.size() == 0) {
             calendar.setTime(new Date(getLatestMarketTime(calendar.getTimeInMillis())));
-            System.out.println("W: " + calendar.getTimeInMillis());
         }
 
         calendar.set(Calendar.HOUR_OF_DAY, 6);
@@ -291,6 +290,8 @@ public class UserStockServices {
         calendar.set(Calendar.MILLISECOND, 0);
 
         if (periodType.equals("day")) {
+            System.out.println("W: " + calendar.getTimeInMillis());
+            System.out.println(portfolioQuotes.toString());
 
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
             System.out.println(index);
