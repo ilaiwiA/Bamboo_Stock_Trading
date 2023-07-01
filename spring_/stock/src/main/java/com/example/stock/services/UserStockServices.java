@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,7 @@ public class UserStockServices {
     final long UNIX_MS_PER_MIN = 60000L;
     final long UNIX_MS_PER_5MIN = 300000L;
     final long UNIX_MS_PER_DAY = 86400000L;
+    final TimeZone TIME_ZONE = TimeZone.getTimeZone("America/Chicago");
 
     @Autowired
     UserRepository userRepository;
@@ -101,7 +103,7 @@ public class UserStockServices {
                 recentDate = lastDate;
             }
 
-            Calendar quoteTime = Calendar.getInstance();
+            Calendar quoteTime = Calendar.getInstance(TIME_ZONE);
             quoteTime.setTime(new Date(recentDate));
             quoteTime.set(Calendar.MINUTE, previousMin(quoteTime.get(Calendar.MINUTE)));
             quoteTime.set(Calendar.SECOND, 0);
@@ -236,7 +238,7 @@ public class UserStockServices {
         Quotes lastQuote = portfolioQuotes.get(portfolioQuotes.size() - 1);
         Long lastDate = lastQuote.getDatetime();
 
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
         calendar.setTime(new Date(lastDate));
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
@@ -244,7 +246,7 @@ public class UserStockServices {
         lastDate = calendar.getTimeInMillis();
 
         // long currTime = getCurrentTime();
-        long currTime = Calendar.getInstance().getTimeInMillis();
+        long currTime = Calendar.getInstance(TIME_ZONE).getTimeInMillis();
 
         int min = calendar.get(Calendar.MINUTE);
         int multipleFive = (int) (Math.ceil((double) min / 5) * 5);
@@ -277,7 +279,7 @@ public class UserStockServices {
     }
 
     List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType, List<UserStock> stocks) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
         calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
 
         if (stocks.size() == 0) {
@@ -497,9 +499,9 @@ public class UserStockServices {
     List<Quotes> getStockDay(List<Quotes> stockList, String periodType, Long date) {
         Long dateCreation = stockList.get(0).getDatetime();
 
-        Calendar calendar = Calendar.getInstance();
-        Calendar calendarQuotes = Calendar.getInstance();
-        Calendar calendarCreation = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("America/Chicago"));
+        Calendar calendarQuotes = Calendar.getInstance(TIME_ZONE);
+        Calendar calendarCreation = Calendar.getInstance(TIME_ZONE);
         calendar.setTime(new Date(date));
         calendarCreation.setTime(new Date(dateCreation));
 
@@ -536,7 +538,7 @@ public class UserStockServices {
     }
 
     Long getCurrentTimeStart() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
 
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 0);
@@ -547,7 +549,7 @@ public class UserStockServices {
     }
 
     Long getLatestMarketTime(Long date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
         calendar.setTimeInMillis(date);
 
         System.out.println("HUH: " + calendar.get(Calendar.DAY_OF_WEEK));
@@ -564,16 +566,16 @@ public class UserStockServices {
     }
 
     Long getCurrentTime() {
-        Calendar currentTime = Calendar.getInstance();
+        Calendar currentTime = Calendar.getInstance(TIME_ZONE);
         System.out.println("CURR: " + currentTime);
 
-        Calendar minMarketTime = Calendar.getInstance();
+        Calendar minMarketTime = Calendar.getInstance(TIME_ZONE);
         minMarketTime.set(Calendar.HOUR_OF_DAY, 6);
         minMarketTime.set(Calendar.MINUTE, 0);
         minMarketTime.set(Calendar.SECOND, 0);
         minMarketTime.set(Calendar.MILLISECOND, 0);
 
-        Calendar maxMarketTime = Calendar.getInstance();
+        Calendar maxMarketTime = Calendar.getInstance(TIME_ZONE);
         maxMarketTime.set(Calendar.HOUR_OF_DAY, 18);
         maxMarketTime.set(Calendar.MINUTE, 55);
         maxMarketTime.set(Calendar.SECOND, 0);
@@ -592,10 +594,10 @@ public class UserStockServices {
     }
 
     String getDateParameter(Long startDate) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
 
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
+        Calendar start = Calendar.getInstance(TIME_ZONE);
+        Calendar end = Calendar.getInstance(TIME_ZONE);
 
         start.setTime(new Date(startDate));
 
@@ -627,7 +629,7 @@ public class UserStockServices {
     }
 
     Long roundedDate(Long date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance(TIME_ZONE);
         calendar.setTime(new Date(date));
         calendar.set(Calendar.MINUTE, previousMin(calendar.get(Calendar.MINUTE)));
         calendar.set(Calendar.SECOND, 0);
