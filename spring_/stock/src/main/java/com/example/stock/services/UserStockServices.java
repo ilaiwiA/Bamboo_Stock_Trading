@@ -60,7 +60,7 @@ public class UserStockServices {
 
         // return portfolioQuotes;
 
-        return getPortfolioQuotesByDate(portfolioQuotes, periodType);
+        return getPortfolioQuotesByDate(portfolioQuotes, periodType, stocks);
     }
 
     List<Quotes> createPortfolio(User user, List<Quotes> portfolioQuotes) {
@@ -279,16 +279,23 @@ public class UserStockServices {
         return portfolioQuotes;
     }
 
-    List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType) {
+    List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType, List<UserStock> stocks) {
         Calendar calendar = Calendar.getInstance();
 
-        calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
+        if (stocks.size() == 0) {
+            calendar.setTime(new Date(getCurrentTime()));
+
+        } else {
+            calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
+        }
+
         calendar.set(Calendar.HOUR_OF_DAY, 6);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
         if (periodType.equals("day")) {
+
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
             if (index == -1) {
 

@@ -53,6 +53,7 @@ public class AuthController {
      */
     @PostMapping("/login")
     public String generateToken(@RequestBody AuthRequest authRequest, HttpServletResponse response) {
+        System.out.println(authRequest.toString());
 
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(),

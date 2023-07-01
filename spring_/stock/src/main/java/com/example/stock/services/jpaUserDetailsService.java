@@ -3,7 +3,6 @@ package com.example.stock.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.stock.models.User.User;
@@ -30,7 +29,9 @@ public class jpaUserDetailsService implements UserDetailsService {
             User user = userRepository.findUserByUsername(username);
             return new UserSecurity(user); // maps user to custom UserSecurity object
         } catch (Exception e) {
-            throw new UsernameNotFoundException("Username not found " + username); // exception if not found
+            return null;
+            // throw new UsernameNotFoundException("Username not found " + username); //
+            // exception if not found
         }
 
     }
