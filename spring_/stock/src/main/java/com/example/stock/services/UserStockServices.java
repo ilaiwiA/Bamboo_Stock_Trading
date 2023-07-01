@@ -281,7 +281,7 @@ public class UserStockServices {
         calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
 
         if (stocks.size() == 0) {
-            calendar.setTime(new Date(calendar.getTimeInMillis()));
+            calendar.setTime(new Date(getLatestMarketTime(calendar.getTimeInMillis())));
             System.out.println("W: " + calendar.getTimeInMillis());
         }
 
