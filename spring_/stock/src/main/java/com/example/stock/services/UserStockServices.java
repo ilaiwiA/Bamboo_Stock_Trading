@@ -292,11 +292,8 @@ public class UserStockServices {
         calendar.set(Calendar.MILLISECOND, 0);
 
         if (periodType.equals("day")) {
-            System.out.println("W: " + calendar.getTimeInMillis());
-            System.out.println(portfolioQuotes.toString());
 
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
-            System.out.println(index);
             if (index == -1) {
 
                 portfolioQuotes.get(0).setPrevious(portfolioQuotes.get(0).getClose());
@@ -552,22 +549,18 @@ public class UserStockServices {
         Calendar calendar = Calendar.getInstance(TIME_ZONE);
         calendar.setTimeInMillis(date);
 
-        System.out.println("HUH: " + calendar.get(Calendar.DAY_OF_WEEK));
-
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7) {
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
             calendar.add(Calendar.DATE, -7);
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         }
-        System.out.println("AHH: " + calendar.getTimeInMillis());
 
         return calendar.getTimeInMillis();
     }
 
     Long getCurrentTime() {
         Calendar currentTime = Calendar.getInstance(TIME_ZONE);
-        System.out.println("CURR: " + currentTime);
 
         Calendar minMarketTime = Calendar.getInstance(TIME_ZONE);
         minMarketTime.set(Calendar.HOUR_OF_DAY, 6);
