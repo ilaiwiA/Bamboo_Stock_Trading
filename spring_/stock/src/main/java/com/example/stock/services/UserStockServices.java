@@ -58,8 +58,6 @@ public class UserStockServices {
         else
             fillPortfolio(user, portfolioQuotes);
 
-        // return portfolioQuotes;
-
         return getPortfolioQuotesByDate(portfolioQuotes, periodType, stocks);
     }
 
@@ -99,7 +97,6 @@ public class UserStockServices {
             Double prevValue = 0D;
 
             Long recentDate = stocks.get(i).getDate();
-            Long purchaseDate = roundedDate(recentDate);
             if (lastDate > recentDate) {
                 recentDate = lastDate;
             }
@@ -284,6 +281,7 @@ public class UserStockServices {
 
         if (stocks.size() == 0) {
             calendar.setTime(new Date(getCurrentTime()));
+            System.out.println("W: " + getCurrentTime());
 
         } else {
             calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
