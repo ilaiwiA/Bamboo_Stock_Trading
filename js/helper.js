@@ -19,14 +19,19 @@ export const getJSON = async function (url) {
     const res = await Promise.race([fetch(request), timeOut(TIME_OUT)]);
 
     console.log(res.status, res.ok);
-    if (res.status === 204) return;
+    if (res.status === 204) {
+      console.log("RES STATUS 204: " + res.status);
+      return;
+    }
 
     if (!res.ok) {
+      console.log("HERE?");
       throw new Error(`${res.status}`);
     }
     return await res.json();
   } catch (error) {
-    console.error(`${"🚨JSON🚨"} + ${error}`);
+    console.error("JSON ERR");
+    // console.error(`${"🚨JSON🚨"} + ${error}`);
     throw error;
   }
 };
@@ -49,7 +54,7 @@ export const isMarketOpen = function () {
   const date = new Date();
   if (date.getDay() === 0 || date.getDay() === 6) return false;
 
-  if (date.getHours() < 6 || date.getHours > 19) return false;
+  if (date.getHours() < 6 || date.getHours() > 19) return false;
 
   return true;
 };

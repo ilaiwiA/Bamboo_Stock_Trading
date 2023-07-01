@@ -5,6 +5,7 @@ export const TIME_OUT = 10;
 
 export const URL = "https://bamboospring-production.up.railway.app/api/"; // prod server
 export const URL_AUTH = "https://bamboospring-production.up.railway.app/auth/";
+export const LOGIN_REDIRECT = "/Bamboo-Stock-Trading/Register.html";
 
 export const USER_STOCK = "stocklist";
 export const WATCH_LIST = "watchlist";

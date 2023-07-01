@@ -1,4 +1,4 @@
-import { URL_AUTH } from "./config";
+import { LOGIN_REDIRECT, URL_AUTH } from "./config";
 
 import ERROR_ICON from "url:/images/error-icon.png";
 import SUCCESS_ICON from "url:/images/successIconLarge.png";
@@ -76,7 +76,7 @@ const registrationSuccess = function () {
         <p id="redirect-msg">
         You will be redirected to the login page shortly...
         </p>
-        <a id="redirect-manual" href="/Bamboo-Stock-Trading/LoginPage.html">Click here if you are not redirected.</a>
+        <a id="redirect-manual" href="/LoginPage.html">Click here if you are not redirected.</a>
     </div>
   </section>
   `;
@@ -84,7 +84,7 @@ const registrationSuccess = function () {
   main.insertAdjacentHTML("beforeend", html);
 
   setTimeout(() => {
-    window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
+    window.location.href = LOGIN_REDIRECT;
   }, "2000");
 };
 

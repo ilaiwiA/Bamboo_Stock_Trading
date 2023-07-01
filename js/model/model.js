@@ -4,6 +4,7 @@ import {
   DAILY_5_MIN_INTERVAL,
   DAILY_MINUTES,
   DAILY_PRICE_CONFIG,
+  LOGIN_REDIRECT,
   NEWS_LIMIT,
   PAST_PRICE_CONFIG,
   RECENT_PRICE_CONFIG,
@@ -231,6 +232,8 @@ const generateNewsLimit = function (data) {
 // load user
 export const loadUser = async function (ticker) {
   try {
+    console.log("LOAD USER: ");
+
     const {
       firstName,
       userName,
@@ -243,6 +246,8 @@ export const loadUser = async function (ticker) {
       },
     } = await getJSON(URL + "user");
 
+    console.log("FIRST: " + firstName);
+
     state["firstName"] = firstName;
     state["userName"] = userName;
     state[`availableBal`] = availableBal;
@@ -250,16 +255,30 @@ export const loadUser = async function (ticker) {
     state["userStocks"] = stocks;
 
     if (!ticker) {
-      await loadStockList(watchList, WATCH_LIST);
-      await loadStockList(stockList, USER_STOCK);
-    }
+      console.log("SECOND: ");
 
-    if (!watchList && stockList.length < 1 && !ticker) {
-      await loadStockList(
-        ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA"],
-        TOP_LIST
-      );
+      if (!watchList && stockList.length < 1) {
+        console.log("THIRD: ");
+
+        await loadStockList(
+          ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA"],
+          TOP_LIST
+        );
+      } else {
+        console.log("Forth: ");
+
+        await loadStockList(watchList, WATCH_LIST);
+        await loadStockList(stockList, USER_STOCK);
+      }
     }
+    console.log("Five: ");
+
+    // if (!watchList && stockList.length < 1 && !ticker) {
+    //   await loadStockList(
+    //     ["AAPL", "MSFT", "GOOGL", "AMZN", "NVDA", "TSLA"],
+    //     TOP_LIST
+    //   );
+    // }
   } catch (error) {
     throw new Error(401);
   }
@@ -294,12 +313,16 @@ export const loadStockList = async function (stockList, panelType) {
       ...Object.values(await getJSON(URL + "stocks/" + stockList)),
     ];
 
+    console.log(dataList);
     for (data of dataList) {
+      console.log("A: ", data);
       data.quotes = await generateStockQuotes(data.symbol, "day", true);
     }
+    console.log(dataList + "   C");
 
     state[`${panelType}`] = generateStockList(dataList);
   } catch (error) {
+    console.log("ERROR IN LOADING STOCKLIST");
     throw error;
   }
 };
@@ -473,8 +496,7 @@ export const logout = async function () {
   try {
     console.log("LOGGED OUT");
     const response = await getJSON(URL_AUTH + "logout");
-    if (response.response === "success")
-      window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
+    if (response.response === "success") window.location.href = "/";
   } catch (error) {
     throw error;
   }

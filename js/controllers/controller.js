@@ -11,7 +11,7 @@ import MissingView from "../view/MissingView.js";
 import UserStockDetailsView from "../view/UserStockDetailsView.js";
 import HeaderListView from "../view/HeaderListView.js";
 import AutoCompleteView from "../view/AutoCompleteView.js";
-import { CHART_UPDATE_INTERVAL } from "../config.js";
+import { CHART_UPDATE_INTERVAL, LOGIN_REDIRECT } from "../config.js";
 import { isMarketOpen } from "../helper.js";
 
 // Load portfollio based on HASH
@@ -50,9 +50,10 @@ const controllerLoadPortfollio = async function () {
     //load current news
   } catch (error) {
     if (error.message === "401") {
-      console.error(error);
-
-      window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
+      console.error("CALLED ERROR: " + error.message);
+      setTimeout(() => {
+        window.location.href = LOGIN_REDIRECT;
+      }, 20000);
     }
   }
 };
@@ -103,7 +104,9 @@ const controllerChangePage = async function () {
       console.error(error);
       if (error.message === "401") {
         console.error(error);
-        window.location.href = "/Bamboo-Stock-Trading/LoginPage.html";
+        setTimeout(() => {
+          window.location.href = LOGIN_REDIRECT;
+        }, 3000);
       }
     }
   }
