@@ -293,6 +293,7 @@ public class UserStockServices {
         if (periodType.equals("day")) {
 
             int index = portfolioQuotes.indexOf(getStockDate(portfolioQuotes, calendar.getTimeInMillis()));
+            System.out.println(index);
             if (index == -1) {
 
                 portfolioQuotes.get(0).setPrevious(portfolioQuotes.get(0).getClose());
