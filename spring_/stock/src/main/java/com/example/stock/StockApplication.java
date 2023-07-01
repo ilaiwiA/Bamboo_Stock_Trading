@@ -21,7 +21,7 @@ public class StockApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://bamboospring-production.up.railway.app")
+				registry.addMapping("/**").allowedOrigins("https://ilaiwia.github.io")
 						.allowedMethods("GET", "POST")
 						.allowCredentials(true);
 			}
