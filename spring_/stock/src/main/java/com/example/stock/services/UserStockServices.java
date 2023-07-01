@@ -278,13 +278,11 @@ public class UserStockServices {
 
     List<Quotes> getPortfolioQuotesByDate(List<Quotes> portfolioQuotes, String periodType, List<UserStock> stocks) {
         Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
 
         if (stocks.size() == 0) {
-            calendar.setTime(new Date(getCurrentTime()));
-            System.out.println("W: " + getCurrentTime());
-
-        } else {
-            calendar.setTime(new Date(portfolioQuotes.get(portfolioQuotes.size() - 1).getDatetime()));
+            calendar.setTime(new Date(calendar.getTimeInMillis()));
+            System.out.println("W: " + calendar.getTimeInMillis());
         }
 
         calendar.set(Calendar.HOUR_OF_DAY, 6);
@@ -552,7 +550,7 @@ public class UserStockServices {
 
         if (calendar.get(Calendar.DAY_OF_WEEK) == 7) {
             calendar.set(Calendar.DAY_OF_WEEK, 6);
-        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 2) {
+        } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
             calendar.add(Calendar.DATE, -7);
             calendar.set(Calendar.DAY_OF_WEEK, 6);
         }
@@ -562,6 +560,7 @@ public class UserStockServices {
 
     Long getCurrentTime() {
         Calendar currentTime = Calendar.getInstance();
+        System.out.println("CURR: " + currentTime);
 
         Calendar minMarketTime = Calendar.getInstance();
         minMarketTime.set(Calendar.HOUR_OF_DAY, 6);
