@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="./images/favicon32.png"
+      type="image/x-icon"
+    />
+
+    <link rel="stylesheet" href="./styles/login.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module" src="./js/login.js"></script>
+
+    <title>Bamboo Stock Trading</title>
+  </head>
+  <body>
+    <div class="waitLoad">
+      <div class="loader"></div>
+    </div>
+
+    <main>
+      <section class="background-art"></section>
+
+      <section class="login-form">
+        <h1>Log in to Bamboo</h1>
+
+        <form id="login-form">
+          <div class="form-field">
+            <label for="formName">Username</label>
+            <input type="text" name="formName" id="formName" />
+          </div>
+          <div class="form-field">
+            <label for="formPass">Password</label>
+            <input type="password" name="formPass" id="formPass" />
+          </div>
+          <div class="form-extra">
+            <button type="submit" id="button-submit"><p>Log in</p></button>
+
+            <div id="login-failure" class="hidden">
+              <p>
+                  Unable to log in with the provided credentials.
+                  <p>Please try again.</p>
+              </p>
+          </div>
+          
+          </div>
+          <p class="form-redirect">
+            Don't have an account?
+            <a href="/Register.html">Click here to register</a>
+          </p>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>

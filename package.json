@@ -1,0 +1,20 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "parcel index.html ./LoginPage.html ./Register.html",
+    "build": "parcel build index.html ./LoginPage.html ./Register.html --public-url ./",
+    "prepush": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chart.js": "^4.2.1",
+    "chartjs-plugin-annotation": "^2.1.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  }
+}

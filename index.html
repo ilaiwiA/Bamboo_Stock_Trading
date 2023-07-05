@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="images/favicon32.png" type="image/x-icon" />
+    <title>Bamboo Stock Trading</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@200;300;400;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script type="module" src="./js/controllers/controller.js"></script>
+  </head>
+
+  <body>
+    <header>
+      <a href="/">
+        <img src="images/bamboo_logo.png" alt="main-logo-home" />
+      </a>
+      <form action="">
+        <label for="search_input"></label>
+        <input
+          type="text"
+          id="search_input"
+          placeholder="Search"
+          autocomplete="off"
+        />
+        <ul id="results" class="hidden"></ul>
+      </form>
+      <nav>
+        <ul>
+          <li id="portfolio">Portfolio</li>
+          <li id="logout">Logout</li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="app-container">
+      <div class="main-container"></div>
+
+      <aside class="aside-container"></aside>
+    </main>
+    <footer>
+      <p>Created by <span>Ahmed Ilaiwi</span></p>
+    </footer>
+  </body>
+</html>

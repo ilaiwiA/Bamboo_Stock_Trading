@@ -1,0 +1,227 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  /* main */
+  --positive_green: #00c800;
+  --negative_red: #fd5240;
+  --NEUTRAL: #b2b2b2;
+
+  /* body */
+  --light__gray__body: #7b7b7b;
+  --light__gray__highlight: #c5c5c5;
+
+  --ff_main: "Nunito Sans", sans-serif;
+
+  --aside_height: 135px;
+}
+
+body {
+  font-family: var(--ff_main);
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  height: 100vh;
+}
+
+.background-art {
+  background-image: url("/images/bamboo_art_background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+  gap: 1.5em;
+  width: 100%;
+  /* padding-left: 2em; */
+}
+
+.login-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-left: 1em;
+}
+
+.login-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.login-form .form-redirect {
+  font-size: 12px;
+}
+
+.login-form .form-redirect a {
+  font-weight: 700;
+  text-decoration: underline;
+  color: black;
+}
+
+.login-form h1 {
+  font-size: 2em;
+  font-weight: 600;
+}
+
+.login-form form label {
+  font-size: 0.85em;
+  font-weight: 300;
+}
+
+.login-form form input {
+  min-width: 325px;
+  padding-left: 6px;
+  padding: 0.5em;
+}
+
+.login-form button {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+
+  padding: 1.25em;
+
+  /* min-width: 75px; */
+  max-width: 100px;
+  font-size: 12px;
+  border: none;
+  border-radius: 3em;
+  font-weight: 600;
+  background-color: black;
+
+  color: whitesmoke;
+}
+
+.login-form button p {
+  margin: 0.25em;
+}
+
+.login-form .form-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.form-extra #login-failure {
+  background-color: #f3f3f3;
+  border-radius: 0.25em;
+  padding: 1em;
+  width: 325px;
+
+  font-size: 14px;
+}
+
+.main-form {
+  width: 800px;
+}
+
+/* register form */
+.login-form-register {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.5em;
+}
+
+.register-success {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.register-success img {
+  width: 500px;
+}
+
+.success-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.success-message h1 {
+  font-weight: 800;
+  font-size: 1.75em;
+}
+
+.success-message #redirect-manual {
+  font-size: 0.75em;
+  color: black;
+  text-decoration: underline;
+}
+
+/* registrations error labels */
+.label-error {
+  display: flex;
+  align-items: end;
+  gap: 0.5em;
+
+  margin-top: 0.25em;
+}
+
+.label-error p {
+  color: #fd5240;
+  font-weight: 600;
+}
+
+.label-error img {
+  width: 22px;
+  align-self: flex-start;
+}
+
+.waitLoad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+/* ANIMATIONS*/
+.loader {
+  border: 12px solid #f3f3f3; /* Light grey */
+  border-top: 12px solid #7b7b7b; /* Blue */
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  z-index: 100;
+  animation: spin 1s linear infinite;
+}
+
+.loader-button {
+  border: 3px solid #f3f3f3; /* Light grey */
+  border-top: 3px solid #7b7b7b; /* Blue */
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  z-index: 100;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}
